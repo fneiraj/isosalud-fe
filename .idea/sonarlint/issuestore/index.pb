@@ -99,8 +99,6 @@ H
 src/Settings/Settings.js,b/5/b5db4dc47f9c14d54727169491f19504e5a04514
 U
 %src/pages/my-dates/calendar/index.jsx,f/f/ff19f18dba4836651cf741d2d23d3f3758a1a174
-t
-Dsrc/pages/patient-profile/treatments/components/TreatmentDetails.jsx,1/4/14a4c9b12494292f84850f28061872e8a241b3ee
 g
 7src/pages/my-dates/calendar/components/DeleteDialog.jsx,0/0/008ca78fe52db4ae6586b6a588e3bd8a5b44ea4b
 K
@@ -137,8 +135,6 @@ q
 Asrc/pages/patient-profile/treatments/components/TreatmentCard.jsx,5/5/55d19bc746e0d06410e56a8e9675f09ada7f4814
 ^
 .src/pages/patient-profile/treatments/index.jsx,5/b/5be4107c075fce6ba597c2df93dd6eaefb2d9842
-<
-package.json,7/0/7030d0b2f71b999ff89a343de08c414af32fc93a
 ?
 src/styles.scss,6\a\6a36a191b6d613ce902a6e1beb58b65e8a5136ab
 F
@@ -153,8 +149,6 @@ N
 src/helpers/handle-response.ts,9\5\9510e9016f264407a6eff21abfae74fe53e9853a
 [
 +src/services/auth/AuthenticationService.jsx,e\7\e7cd7a9b7bb2d07ee6ca05dbbe01d2d579713fee
-<
-src/theme.js,0\a\0a7e8303dfe5da72e1b0b137d4890ceddc80a633
 S
 #src/pages/dashboard-admin/index.jsx,b\a\babb861c87971558ac0e02e04986417185f169fd
 [

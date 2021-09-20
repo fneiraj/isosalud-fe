@@ -15,13 +15,12 @@ import {
     Tooltip,
     withStyles
 } from "@material-ui/core";
-import {animated, useSpring} from 'react-spring/web.cjs';
+import {animated, useSpring} from 'react-spring';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import CancelIcon from '@material-ui/icons/Cancel';
 import PrintIcon from '@material-ui/icons/Print';
 import {DataMock} from '../../../../mock/data';
 import ToothArches from "./tooth-arches/ToothArches";
-
 
 const styles = (theme) => ({
     modal: {
