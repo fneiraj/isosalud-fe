@@ -8,7 +8,7 @@ import {grey} from "@material-ui/core/colors";
 import Divider from "@material-ui/core/Divider";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import PageBase from "../../layouts/page-base/PageBase";
+import PageBase from "layouts/page-base";
 import {history} from "../../helpers";
 
 const FormPage = () => {

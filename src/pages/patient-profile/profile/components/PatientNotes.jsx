@@ -1,6 +1,6 @@
 import {Button, Card, CardContent, Grid, Link as MuiLink, Typography} from "@material-ui/core";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import {makeStyles} from "@material-ui/core/styles";
 import {Link} from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -58,20 +58,20 @@ const PatientInfo = ({handleAddNote}) => {
     const renderNote = ({id, title, author, date}) => (
         <Typography component={"div"} className={classes.noteItem}>
             <Grid container>
-            <Grid item xs={6}>
-                <Typography>{title}</Typography>
+                <Grid item xs={6}>
+                    <Typography>{title}</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                    <Typography>{author}</Typography>
+                </Grid>
+                <Grid item xs={2}>
+                    <Typography className={classes.smallFont}>{date}</Typography>
+                </Grid>
             </Grid>
-            <Grid item xs={4}>
-                <Typography>{author}</Typography>
-            </Grid>
-            <Grid item xs={2}>
-                <Typography className={classes.smallFont}>{date}</Typography>
-            </Grid>
-        </Grid>
         </Typography>
     )
 
-    const renderNotes = () => (
+    const Notes = () => (
         <Grid container>
             {notes.map(note => (
                 <Grid item xs={12} key={note.id}>
@@ -91,10 +91,10 @@ const PatientInfo = ({handleAddNote}) => {
                         Ver todas
                     </MuiLink>
                 </Typography>
-                {renderNotes()}
-                    <Button color="primary" onClick={handleAddNote} className={classes.right}>
-                        Agregar
-                    </Button>
+                <Notes/>
+                <Button color="primary" onClick={handleAddNote} className={classes.right}>
+                    Agregar
+                </Button>
             </CardContent>
         </Card>
     )

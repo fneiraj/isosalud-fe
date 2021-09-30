@@ -12,7 +12,7 @@ import {Helmet} from "react-helmet-async";
 import {Box} from "@material-ui/core";
 import styles from './styles';
 import defaultTheme from '../../theme';
-import Copyright from "../../components/copyright/Copyright";
+import Copyright from "../../components/copyright";
 import {useEffect} from "react";
 
 const LoginPage = ({classes, location, history}) => {

@@ -3,7 +3,7 @@ import EventIcon from '@material-ui/icons/Event';
 import PeopleIcon from '@material-ui/icons/People';
 import LayersIcon from '@material-ui/icons/Layers';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
-import {Role} from '../models/Role';
+import {Role} from 'models/Role';
 
 const menus = [
     {
@@ -19,7 +19,7 @@ const menus = [
                     {title: "Agendar cita", link: "/mis-citas/agendar"}
                 ]*/
             },
-            {id: "Mis Pacientes", icon: <PeopleIcon/>, link: "/mis-pacientes"},
+            {id: "Pacientes", icon: <PeopleIcon/>, link: "/pacientes"},
             {id: "Inventario", icon: <LayersIcon/>, link: "/inventario"},
         ],
     },

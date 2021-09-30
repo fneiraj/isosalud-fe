@@ -1,11 +1,10 @@
-import {render} from "react-dom";
-import routes from "../src/routes/routes";
-import '@fontsource/roboto';
+import { render } from 'react-dom'
+import routes from '../src/routes/routes'
+import '@fontsource/roboto'
 
-//Configurar backend mock
-import {configureFakeBackend} from "./helpers";
+// Configurar backend mock
+import { configureFakeBackend } from 'helpers'
 
-configureFakeBackend();
+configureFakeBackend()
 
-
-render(routes, document.getElementById("root"));
+render(routes, document.getElementById('root'))

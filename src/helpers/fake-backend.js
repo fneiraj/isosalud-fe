@@ -1,5 +1,5 @@
-import {Role} from '../models/Role';
-import {DataMock} from '../mock/data';
+import {Role} from 'models/Role';
+import {DataMock} from 'mock/data';
 
 export function configureFakeBackend() {
     let users = DataMock.users;

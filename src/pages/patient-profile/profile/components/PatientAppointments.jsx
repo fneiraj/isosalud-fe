@@ -1,208 +1,195 @@
-import {
-    Avatar,
-    Button,
-    Card,
-    CardContent,
-    Grid,
-    Link as MuiLink,
-    Tab,
-    Tabs,
-    TextField,
-    Typography
-} from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import React, {useState} from "react";
-import styles from "../styles";
-import {Link} from "react-router-dom";
+import {Button, Card, CardContent, Divider, Grid, Hidden, Typography} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import React from "react";
 import EventIcon from '@material-ui/icons/Event';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
+import DescriptionIcon from '@material-ui/icons/Description';
+import PlayCircleFilledWhiteOutlinedIcon from '@material-ui/icons/PlayCircleFilledWhiteOutlined';
+import DateFnsAdapter from "@date-io/date-fns";
+import {
+    Timeline,
+    TimelineConnector,
+    TimelineContent,
+    TimelineItem,
+    TimelineOppositeContent,
+    TimelineSeparator
+} from "@material-ui/lab";
+import classNames from "classnames";
+import Scrollable from "../../../../components/scrollable";
 
-const useStyles = makeStyles((theme) => ({
-    ukTimeline: {
-        maxHeight: "300px"
+const dateFns = new DateFnsAdapter();
+
+const useStyles = makeStyles(() => ({
+    leftSide: {
+        // TODO: adjust this value accordingly
+        flex: 0
     },
-    ukTimelineItem: {
-        maxHeight: "300px"
+    bold: {
+        fontWeight: 400
     },
-    ukCard: {
-        maxHeight: "300px"
+    date: {
+        fontSize: "17px"
     },
-    uk_timeline__uk_timeline_item: {
+    fontWeight200: {
+        fontWeight: 250
+    },
+    button: {
+        width: "100%",
         display: "flex",
-            position: "relative"
+        justifyContent: "center"
     },
-    uk_timeline__uk_timeline_item__before: {
-        background: "#dadee4",
-            content: "\"\"",
-            height: "100%",
-            left: "19px",
-            position: "absolute",
-            top: "20px",
-            width: "2px",
-            zIndex: "-1"
+    addAppointmentButtonBox: {
+        float: "right"
     },
-    uk_timeline__uk_timeline_item__uk_timeline_icon__uk_badge: {
-        marginTop: "20px",
-            width: "40px",
-            height: "40px"
-    },
-    uk_timeline__uk_timeline_item__uk_timeline_content: {
-        MsFlex: "1 1 auto",
-            flex: "1 1 auto",
-            padding: "0 0 0 1rem"
+    scrollable: {
+        maxHeight: '270px',
+        width: "100%",
+        overflow: 'auto'
     }
 }));
-
 
 const PatientAppointments = ({handleAddNote}) => {
     const classes = useStyles();
 
-    const [tabSelected, setTabSelected] = useState(0);
-
-    const handleTabChange = (event, newValue) => setTabSelected(newValue);
-
-    const AntTabs = withStyles({
-        root: {
-            borderBottom: '1px solid #e8e8e8',
-        },
-        indicator: {
-            backgroundColor: '#1890ff',
-        },
-    })(Tabs);
-
-    const AntTab = withStyles((theme) => ({
-        root: {
-            textTransform: 'none',
-            minWidth: 72,
-            fontWeight: theme.typography.fontWeightRegular,
-            marginRight: theme.spacing(4),
-            fontFamily: [
-                '-apple-system',
-                'BlinkMacSystemFont',
-                '"Segoe UI"',
-                'Roboto',
-                '"Helvetica Neue"',
-                'Arial',
-                'sans-serif',
-                '"Apple Color Emoji"',
-                '"Segoe UI Emoji"',
-                '"Segoe UI Symbol"',
-            ].join(','),
-            '&:hover': {
-                color: '#40a9ff',
-                opacity: 1,
-            },
-            '&$selected': {
-                color: '#1890ff',
-                fontWeight: theme.typography.fontWeightMedium,
-            },
-            '&:focus': {
-                color: '#40a9ff',
-            },
-        },
-        selected: {},
-    }))((props) => <Tab disableRipple {...props} />);
-
-    const selector = () => (
-        <>
-            <AntTabs value={tabSelected} onChange={handleTabChange}>
-                <AntTab label="Próximas citas"/>
-                <AntTab label="Pasadas citas"/>
-                <Button
-                    color="primary"
-                    className={classes.right}
-                    endIcon={<EventIcon/>}
-                >
-                    Agregar cita
-                </Button>
-            </AntTabs>
-        </>
+    const Title = () => (
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+                Citas
+                <div className={classes.addAppointmentButtonBox}>
+                    <Button
+                        color="primary"
+                        endIcon={<EventIcon/>}
+                    >
+                        Agregar cita
+                    </Button>
+                </div>
+            </Typography>
     )
 
-    const timeLine = () => (
-        <div className="uk-container uk-padding">
-            <div className={"uk-timeline"}>
-                <div className="uk-timeline-item">
-                    <div className="uk-timeline-icon">
-                        <span className="uk-badge"><span uk-icon="check"></span></span>
-                    </div>
-                    <div className="uk-timeline-content">
-                        <div className="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
-                            <div className="uk-card-header">
-                                <div className="uk-grid-small uk-flex-middle" uk-grid>
-                                    <h3 className="uk-card-title">
-                                        <time dateTime="2020-07-08">July 8</time>
-                                    </h3>
-                                    <span className="uk-label uk-label-success uk-margin-auto-left">Feature</span>
-                                </div>
-                            </div>
-                            <div className="uk-card-body">
-                                <p className="uk-text-success">Fully responsive timeline you can add to your UIkit 3
-                                    project
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="uk-timeline-item">
-                    <div className="uk-timeline-icon">
-                        <span className="uk-badge"><span uk-icon="check"></span></span>
-                    </div>
-                    <div className="uk-timeline-content">
-                        <div className="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
-                            <div className="uk-card-header">
-                                <div className="uk-grid-small uk-flex-middle" uk-grid>
-                                    <h3 className="uk-card-title">
-                                        <time dateTime="2020-07-07">July 7</time>
-                                    </h3>
-                                    <span className="uk-label uk-label-warning uk-margin-auto-left">Test</span>
-                                </div>
-                            </div>
-                            <div className="uk-card-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt.
-                                </p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt.
-                                </p>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="uk-timeline-item">
-                    <div className="uk-timeline-icon">
-                        <span className="uk-badge"><span uk-icon="check"></span></span>
-                    </div>
-                    <div className="uk-timeline-content">
-                        <div className="uk-card uk-card-default uk-margin-medium-bottom uk-overflow-auto">
-                            <div className="uk-card-header">
-                                <div className="uk-grid-small uk-flex-middle" uk-grid>
-                                    <h3 className="uk-card-title">
-                                        <time dateTime="2020-07-06">July 6</time>
-                                    </h3>
-                                    <span className="uk-label uk-label-danger uk-margin-auto-left">Fix</span>
-                                </div>
-                            </div>
-                            <div className="uk-card-body">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                    incididunt.
-                                </p>
-                            </div>
-                        </div>
-                        <a href="#"><span className="uk-margin-small-right" uk-icon="triangle-down"></span>Load more</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
+    const appointments = [
+        {
+            id: 1,
+            title: "Cita 1",
+            date: dateFns.parse("10-09-2021 11:44", "dd-MM-yyyy hh:mm"),
+            dr: "Fernando Neira",
+            status: "complete"
+        },
+        {
+            id: 2,
+            title: "Cita 2",
+            date: dateFns.parse("15-09-2021 11:44", "dd-MM-yyyy hh:mm"),
+            dr: "Fernando Neira",
+            status: "complete"
+        },
+        {
+            id: 3,
+            title: "Cita 3",
+            date: dateFns.parse("14-09-2021 11:44", "dd-MM-yyyy hh:mm"),
+            dr: "Fernando Neira",
+            status: "miss"
+        },
+        {
+            id: 4,
+            title: "Cita 1",
+            date: dateFns.parse("30-09-2021 11:44", "dd-MM-yyyy hh:mm"),
+            dr: "Fernando Neira",
+            status: "scheduled"
+        },
+    ]
+
+    const renderTimelineItem = ({id, title, date, dr, status}, isLast) => {
+        let statusIcon;
+
+        switch (status) {
+            case "miss":
+                statusIcon = <HighlightOffIcon fontSize={"large"} style={{fill: "red"}}/>
+                break;
+            case "complete":
+                statusIcon = <CheckCircleOutlineIcon fontSize={"large"} style={{fill: "green"}}/>
+                break;
+            default:
+                statusIcon = <PlayCircleFilledWhiteOutlinedIcon fontSize={"large"}/>
+        }
+
+        return (
+            <TimelineItem>
+                <TimelineOppositeContent className={classes.leftSide}/>
+                <TimelineSeparator>
+                    {statusIcon}
+                    {!isLast && <TimelineConnector/>}
+                </TimelineSeparator>
+                <TimelineContent>
+                    <Card variant={"outlined"}>
+                        <CardContent>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} md={3}>
+                                    <Typography align={"center"}>
+                                        <span
+                                            className={classNames(classes.bold, classes.date)}>{dateFns.format(date, "dd 'de' MMMM 'de' y")}</span><br/>
+                                        <span
+                                            className={classes.fontWeight200}>{dateFns.format(date, "hh:mm a").toUpperCase()}</span>
+                                    </Typography>
+                                </Grid>
+                                <Hidden mdDown>
+                                    <Divider orientation="vertical" flexItem
+                                             style={{marginRight: "10px", marginLeft: "10px"}}/>
+                                </Hidden>
+                                <Grid item xs={12} md={2}>
+                                    <Typography align={"center"}>
+                                        <span className={classes.fontWeight200}>Tipo</span><br/>
+                                        <span className={classes.bold}>Consulta</span>
+                                    </Typography>
+                                </Grid>
+                                <Hidden mdDown>
+                                    <Divider orientation="vertical" flexItem
+                                             style={{marginRight: "10px", marginLeft: "10px"}}/>
+                                </Hidden>
+                                <Grid item xs={12} md={3}>
+                                    <Typography align={"center"}>
+                                        <span className={classes.fontWeight200}>Doctor</span><br/>
+                                        <span className={classes.bold}>{dr}</span>
+                                    </Typography>
+                                </Grid>
+                                <Hidden mdDown>
+                                    <Divider orientation="vertical" flexItem
+                                             style={{marginRight: "10px", marginLeft: "10px"}}/>
+                                </Hidden>
+                                <Grid item xs={12} md={3} className={classes.button}>
+                                    <Button
+                                        variant="text"
+                                        color="primary"
+                                        startIcon={<DescriptionIcon/>}
+                                    >
+                                        Notas
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                </TimelineContent>
+            </TimelineItem>
+        )
+    }
+
+    const AppointmentsTimeline = () => {
+        appointments.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        return (
+            <Timeline>
+                {appointments.map((item, i) => (
+                    renderTimelineItem(item, appointments.length === i + 1)
+                ))}
+            </Timeline>
+        )
+    }
 
     return (
         <Card variant={"outlined"}>
             <CardContent>
-                {selector()}
-                {timeLine()}
+                <Title />
+                <Scrollable>
+                    <AppointmentsTimeline />
+                </Scrollable>
             </CardContent>
         </Card>
     )

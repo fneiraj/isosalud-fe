@@ -7,6 +7,7 @@ import {Grid, Modal, TextField, Typography} from "@material-ui/core";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Close} from "@material-ui/icons";
+import useToggle from "hooks/useToggle";
 
 const styles = theme => ({
     root: {
@@ -68,11 +69,7 @@ const userEmpty = {
 const FormNewPatient = ({classes}) => {
 
     const [userData, setUserData] = useState(userEmpty)
-    const [newPatientFormVisible, setNewPatientFormVisible] = useState(false);
-
-    const toggleNewPatientFormVisibility = () => {
-        setNewPatientFormVisible(!newPatientFormVisible);
-    }
+    const [isNewPatientFormVisible, toggleNewPatientFormVisible] = useToggle();
 
     const formik = useFormik({
         enableReinitialize: true,
@@ -298,8 +295,8 @@ const FormNewPatient = ({classes}) => {
         <Modal
             aria-labelledby="spring-modal-title"
             aria-describedby="spring-modal-description"
-            open={newPatientFormVisible}
-            onClose={toggleNewPatientFormVisibility}
+            open={isNewPatientFormVisible}
+            onClose={toggleNewPatientFormVisible}
             className={classes.modal}
         >
             <Paper className={classes.content}>
@@ -309,7 +306,7 @@ const FormNewPatient = ({classes}) => {
                     </Typography>
                     <IconButton
                         className={classes.closeButton}
-                        onClick={toggleNewPatientFormVisibility}
+                        onClick={toggleNewPatientFormVisible}
                     >
                         <Close color="action"/>
                     </IconButton>

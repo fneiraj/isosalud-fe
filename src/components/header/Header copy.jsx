@@ -7,9 +7,9 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MoreIcon from "@material-ui/icons/MoreVert"
 import {Menu, Toolbar, Tooltip} from "@material-ui/core"
 import {withStyles} from "@material-ui/core/styles"
-import {authenticationService} from "../../services"
-import {history} from "../../helpers"
-import styles from "./HeaderStyles"
+import {authenticationService} from "services"
+import {history} from "helpers"
+import styles from "./styles"
 
 const Header = ({handleChangeNavDrawer, classes, navDrawerOpen}) => {
 

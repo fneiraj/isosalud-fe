@@ -1,4 +1,4 @@
-import {Avatar, Button, Card, CardContent, Grid, Typography, TextField} from "@material-ui/core";
+import {Avatar, Button, Card, CardContent, Grid, TextField, Typography} from "@material-ui/core";
 import React from "react";
 import styles from "../styles";
 import {makeStyles} from "@material-ui/core/styles";
@@ -40,7 +40,7 @@ const PatientInfo = ({isEditing, onContactClick}) => {
         upcoming: 4
     }
 
-    const basicInfo = () => (
+    const BasicInfo = () => (
         <Grid container alignItems="center" justify="center" direction="column">
             <Grid item xs={12}>
                 <Avatar
@@ -67,7 +67,7 @@ const PatientInfo = ({isEditing, onContactClick}) => {
         </Grid>
     )
 
-    const appointmentsInfo = () => (
+    const AppointmentsInfo = () => (
         <Grid container alignItems="center" justify="center" direction="column">
             <Grid item xs={12} style={{marginTop: 15}}>
                 <Typography className={classes.bold}>
@@ -99,7 +99,7 @@ const PatientInfo = ({isEditing, onContactClick}) => {
         </Grid>
     )
 
-    const contactPatient = () => (
+    const ContactPatient = () => (
         <Grid container>
             <Grid item style={{marginTop: 15}}>
                 <Button
@@ -120,7 +120,7 @@ const PatientInfo = ({isEditing, onContactClick}) => {
         inputProps: {style: styles.labelEditText},
     }
 
-    const personalInfo = () => (
+    const PersonalInfo = () => (
         <Grid container>
             <Grid item xs={5}>
                 <TextField label="Telefono" value={userInfo.phone} {...textFieldProps} />
@@ -163,20 +163,20 @@ const PatientInfo = ({isEditing, onContactClick}) => {
                     <Grid item md={5} xs={12}>
                         <Grid container alignItems="center" justify="center" direction="column">
                             <Grid item>
-                                {basicInfo()}
+                                <BasicInfo />
                             </Grid>
                             <Grid item>
-                                {appointmentsInfo()}
+                                <AppointmentsInfo />
                             </Grid>
                             <Grid item>
-                                {contactPatient()}
+                                <ContactPatient />
                             </Grid>
                         </Grid>
                     </Grid>
                     <Grid item sm={7} xs={12}>
                         <Grid container alignItems="center" justify="center" direction="column">
                             <Grid item>
-                                {personalInfo()}
+                                <PersonalInfo />
                             </Grid>
                         </Grid>
                     </Grid>

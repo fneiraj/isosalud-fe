@@ -11,8 +11,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 import {Link, withRouter} from 'react-router-dom'
-import styles from './HeaderStyles';
-import {getPageProps} from '../../config/menus';
+import styles from './styles';
+import {getPageProps} from 'config/menus';
 import {Helmet} from 'react-helmet-async';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
 

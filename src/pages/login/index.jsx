@@ -1,12 +1,12 @@
 import {withStyles} from "@material-ui/core/styles";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
-import {authenticationService} from "../../services";
+import {authenticationService} from "services";
 import {Helmet} from "react-helmet-async";
 import styles from './styles';
 import {useEffect} from "react";
-import LoginForm from "./components/form";
-import FormWrapper from "./components/form-wrapper";
+import LoginForm from "pages/login/components/LoginForm";
+import FormWrapper from "pages/login/components/FormWrapper";
 
 const LoginPage = ({classes, location, history}) => {
 
@@ -34,7 +34,7 @@ const LoginPage = ({classes, location, history}) => {
                 .then(
                     user => {
                         const {from} = location.state || {from: {pathname: "/"}};
-                        history.push(from);
+                        history.push("/");
                     },
                     error => {
                         setSubmitting(false);

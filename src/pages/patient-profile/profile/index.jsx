@@ -5,6 +5,7 @@ import PatientInfo from "./components/PatientInfo";
 import PatientNotes from "./components/PatientNotes";
 import PatientAppointments from "./components/PatientAppointments";
 import {withStyles} from "@material-ui/core/styles";
+import Payments from "./components/Payments";
 
 const PatienteProfilePage = (props) => {
     const {classes} = props;
@@ -19,9 +20,18 @@ const PatienteProfilePage = (props) => {
                     />
                 </Grid>
                 <Grid key={"patient_notes"} item xs={12} sm={5}>
-                    <PatientNotes
+                    <Grid container spacing={3}>
+                        <Grid item xs={12}>
+                            <PatientNotes
 
-                    />
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Payments
+
+                            />
+                        </Grid>
+                    </Grid>
                 </Grid>
                 <Grid key={"patient_appointments"} item xs={12}>
                     <PatientAppointments

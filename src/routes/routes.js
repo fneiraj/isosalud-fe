@@ -21,10 +21,10 @@ import {
     UsersPage
 } from "../pages";
 import {PrivateRoute} from "./PrivateRoute";
-import {Role} from "../models/Role";
+import {Role} from "models/Role";
 import BasicTables from "../pages/Table/BasicTables";
 import DataTables from "../pages/Table/DataTables";
-import ScrollToTop from "../components/drawer/ScrollToTop";
+import ScrollToTop from "components/scroll-to-top";
 import EvolutionsPage from "../pages/patient-profile/evolutions";
 import MyProfilePage from "../pages/my-profile";
 
@@ -89,8 +89,9 @@ export default (
                     component={ScheduleMeetPage}
                 />
                 <PrivateRoute
-                    path="/mis-pacientes"
+                    path="/pacientes"
                     component={MyPatientsPage}
+                    exact
                 />
                 <PrivateRoute
                     path="/inventario"

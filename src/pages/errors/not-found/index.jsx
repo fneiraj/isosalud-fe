@@ -1,10 +1,8 @@
 import {Grid, Typography, withStyles} from "@material-ui/core";
 import {Helmet} from "react-helmet-async";
-import classNames from 'classnames';
 import styles from './styles';
-import Animation from "../../../components/animation/animation";
+import Animation from "components/animation";
 import {Link} from "react-router-dom";
-
 
 const NotFound = () => {
 
