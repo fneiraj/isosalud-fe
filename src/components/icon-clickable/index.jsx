@@ -1,8 +1,21 @@
-const IconClickable = ({Icon, onClick}) => (
-    <Icon
-        onClick={onClick}
-        style={{cursor: "pointer"}}
-    />
-)
+import { makeStyles } from '@material-ui/core/styles'
 
-export default IconClickable;
+const useStyles = makeStyles((theme) => ({
+  cursorPointer: {
+    cursor: 'pointer'
+  }
+}))
+
+const IconClickable = ({ Icon, onClick, ...restProps }) => {
+  const classes = useStyles()
+
+  return (
+    <Icon
+      onClick={onClick}
+      {...restProps}
+      className={classes.cursorPointer}
+    />
+  )
+}
+
+export default IconClickable

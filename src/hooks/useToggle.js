@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react'
 
 const useToggle = (initialState = false) => {
-    const [isEnable, setIsEnable] = useState(initialState);
+  const [isEnable, setIsEnable] = useState(initialState)
 
-    const toggle = useCallback(() => setIsEnable(prevState => !prevState), []);
+  const toggle = useCallback(() => setIsEnable(prevState => !prevState), [])
 
-    return [isEnable, toggle]
+  return [isEnable, toggle]
 }
 
-export default useToggle;
+export default useToggle

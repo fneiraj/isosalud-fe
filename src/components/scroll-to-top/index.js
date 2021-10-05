@@ -1,18 +1,18 @@
-import {useEffect} from 'react';
-import {history} from 'helpers';
+import { useEffect } from 'react'
+import { history } from 'helpers'
 
 const ScrollToTop = () => {
-    useEffect(() => {
-        const unlisten = history.listen(() => {
-            window.scrollTo(0, 0);
-        });
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0)
+    })
 
-        return () => {
-            unlisten();
-        }
-    }, []);
+    return () => {
+      unlisten()
+    }
+  }, [])
 
-    return null;
+  return null
 }
 
-export default ScrollToTop;
+export default ScrollToTop

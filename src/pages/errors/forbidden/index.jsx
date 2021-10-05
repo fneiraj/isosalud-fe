@@ -1,12 +1,11 @@
-import React from "react";
+import React from 'react'
 
 const Forbidden = () => {
-
-    return (
-        <>
-            {"403 - Forbidden"}
-        </>
-    );
+  return (
+    <>
+      403 - Forbidden
+    </>
+  )
 }
 
-export default Forbidden;
+export default Forbidden

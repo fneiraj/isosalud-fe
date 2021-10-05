@@ -1,7 +1,7 @@
 const styles = () => ({
-    root: {
-        background: "#95c2de"
-    }
+  root: {
+    background: '#95c2de'
+  }
 })
 
-export default styles;
+export default styles

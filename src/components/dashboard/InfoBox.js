@@ -58,7 +58,7 @@ class InfoBox extends React.Component {
 }
 
 InfoBox.propTypes = {
-    Icon: PropTypes.any, // eslint-disable-line
+  Icon: PropTypes.any, // eslint-disable-line
   color: PropTypes.string,
   title: PropTypes.string,
   value: PropTypes.string

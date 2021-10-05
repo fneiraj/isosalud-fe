@@ -1,21 +1,21 @@
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
-    scrollable: {
-        maxHeight: '270px',
-        width: "100%",
-        overflow: 'auto'
-    }
-}));
+  scrollable: {
+    maxHeight: '270px',
+    width: '100%',
+    overflow: 'auto'
+  }
+}))
 
-const Scrollable = ({children, ...rest}) => {
-    const classes = useStyles();
+const Scrollable = ({ children, maxHeight = '270px', ...rest }) => {
+  const classes = useStyles()
 
-    return (
-        <div className={classes.scrollable} {...rest}>
-            {children}
-        </div>
-    )
+  return (
+    <div className={classes.scrollable} style={{ maxHeight: maxHeight }} {...rest}>
+      {children}
+    </div>
+  )
 }
 
-export default Scrollable;
+export default Scrollable

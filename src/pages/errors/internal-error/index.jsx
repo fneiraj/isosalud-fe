@@ -1,12 +1,11 @@
-import React from "react";
+import React from 'react'
 
 const InternalError = () => {
-
-    return (
-        <>
-            {"500 - Internal Error"}
-        </>
-    );
+  return (
+    <>
+      500 - Internal Error
+    </>
+  )
 }
 
-export default InternalError;
+export default InternalError

@@ -1,12 +1,11 @@
 const Index = () => {
+  return (
 
-    return (
+    <>
+      <span>Calendario admin</span>
+    </>
 
-        <>
-            <span>Calendario admin</span>
-        </>
-
-    )
+  )
 }
 
-export default Index;
+export default Index

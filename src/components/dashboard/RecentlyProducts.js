@@ -62,7 +62,7 @@ const RecentlyProducts = ({ classes, data }) => {
       <List
         subheader={
           <ListSubheader classes={{ root: classes.subheader }}>Proximas 5 citas</ListSubheader>
-                }
+        }
       >
         {data.map((item, idx) => (
           <ListItem key={idx}>

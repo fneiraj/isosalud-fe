@@ -1,33 +1,32 @@
-import PropTypes from 'prop-types';
-import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
-import globalStyles from '../../styles';
+import PropTypes from 'prop-types'
+import Paper from '@material-ui/core/Paper'
+import Divider from '@material-ui/core/Divider'
+import globalStyles from '../../styles'
 
-const PageBase = ({children, navigation}) => {
+const PageBase = ({ children, navigation }) => {
+  return (
+    <div>
+      <span style={globalStyles.navigation}>
+        {navigation}
+      </span>
 
-    return (
-        <div>
-            <span style={globalStyles.navigation}>
-                {navigation}
-            </span>
+      <Paper style={globalStyles.paper}>
+        <h3 style={globalStyles.title}>{}</h3>
 
-            <Paper style={globalStyles.paper}>
-                <h3 style={globalStyles.title}>{}</h3>
+        <Divider />
 
-                <Divider/>
+        {children}
 
-                {children}
-
-                <div style={globalStyles.clear}/>
-            </Paper>
-        </div>
-    );
-};
+        <div style={globalStyles.clear} />
+      </Paper>
+    </div>
+  )
+}
 
 PageBase.propTypes = {
-    title: PropTypes.string,
-    navigation: PropTypes.string,
-    children: PropTypes.element
-};
+  title: PropTypes.string,
+  navigation: PropTypes.string,
+  children: PropTypes.element
+}
 
-export default PageBase;
+export default PageBase

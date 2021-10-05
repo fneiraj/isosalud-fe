@@ -1,6 +1,3 @@
-
-const styles = {
-
-}
+const styles = {}
 
 export default styles

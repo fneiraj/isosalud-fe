@@ -1,21 +1,21 @@
 const styles = {
-    columns: {
-        id: {
-            width: "10%"
-        },
-        name: {
-            width: "40%"
-        },
-        price: {
-            width: "20%"
-        },
-        category: {
-            width: "20%"
-        },
-        edit: {
-            width: "10%"
-        }
+  columns: {
+    id: {
+      width: '10%'
+    },
+    name: {
+      width: '40%'
+    },
+    price: {
+      width: '20%'
+    },
+    category: {
+      width: '20%'
+    },
+    edit: {
+      width: '10%'
     }
-};
+  }
+}
 
-export default styles;
+export default styles
