@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
@@ -20,6 +20,7 @@ import { DataMock } from 'mock/data'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import FormNewPatient from './components/FormNewPatient'
+import { userService } from 'services/user/UserService'
 
 const rows = [
   { id: 'username', numeric: false, disablePadding: true, label: 'Nombre de usuario' },
@@ -142,6 +143,15 @@ const UsersPage = ({ classes }) => {
 
   const [userData, setUserData] = useState(userEmpty)
   const [newPatientFormVisible, setNewPatientFormVisible] = useState(false)
+
+  const [users, setUsers] = useState([])
+
+  useEffect(() => {
+    userService.getAll()
+      .then(response => setUsers(response.data))
+      .catch(error => console.log(error))
+    console.log(users)
+  }, [])
 
   const toggleNewPatientFormVisibility = () => {
     setNewPatientFormVisible(!newPatientFormVisible)

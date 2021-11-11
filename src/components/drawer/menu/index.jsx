@@ -42,7 +42,7 @@ const Menu = ({ classes, onDrawerToggle, location, listItems }) => {
   }
 
   return listItems.map(({ id, children, roles }, i) => {
-    const isForbidden = roles && roles.indexOf(authenticationService.currentUserValue?.role) === -1
+    const isForbidden = roles && roles.indexOf(authenticationService.currentUserTokenValue?.role) === -1
 
     if (isForbidden) return null
 

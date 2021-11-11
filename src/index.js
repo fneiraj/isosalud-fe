@@ -3,8 +3,8 @@ import routes from '../src/routes/routes'
 import '@fontsource/roboto'
 
 // Configurar backend mock
-import { configureFakeBackend } from 'helpers'
+// import { configureFakeBackend } from 'helpers'
 
-configureFakeBackend()
+// configureFakeBackend()
 
 render(routes, document.getElementById('root'))

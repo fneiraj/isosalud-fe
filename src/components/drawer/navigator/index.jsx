@@ -9,15 +9,14 @@ import Menu from 'components/drawer/menu'
 import menus from 'config/menus'
 import { withRouter } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar'
-import { authenticationService } from 'services'
 import SessionMenu from 'components/drawer/session-menu'
 import Typography from '@material-ui/core/Typography'
 import styles from './styles'
+import useLocalStorage from 'hooks/useLocalStorage'
 
 const Navigator = (props) => {
   const { classes, onDrawerToggle, location, staticContext, ...other } = props
-
-  const currentUser = authenticationService.currentUserValue
+  const [currentUser] = useLocalStorage('current_user')
 
   return (
     <Drawer onClose={onDrawerToggle} variant='permanent' {...other} classes={{ paper: classes.drawer }}>
@@ -29,14 +28,14 @@ const Navigator = (props) => {
         </ListItem>
         <ListItem className={clsx(classes.item, classes.itemCategory)}>
           <ListItemIcon>
-            <Avatar src={currentUser?.avatar} alt='Imagen de perfil' />
+            <Avatar src={currentUser?.profileImgUri} alt='Imagen de perfil' />
           </ListItemIcon>
           <ListItemText
             classes={{
               primary: classes.itemPrimary
             }}
           >
-            {`${currentUser?.firstName} ${currentUser?.lastName}`}
+            {`${currentUser?.personInfo?.firstName} ${currentUser?.personInfo?.lastName}`}
           </ListItemText>
         </ListItem>
         <Menu

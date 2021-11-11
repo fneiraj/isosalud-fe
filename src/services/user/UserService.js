@@ -1,20 +1,14 @@
-import { authHeader, handleResponse } from 'helpers'
-
-const config = {
-  apiUrl: 'http://localhost:8080'
-}
+import { HttpClient } from 'services/http-client'
 
 export const userService = {
   getAll,
-  getById
+  getById: getByUsername
 }
 
 function getAll () {
-  const requestOptions = { method: 'GET', headers: authHeader() }
-  return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse)
+  return HttpClient.get('/user')
 }
 
-function getById (id) {
-  const requestOptions = { method: 'GET', headers: authHeader() }
-  return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse)
+function getByUsername (username) {
+  return HttpClient.get(`/user/search?username=${username}`)
 }

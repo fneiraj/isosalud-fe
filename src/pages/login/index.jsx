@@ -29,16 +29,18 @@ const LoginPage = ({ classes, location, history }) => {
     onSubmit ({ username, password, rememberMe }, { setStatus, setSubmitting }) {
       setStatus()
       authenticationService.login(username, password)
-        .then(
-          user => {
-            // const { from } = location.state || { from: { pathname: '/' } }
-            history.push('/')
-          },
-          error => {
-            setSubmitting(false)
-            setStatus(error)
-          }
-        )
+        .then(async (user) => {
+          // const { from } = location.state || { from: { pathname: '/' } }
+          console.log('successfull login')
+          history.push('/')
+        })
+        .catch((error) => {
+          setSubmitting(false)
+
+          console.log(error)
+
+          setStatus(error?.response?.data?.code === 'AUTH001' ? 'Usuario o contraseña incorrectos.' : 'Error al autenticar.')
+        })
     }
   })
 
