@@ -34,7 +34,6 @@ function login (username, password) {
   return HttpClient.post('/auth/login', qs.stringify(requestOptions.body), requestOptions.headers)
     .then(handleResponse)
     .then(async response => {
-      console.log(response)
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       window.localStorage.setItem('authentication_tokens', JSON.stringify(response))
       currentUserTokenSubject.next(response)
@@ -58,7 +57,6 @@ function getMeInfo () {
 
 function logout () {
   // remove user from local storage to log user out
-  console.log('on logout()')
   window.localStorage.removeItem('authentication_tokens')
   window.localStorage.removeItem('current_user')
   currentUserSubject.next(null)

@@ -1,41 +1,50 @@
 import { Box, Card, CardContent, CardHeader, Grid, Link as MuiLink, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import Scrollable from 'components/scrollable'
+import DateFnsAdapter from '@date-io/date-fns'
 
-const HeaderCard = ({ time }) => (
-  <div style={{ backgroundColor: '#30a8e7', color: '#ffffff', paddingTop: '15px', paddingBottom: '15px' }}>
-    <Typography style={{ marginLeft: '15px', marginRight: '15px' }}>
-      {time}
-      <MuiLink
-        style={{ color: '#ffffff', float: 'right' }}
-        component={Link}
-        to='/appointments/'
-      >
-        Detalles
-      </MuiLink>
-    </Typography>
-  </div>
-)
+const dateFnsInstance = new DateFnsAdapter()
 
-const BodyCard = ({ id, time, patient, description }) => (
-  <Card variant='outlined' style={{ width: '100%' }}>
-    <CardHeader component={() => <HeaderCard time={time} />} />
-    <CardContent>
-      <Typography style={{ fontWeight: '300px' }}>
-        {patient}
+const HeaderCard = ({ id, startDate, endDate }) => {
+  const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
+  const endDateParsed = dateFnsInstance.parse(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
+  const startHour = dateFnsInstance.format(startDateParsed, 'HH:mm')
+  const endHour = dateFnsInstance.format(endDateParsed, 'HH:mm')
+
+  return (
+    <div style={{ backgroundColor: '#30a8e7', color: '#ffffff', paddingTop: '15px', paddingBottom: '15px' }}>
+      <Typography style={{ marginLeft: '15px', marginRight: '15px' }}>
+        {`${startHour} a ${endHour}`}
+        <MuiLink
+          style={{ color: '#ffffff', float: 'right' }}
+          component={Link}
+          to={`/mis-citas/detalle/${id}`}
+        >
+          Detalles
+        </MuiLink>
       </Typography>
-      <Typography color='textSecondary' />
-      <Typography variant='body2' component='p'>
-        {description}
+    </div>
+  )
+}
+
+const BodyCard = ({ id, startDate, endDate, patient, comment }) => (
+  <Card variant='outlined' style={{ width: '100%', minHeight: '200px', marginBottom: 15 }}>
+    <CardHeader component={() => <HeaderCard id={id} startDate={startDate} endDate={endDate} />} />
+    <CardContent>
+      <Typography color='textSecondary'>
+        {`${patient?.firstName} ${patient?.lastName}`}
+      </Typography>
+      <Typography variant='body2' component='p' style={{ marginTop: 15 }}>
+        {`${comment}`}
       </Typography>
     </CardContent>
   </Card>
 )
 
-const AppointmentCard = ({ visitsArr, mobil } = {}) => {
+const AppointmentCard = ({ appointments, mobil } = {}) => {
   const RenderDesktop = () => (
     <Grid container spacing={2} direction='row'>
-      {visitsArr.map(visit => (
+      {appointments.map(visit => (
         <Grid item key={visit.id} style={{ width: '233px' }}>
           <BodyCard {...visit} />
         </Grid>
@@ -47,7 +56,7 @@ const AppointmentCard = ({ visitsArr, mobil } = {}) => {
     <Scrollable>
       <Box style={{ maxHeight: '100vh', overflow: 'auto' }}>
         <Grid container direction='row' wrap='nowrap'>
-          {visitsArr.map(visit => (
+          {appointments.map(visit => (
             <Grid item key={visit.id} style={{ width: '233px' }}>
               <BodyCard {...visit} />
             </Grid>

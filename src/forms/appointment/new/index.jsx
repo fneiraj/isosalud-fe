@@ -1,24 +1,21 @@
 import { useEffect, useState } from 'react'
 import { Button, IconButton, Modal, Paper, Step, StepLabel, Stepper, withStyles } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
-import {
-  AppointmentInfoForm,
-  PatientInfoForm,
-  ConfirmationForm
-} from 'pages/my-dates/calendar/components/calendar/appointment-form/form'
-import styles from 'pages/my-dates/calendar/components/calendar/appointment-form/styles'
+import styles from './styles'
 import { boxService } from 'services/box/BoxService'
 import { patientService } from 'services/patient/PatientService'
 import { appointmentTypesService } from 'services/appointment-types/AppointmentTypesService'
+import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from 'forms/appointment/new/form'
 
-const AppointmentForm = (props) => {
+const NewAppointmentForm = (props) => {
   const {
     classes,
     visible,
     visibleChange,
     cancelAppointment,
-    appointmentData,
-    commitChanges
+    appointmentData = {},
+    commitChanges,
+    currentPatientData
   } = props
 
   const [appointmentChanges, setAppointmentChanges] = useState({})
@@ -224,6 +221,7 @@ const AppointmentForm = (props) => {
         changeAppointment={changeAppointment}
         patients={patients}
         setNextBtnEnabled={setNextBtnEnabled}
+        currentPatientData={currentPatientData}
         {...props}
                  />
     },
@@ -331,4 +329,4 @@ const AppointmentForm = (props) => {
   )
 }
 
-export default withStyles(styles)(AppointmentForm)
+export default withStyles(styles)(NewAppointmentForm)

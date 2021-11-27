@@ -1,103 +1,92 @@
-import { Box, Grid, makeStyles, Tab, Tabs, TextField, Typography } from '@material-ui/core'
-import { Autocomplete } from '@material-ui/lab'
-import { DataMock } from 'mock/data'
 import { useState } from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import { Grid, Modal, TextField, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
+import { Close } from '@material-ui/icons'
 
-const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
   root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
+    width: '100%'
+    //    marginTop: theme.spacing(3)
+  },
+  table: {
+    minWidth: 1020
+  },
+  tableWrapper: {
+    overflowX: 'auto'
+  },
+  modal: {
+    marginTop: 70,
+    marginBottom: 70,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    overflow: 'scroll',
+    width: '50%'
+  },
+  container: {
+    width: theme.spacing(68),
+    padding: 0,
+    paddingBottom: theme.spacing(2)
+  },
+  content: {
+    padding: theme.spacing(1, 3, 2),
+    width: '100%',
     height: '100%'
   },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`
+  header: {
+    overflow: 'hidden',
+    paddingTop: theme.spacing(0.5)
+  },
+  closeButton: {
+    float: 'right'
+  },
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 2)
   }
-}))
+})
+/*
+const user = {
+    firstName: 'Fernando', lastName: 'Neira', rut: '11.111.111-1',
+    email: 'fe.neiraj@gmail.com', convenio: 'Isapre', sexo: 'masculino',
+    dateOfBirth: '15/10/1999', phone: '+452222222', cellPhone: '+56999999999',
+    address: 'Calle S/N #1234', commune: 'Temuco', city: 'Temuco'
+}; */
 
-const styles = {}
+const userEmpty = {
+  firstName: '',
+  lastName: '',
+  rut: '',
+  email: '',
+  convenio: '',
+  sexo: '',
+  dateOfBirth: '',
+  phone: '',
+  cellPhone: '',
+  address: '',
+  commune: '',
+  city: ''
+}
 
-const PatientInfoForm = ({
-  cancelChanges,
-  isNewAppointment,
-  textEditorProps,
-  pickerEditorPropsStartDate,
-  pickerEditorProps,
-  displayAppointmentData,
-  changeAppointment,
-  visibleChange,
-  commitAppointment,
-  applyChanges
-}) => {
-  /*
-      const user = {
-          firstName: 'Fernando', lastName: 'Neira', rut: '11.111.111-1',
-          email: 'fe.neiraj@gmail.com', convenio: 'Isapre', sexo: 'masculino',
-          dateOfBirth: '15/10/1999', phone: '+452222222', cellPhone: '+56999999999',
-          address: 'Calle S/N #1234', commune: 'Temuco', city: 'Temuco'
-      };
-  */
-  const userEmpty = {
-    firstName: '',
-    lastName: '',
-    rut: '',
-    email: '',
-    convenio: '',
-    sexo: '',
-    dateOfBirth: '',
-    phone: '',
-    cellPhone: '',
-    address: '',
-    commune: '',
-    city: ''
-  }
-
+const FormNewUser = ({ classes, visible, toggleVisible }) => {
   const [userData, setUserData] = useState(userEmpty)
-
-  const classes = useStyles()
-
-  function a11yProps (index) {
-    return {
-      id: `vertical-tab-${index}`,
-      'aria-controls': `vertical-tabpanel-${index}`
-    }
-  }
-
-  const [tabValue, setTabValue] = useState(0)
-
-  function TabPanel (props) {
-    const { children, value, index, ...other } = props
-
-    return (
-      <div
-        role='tabpanel'
-        hidden={value !== index}
-        id={`vertical-tabpanel-${index}`}
-        aria-labelledby={`vertical-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box p={3}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    )
-  }
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: userData,
     validationSchema:
       Yup.object().shape({
+        rut: Yup.string().required('Debes ingresar el rut'),
         firstName: Yup.string().required('Debes ingresar el nombre de usuario.'),
         lastName: Yup.string().required('Debes ingresar la contraseña.'),
-        rut: Yup.string().required('Debes ingresar el rut'),
         email: Yup.string().optional(),
-        convenio: Yup.string().required('Debes ingresar el convenio'),
-        sexo: Yup.string().required(),
+        convenio: Yup.string().required('Debes ingresar el convenio'), // add this to db
+        sexo: Yup.string().required(), // add this to db
         dateOfBirth: Yup.string().required(),
         phone: Yup.string().required(),
         cellPhone: Yup.string().required(),
@@ -308,45 +297,50 @@ const PatientInfoForm = ({
   }
 
   return (
-    <div className={classes.root}>
-      <Tabs
-        orientation='vertical'
-        variant='scrollable'
-        value={tabValue}
-        onChange={(event, newValue) => {
-          setTabValue(newValue)
-        }}
-        className={classes.tabs}
-      >
-        <Tab label='Paciente registrado' {...a11yProps(0)} />
-        <Tab label='Paciente nuevo' {...a11yProps(1)} />
-      </Tabs>
-      <TabPanel value={tabValue} index={0} style={{ width: '80%' }}>
-        <div>
-          <Autocomplete
-            id='patient'
-            label='Paciente'
-            value={displayAppointmentData.patient || undefined}
-            className={classes.textField}
-            autoHighlight
-            fullWidth
-            options={DataMock.patients}
-            getOptionSelected={(option, value) => option.id === value.id}
-            getOptionLabel={(option) => (option.name)}
-            onChange={(event, newValue) => changeAppointment({
-              field: ['patient'], changes: newValue
-            })}
-            renderInput={(params) => <TextField label='Nombre paciente' variant='outlined' {...params} />}
-            onError={() => null}
-          />
+    <Modal
+      aria-labelledby='spring-modal-title'
+      aria-describedby='spring-modal-description'
+      open={visible}
+      onClose={toggleVisible}
+      className={classes.modal}
+    >
+      <Paper className={classes.content}>
+        <div className={classes.header}>
+          <Typography>
+            Nuevo paciente
+          </Typography>
+          <IconButton
+            className={classes.closeButton}
+            onClick={toggleVisible}
+          >
+            <Close color='action' />
+          </IconButton>
         </div>
-      </TabPanel>
-      <TabPanel value={tabValue} index={1}>
-        <Typography>Ingresa datos del paciente</Typography>
-        {formNewPatient()}
-      </TabPanel>
-    </div>
+        <div>
+          <div style={{ width: '100%', height: '100%' }}>
+            {formNewPatient()}
+          </div>
+
+          <div style={{ bottom: 30, right: 15, position: 'absolute' }} className={classes.buttonGroup}>
+            <Button onClick={() => {
+            }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={() => {
+              }}
+              className={classes.button}
+            >
+              Crear
+            </Button>
+          </div>
+        </div>
+      </Paper>
+    </Modal>
   )
 }
 
-export default PatientInfoForm
+export default withStyles(styles)(FormNewUser)

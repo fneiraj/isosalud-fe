@@ -1,4 +1,4 @@
-import AppointmentFormContainerBasic from 'pages/my-dates/calendar/components/calendar/appointment-form'
+import NewAppointmentForm from 'forms/appointment/new'
 
 const AppointmentFormWrapper = ({
   data,
@@ -24,7 +24,7 @@ const AppointmentFormWrapper = ({
   }
 
   return (
-    <AppointmentFormContainerBasic
+    <NewAppointmentForm
       visible={editingFormVisible}
       appointmentData={currentAppointment}
       commitChanges={commitChanges}

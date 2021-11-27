@@ -12,16 +12,12 @@ const readUrl = (url = '') =>
 
 // Axios response interceptor
 axios.interceptors.response.use(function (config) {
-  // Do something before request is sent
-  console.log(config)
-
   return config
 }, function (error) {
   const { response } = error
 
   if (response.status !== 200 && response.data?.code === 'AUTH002') {
     if ([401, 403].indexOf(response.status) !== -1) {
-      console.log('on logout')
       // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
       authenticationService.logout()
       window.location.reload()
@@ -31,7 +27,6 @@ axios.interceptors.response.use(function (config) {
     return Promise.reject(error)
   }
 
-  console.log('on interceptor')
   return Promise.reject(error)
 })
 

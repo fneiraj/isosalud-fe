@@ -7,6 +7,9 @@ import Button from '@material-ui/core/Button'
 import { Tooltip } from '@material-ui/core'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import Animation from 'components/animation'
+import DateFnsAdapter from '@date-io/date-fns'
+
+const dateFnsInstance = new DateFnsAdapter()
 
 const TableData = ({
   enableSelect,
@@ -83,6 +86,8 @@ const TableData = ({
     return stableSort(currentData, getSorting(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
       .map(n => {
+        const lastLoginFormated = dateFnsInstance.format(dateFnsInstance.parse(n.lastLogin, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSSSS\'Z\''), 'dd-MM-yyy HH:mm')
+
         const isActualSelected = isSelected(n.id)
         return (
           <TableRow
@@ -108,14 +113,15 @@ const TableData = ({
                       <TableCell align="right">{n.carbs}</TableCell>
                       <TableCell align="right">{n.protein}</TableCell> */}
             {/* <TableCell>{n.id}</TableCell> */}
+            <TableCell>{n.username}</TableCell>
             <TableCell>{n.personInfo?.firstName} {n.personInfo?.lastName}</TableCell>
             <TableCell>{n.personInfo?.rut}</TableCell>
-            <TableCell>{n.meetingsInfo?.nextMeeting || 'Sin asignar'}</TableCell>
             <TableCell>{n.personInfo?.cellphone}</TableCell>
+            <TableCell>{lastLoginFormated || 'Sin registro'}</TableCell>
             <TableCell>
-              <Link className='button' to={`/pacientes/${n.id}`}>
+              <Link className='button' to={`/usuarios/${n.id}`}>
                 <Button>
-                  <Tooltip title='Ver ficha clínica'>
+                  <Tooltip title='Ver perfil'>
                     <VisibilityIcon />
                   </Tooltip>
                 </Button>

@@ -2,6 +2,9 @@ import { Avatar, Button, Card, CardContent, Grid, TextField, Typography } from '
 import React from 'react'
 import styles from '../styles'
 import { makeStyles } from '@material-ui/core/styles'
+import DateFnsAdapter from '@date-io/date-fns'
+
+const dateFnsInstance = new DateFnsAdapter()
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -14,25 +17,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const PatientInfo = ({ isEditing, onContactClick }) => {
+const PatientInfo = ({ isEditing, onContactClick, userData }) => {
   const classes = useStyles()
 
-  const userInfo = {
-    name: 'Fernando Neira',
-    avatarUrl: '',
-    email: 'fe.neiraj@gmail.com',
-    rut: '20.352.825-6',
-    convenio: 'Isapre',
-    gender: 'Masculino',
-    birthday: '15/10/1999',
-    phone: '452212717',
-    cellphone: '976188098',
-    address: 'Calle S/N #1234',
-    commune: 'Temuco',
-    city: 'Temuco',
-    status: 'Activo',
-    registerDate: '01/01/2021'
-  }
+  const { personInfo: info = {} } = userData
+  const { addressInfo: address = {} } = info
 
   const appointmentInfo = {
     past: 5,
@@ -44,23 +33,23 @@ const PatientInfo = ({ isEditing, onContactClick }) => {
       <Grid item xs={12}>
         <Avatar
           className={classes.avatar}
-          alt={userInfo.name}
-          src={userInfo.avatarUrl}
+          alt={`${info?.firstName} ${info?.lastName}`}
+          src={userData?.profileImageUri}
         />
       </Grid>
       <Grid item xs={12} style={{ marginTop: 5 }}>
         <Typography className={classes.bold}>
-          {userInfo.name}
+          {`${info?.firstName} ${info?.lastName}`}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography>
-          {userInfo.rut}
+          {info?.rut}
         </Typography>
       </Grid>
       <Grid item xs={12}>
         <Typography>
-          {userInfo.email}
+          {info?.email}
         </Typography>
       </Grid>
     </Grid>
@@ -119,38 +108,54 @@ const PatientInfo = ({ isEditing, onContactClick }) => {
     inputProps: { style: styles.labelEditText }
   }
 
+  const dateRegisterFormatted = () => {
+    if (!info?.dateCreated) return null
+
+    const dateParsed = dateFnsInstance.parse(info?.dateCreated, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSSSS\'Z\'')
+
+    return dateFnsInstance.format(dateParsed, 'dd-MM-yyyy')
+  }
+
+  const dateBirthdayFormatted = () => {
+    if (!info?.dateOfBirth) return null
+
+    const dateParsed = dateFnsInstance.parse(info?.dateOfBirth, 'yyyy-MM-dd')
+
+    return dateFnsInstance.format(dateParsed, 'dd-MM-yyyy')
+  }
+
   const PersonalInfo = () => (
     <Grid container>
       <Grid item xs={5}>
-        <TextField label='Telefono' value={userInfo.phone} {...textFieldProps} />
+        <TextField label='Telefono' value={info?.phone} {...textFieldProps} />
       </Grid>
       <Grid item xs={2} />
       <Grid item xs={5}>
-        <TextField label='Direccion' value={userInfo.address} {...textFieldProps} />
+        <TextField label='Direccion' value={address?.street} {...textFieldProps} />
       </Grid>
 
       <Grid item xs={5}>
-        <TextField label='Comuna' value={userInfo.commune} {...textFieldProps} />
+        <TextField label='Region' value={address?.region?.name} {...textFieldProps} />
       </Grid>
       <Grid item xs={2} />
       <Grid item xs={5}>
-        <TextField label='Ciudad' value={userInfo.city} {...textFieldProps} />
+        <TextField label='Comuna' value={address?.commune} {...textFieldProps} />
       </Grid>
 
       <Grid item xs={5}>
-        <TextField label='Nacimiento' value={userInfo.birthday} {...textFieldProps} />
+        <TextField label='Nacimiento' value={dateBirthdayFormatted()} {...textFieldProps} />
       </Grid>
       <Grid item xs={2} />
       <Grid item xs={5}>
-        <TextField label='Sexo' value={userInfo.gender} {...textFieldProps} />
+        <TextField label='Sexo' value={info?.gender} {...textFieldProps} />
       </Grid>
 
       <Grid item xs={5}>
-        <TextField label='Registro' value={userInfo.registerDate} {...textFieldProps} />
+        <TextField label='Registro' value={dateRegisterFormatted()} {...textFieldProps} />
       </Grid>
       <Grid item xs={2} />
       <Grid item xs={5}>
-        <TextField label='Estado' value={userInfo.status} {...textFieldProps} />
+        <TextField label='Estado' value={userData?.status} {...textFieldProps} />
       </Grid>
     </Grid>
   )

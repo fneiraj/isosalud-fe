@@ -7,7 +7,6 @@ import { Grid, Modal, TextField, Typography } from '@material-ui/core'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { Close } from '@material-ui/icons'
-import useToggle from 'hooks/useToggle'
 
 const styles = theme => ({
   root: {
@@ -74,21 +73,20 @@ const userEmpty = {
   city: ''
 }
 
-const FormNewPatient = ({ classes }) => {
+const FormNewPatient = ({ classes, visible, toggleVisible }) => {
   const [userData, setUserData] = useState(userEmpty)
-  const [isNewPatientFormVisible, toggleNewPatientFormVisible] = useToggle()
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: userData,
     validationSchema:
       Yup.object().shape({
+        rut: Yup.string().required('Debes ingresar el rut'),
         firstName: Yup.string().required('Debes ingresar el nombre de usuario.'),
         lastName: Yup.string().required('Debes ingresar la contraseña.'),
-        rut: Yup.string().required('Debes ingresar el rut'),
         email: Yup.string().optional(),
-        convenio: Yup.string().required('Debes ingresar el convenio'),
-        sexo: Yup.string().required(),
+        convenio: Yup.string().required('Debes ingresar el convenio'), // add this to db
+        sexo: Yup.string().required(), // add this to db
         dateOfBirth: Yup.string().required(),
         phone: Yup.string().required(),
         cellPhone: Yup.string().required(),
@@ -302,8 +300,8 @@ const FormNewPatient = ({ classes }) => {
     <Modal
       aria-labelledby='spring-modal-title'
       aria-describedby='spring-modal-description'
-      open={isNewPatientFormVisible}
-      onClose={toggleNewPatientFormVisible}
+      open={visible}
+      onClose={toggleVisible}
       className={classes.modal}
     >
       <Paper className={classes.content}>
@@ -313,7 +311,7 @@ const FormNewPatient = ({ classes }) => {
           </Typography>
           <IconButton
             className={classes.closeButton}
-            onClick={toggleNewPatientFormVisible}
+            onClick={toggleVisible}
           >
             <Close color='action' />
           </IconButton>

@@ -15,7 +15,6 @@ const useNotes = () => {
     notesServices.add(note)
       .then(response => {
         setNotes(prevNotes => prevNotes.concat(note))
-        console.log(response)
       })
       .catch(error => console.error(error))
   }

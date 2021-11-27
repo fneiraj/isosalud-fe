@@ -12,6 +12,10 @@ const styles = (theme) => ({
   floatRight: {
     float: 'right'
   },
+  alignRight: {
+    alignContent: 'right',
+    maxWidth: '100%'
+  },
   textCenter: {
     textAlign: 'center'
   },

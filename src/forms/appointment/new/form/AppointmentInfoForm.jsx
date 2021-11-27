@@ -1,4 +1,4 @@
-import { TextField } from '@material-ui/core'
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 import { CalendarToday, Create, Notes } from '@material-ui/icons'
 import RoomIcon from '@material-ui/icons/Room'
 import { KeyboardDatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers'
@@ -15,7 +15,9 @@ const AppointmentInfoForm = ({
   changeAppointment,
   visibleChange,
   commitAppointment,
-  applyChanges
+  applyChanges,
+  boxes,
+  appointmentTypes
 }) => {
   return (
     <>
@@ -55,15 +57,35 @@ const AppointmentInfoForm = ({
         </div>
         <div className={classes.wrapper}>
           <RoomIcon className={classes.icon} color='action' />
-          <TextField
-            {...textEditorProps('room')}
-            label='Box'
-          />
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel style={{ paddingLeft: 15 }}>Box de atención</InputLabel>
+            <Select
+              fullWidth
+              {...textEditorProps('box')}
+              value={displayAppointmentData?.box?.id || displayAppointmentData?.box}
+            >
+              {boxes.map(box => <MenuItem key={box.id} value={box.id}>{box.name}</MenuItem>)}
+            </Select>
+          </FormControl>
+        </div>
+        <div className={classes.wrapper}>
+          <RoomIcon className={classes.icon} color='action' />
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel style={{ paddingLeft: 15 }}>Tipo de atención</InputLabel>
+            <Select
+              fullWidth
+              {...textEditorProps('type')}
+              value={displayAppointmentData?.type?.id || displayAppointmentData?.type}
+            >
+              {appointmentTypes.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
+            </Select>
+          </FormControl>
         </div>
         <div className={classes.wrapper}>
           <Notes className={classes.icon} color='action' />
           <TextField
-            {...textEditorProps('comentarios')}
+            {...textEditorProps('comment')}
+            label='Comentarios'
             multiline
             rows='6'
           />

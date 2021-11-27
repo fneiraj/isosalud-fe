@@ -1,11 +1,12 @@
 import { Button, Card, CardContent, Divider, Grid, Hidden, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import EventIcon from '@material-ui/icons/Event'
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import DescriptionIcon from '@material-ui/icons/Description'
 import PlayCircleFilledWhiteOutlinedIcon from '@material-ui/icons/PlayCircleFilledWhiteOutlined'
+import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded'
 import DateFnsAdapter from '@date-io/date-fns'
 import {
   Timeline,
@@ -17,6 +18,9 @@ import {
 } from '@material-ui/lab'
 import classNames from 'classnames'
 import Scrollable from '../../../../components/scrollable'
+import { appointmentService } from 'services/appointment/AppointmentService'
+import NewAppointmentForm from 'forms/appointment/new'
+import useToggle from 'hooks/useToggle'
 
 const dateFns = new DateFnsAdapter()
 
@@ -49,8 +53,18 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const PatientAppointments = ({ handleAddNote }) => {
+const PatientAppointments = ({ handleAddNote, userData }) => {
   const classes = useStyles()
+  const [appointments, setAppointments] = useState([])
+  const [isFormVisible, toggleFormVisible] = useToggle(false)
+
+  useEffect(() => {
+    if (userData?.personInfo?.rut) {
+      appointmentService.getAllByPatientRut(userData?.personInfo?.rut)
+        .then(response => setAppointments(response.data))
+        .catch(error => console.error(error))
+    }
+  }, [userData])
 
   const Title = () => (
     <Typography className={classes.title} color='textSecondary' gutterBottom>
@@ -59,6 +73,7 @@ const PatientAppointments = ({ handleAddNote }) => {
         <Button
           color='primary'
           endIcon={<EventIcon />}
+          onClick={toggleFormVisible}
         >
           Agregar cita
         </Button>
@@ -66,49 +81,23 @@ const PatientAppointments = ({ handleAddNote }) => {
     </Typography>
   )
 
-  const appointments = [
-    {
-      id: 1,
-      title: 'Cita 1',
-      date: dateFns.parse('10-09-2021 11:44', 'dd-MM-yyyy hh:mm'),
-      dr: 'Fernando Neira',
-      status: 'complete'
-    },
-    {
-      id: 2,
-      title: 'Cita 2',
-      date: dateFns.parse('15-09-2021 11:44', 'dd-MM-yyyy hh:mm'),
-      dr: 'Fernando Neira',
-      status: 'complete'
-    },
-    {
-      id: 3,
-      title: 'Cita 3',
-      date: dateFns.parse('14-09-2021 11:44', 'dd-MM-yyyy hh:mm'),
-      dr: 'Fernando Neira',
-      status: 'miss'
-    },
-    {
-      id: 4,
-      title: 'Cita 1',
-      date: dateFns.parse('30-09-2021 11:44', 'dd-MM-yyyy hh:mm'),
-      dr: 'Fernando Neira',
-      status: 'scheduled'
-    }
-  ]
+  const renderTimelineItem = ({ id, title, startDate: date, medic, status, type }, isLast) => {
+    const dateFormated = dateFns.parse(date, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
 
-  const renderTimelineItem = ({ id, title, date, dr, status }, isLast) => {
     let statusIcon
 
-    switch (status) {
-      case 'miss':
-        statusIcon = <HighlightOffIcon fontSize='large' style={{ fill: 'red' }} />
+    switch (status.name) {
+      case 'Cancelada':
+        statusIcon = <HighlightOffIcon fontSize='large' style={{ fill: '#ef5350' }} />
         break
-      case 'complete':
-        statusIcon = <CheckCircleOutlineIcon fontSize='large' style={{ fill: 'green' }} />
+      case 'Realizada':
+        statusIcon = <CheckCircleOutlineIcon fontSize='large' style={{ fill: '#66bb6a' }} />
+        break
+      case 'Reagendada':
+        statusIcon = <ScheduleRoundedIcon fontSize='large' style={{ fill: '#ffa726' }} />
         break
       default:
-        statusIcon = <PlayCircleFilledWhiteOutlinedIcon fontSize='large' />
+        statusIcon = <PlayCircleFilledWhiteOutlinedIcon fontSize='large' style={{ fill: '#64B5F6' }} />
     }
 
     return (
@@ -126,11 +115,11 @@ const PatientAppointments = ({ handleAddNote }) => {
                   <Typography align='center'>
                     <span
                       className={classNames(classes.bold, classes.date)}
-                    >{dateFns.format(date, 'dd \'de\' MMMM \'de\' y')}
+                    >{dateFns.format(dateFormated, 'dd \'de\' MMMM \'de\' y')}
                     </span><br />
                     <span
                       className={classes.fontWeight200}
-                    >{dateFns.format(date, 'hh:mm a').toUpperCase()}
+                    >{dateFns.format(dateFormated, 'hh:mm a').toUpperCase()}
                     </span>
                   </Typography>
                 </Grid>
@@ -143,7 +132,7 @@ const PatientAppointments = ({ handleAddNote }) => {
                 <Grid item xs={12} md={2}>
                   <Typography align='center'>
                     <span className={classes.fontWeight200}>Tipo</span><br />
-                    <span className={classes.bold}>Consulta</span>
+                    <span className={classes.bold}>{type.name}</span>
                   </Typography>
                 </Grid>
                 <Hidden mdDown>
@@ -155,7 +144,7 @@ const PatientAppointments = ({ handleAddNote }) => {
                 <Grid item xs={12} md={3}>
                   <Typography align='center'>
                     <span className={classes.fontWeight200}>Doctor</span><br />
-                    <span className={classes.bold}>{dr}</span>
+                    <span className={classes.bold}>{`${medic.firstName} ${medic.lastName}`}</span>
                   </Typography>
                 </Grid>
                 <Hidden mdDown>
@@ -170,7 +159,7 @@ const PatientAppointments = ({ handleAddNote }) => {
                     color='primary'
                     startIcon={<DescriptionIcon />}
                   >
-                    Notas
+                    Comentarios
                   </Button>
                 </Grid>
               </Grid>
@@ -182,11 +171,11 @@ const PatientAppointments = ({ handleAddNote }) => {
   }
 
   const AppointmentsTimeline = () => {
-    appointments.sort((a, b) => new Date(b.date) - new Date(a.date))
+    appointments?.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
 
     return (
       <Timeline>
-        {appointments.map((item, i) => (
+        {appointments?.map((item, i) => (
           renderTimelineItem(item, appointments.length === i + 1)
         ))}
       </Timeline>
@@ -194,14 +183,21 @@ const PatientAppointments = ({ handleAddNote }) => {
   }
 
   return (
-    <Card variant='outlined'>
-      <CardContent>
-        <Title />
-        <Scrollable>
-          <AppointmentsTimeline />
-        </Scrollable>
-      </CardContent>
-    </Card>
+    <>
+      <Card variant='outlined'>
+        <CardContent>
+          <Title />
+          <Scrollable>
+            <AppointmentsTimeline />
+          </Scrollable>
+        </CardContent>
+      </Card>
+      <NewAppointmentForm
+        visible={isFormVisible}
+        visibleChange={toggleFormVisible}
+        currentPatientData={userData}
+      />
+    </>
   )
 }
 

@@ -7,19 +7,19 @@ const DeleteAppoinmentDialog = ({ confirmationVisible, toggleConfirmationVisible
       onClose={toggleConfirmationVisible}
     >
       <DialogTitle>
-        Borrar cita
+        Cancelar cita
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          ¿Estas seguro de borrar esta cita?
+          ¿Estas seguro de cancelar esta cita?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={toggleConfirmationVisible} color='primary' variant='outlined'>
-          Cancelar
+        <Button onClick={toggleConfirmationVisible} color='primary' variant='contained'>
+          Volver
         </Button>
-        <Button onClick={commitDeletedAppointment} color='secondary' variant='outlined'>
-          Borrar
+        <Button onClick={commitDeletedAppointment} color='secondary' variant='contained'>
+          Cancelar
         </Button>
       </DialogActions>
     </Dialog>

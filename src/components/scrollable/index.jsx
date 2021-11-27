@@ -8,7 +8,7 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-const Scrollable = ({ children, maxHeight = '270px', ...rest }) => {
+const Scrollable = ({ children, maxHeight = '520px', ...rest }) => {
   const classes = useStyles()
 
   return (

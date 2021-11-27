@@ -1,32 +1,46 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TablePagination from 'components/data-page/table-pagination'
 import Paper from '@material-ui/core/Paper'
-import { DataMock } from 'mock/data'
 import FormNewPatient from './components/FormNewPatient'
 import styles from './styles'
 import HeaderData from 'components/data-page/header'
 import TableHeader from 'components/data-page/table-header'
-import TableData from 'components/data-page/table-data'
+import { patientService } from 'services/patient/PatientService'
+import TableData from './components/table-data'
+import useToggle from 'hooks/useToggle'
 
 const rows = [
   { id: 'name', numeric: false, disablePadding: false, label: 'Nombre' },
-  { id: 'treatments', numeric: false, disablePadding: false, label: 'Nº Tratamientos' },
+  { id: 'treatments', numeric: false, disablePadding: false, label: 'RUT' },
   { id: 'nextMeeting', numeric: false, disablePadding: false, label: 'Próxima cita' },
   { id: 'phone', numeric: false, disablePadding: false, label: 'Celular' },
   { id: 'actions', numeric: false, disablePadding: false, disableSort: true, label: 'Acciones' }
 ]
 
 const PatientsPage = ({ classes }) => {
-  // TODO: Refactorizar esto
-  // eslint-disable-next-line no-unused-vars
-  const [data, setData] = useState(DataMock.patients)
+  const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
-  const [newPatientFormVisible, setNewPatientFormVisible] = useState(false)
+  const [newPatientFormVisible, toggleNewPatientFormVisible] = useToggle()
+  const [orderBy, setOrderBy] = useState('id')
+  const [order, setOrder] = useState('asc')
+  const [page, setPage] = useState(1)
+  const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [currentData, setCurrentData] = useState([])
+  const [selected, setSelected] = useState([])
+
+  useEffect(() => {
+    patientService.getAll()
+      .then(res => {
+        setData(res.data.data)
+        setCurrentData(res.data.data)
+      })
+      .catch(error => console.error(error))
+  }, [])
 
   const toggleNewPatientFormVisibility = () => {
-    setNewPatientFormVisible(!newPatientFormVisible)
+    toggleNewPatientFormVisible()
   }
 
   const handleRequestSort = (event, property) => {
@@ -46,9 +60,10 @@ const PatientsPage = ({ classes }) => {
   const handleChangeRowsPerPage = (event) => setRowsPerPage(event.target.value)
 
   const findNameOrRut = (p, value) => {
+    const personInfo = p.personInfo
     const valueWithoutPoint = value.replaceAll('.', '')
-    const rutWithoutPoint = p.rut?.replaceAll('.', '')
-    return p.name.toLowerCase().includes(value.toLowerCase()) || rutWithoutPoint?.includes(valueWithoutPoint)
+    const rutWithoutPoint = personInfo.rut?.replaceAll('.', '')
+    return personInfo.firstName.toLowerCase().includes(value.toLowerCase()) || personInfo.lastName.toLowerCase().includes(value.toLowerCase()) || rutWithoutPoint?.includes(valueWithoutPoint)
   }
 
   const handleSearch = (event) => {
@@ -60,13 +75,6 @@ const PatientsPage = ({ classes }) => {
       setCurrentData(data)
     }
   }
-
-  const [orderBy, setOrderBy] = useState('id')
-  const [order, setOrder] = useState('asc')
-  const [page, setPage] = useState(1)
-  const [rowsPerPage, setRowsPerPage] = useState(10)
-  const [currentData, setCurrentData] = useState(data)
-  const [selected, setSelected] = useState([])
 
   return (
     <>
@@ -118,7 +126,7 @@ const PatientsPage = ({ classes }) => {
         />
       </Paper>
 
-      <FormNewPatient />
+      <FormNewPatient visible={newPatientFormVisible} toggleVisible={toggleNewPatientFormVisible} />
     </>
   )
 }

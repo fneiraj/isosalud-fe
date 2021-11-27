@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Paper, withStyles } from '@material-ui/core'
 import {
   AppointmentForm,
@@ -14,7 +14,6 @@ import {
 import { CurrentTimeIndicator, EditingState, ViewState } from '@devexpress/dx-react-scheduler'
 import DeleteAppoinmentDialog from 'pages/my-dates/calendar/components/calendar/delete-appointment-dialog'
 import { format } from 'date-fns'
-import { DataMock } from 'mock/data'
 import styles from './styles'
 import useLocalStorage from 'hooks/useLocalStorage'
 import DayScaleCell from 'pages/my-dates/calendar/components/calendar/week-day-scale-cell'
@@ -27,6 +26,7 @@ import WeekTimeTableCell from 'pages/my-dates/calendar/components/calendar/time-
 import MonthTimeTableCell from 'pages/my-dates/calendar/components/calendar/month-day-scale-cell'
 import DayTimeTableCell from 'pages/my-dates/calendar/components/calendar/day-table-cell'
 import useToggle from 'hooks/useToggle'
+import { appointmentService } from 'services/appointment/AppointmentService'
 
 const Calendar = () => {
   const currentDate = new Date()
@@ -34,7 +34,7 @@ const Calendar = () => {
   const endDayHour = 19
 
   const [calendarType, setCalendarType] = useLocalStorage('calendarType', 'Month')
-  const [data, setData] = useState(DataMock.appointments)
+  const [data, setData] = useState([])
   const [isDeleteDialogVisible, toggleDeleteDialogVisible] = useToggle()
   const [isAppointmentFormVisible, toggleAppointmentFormVisible] = useToggle()
   const [deletedAppointmentId, setDeletedAppointmentId] = useState(undefined)
@@ -43,17 +43,27 @@ const Calendar = () => {
   const [addedAppointment, setAddedAppointment] = useState({})
   const [isNewAppointment, setIsNewAppointment] = useState(false)
 
-  const commitChanges = ({ added, changed, deleted }) => {
+  useEffect(() => {
+    appointmentService.getAllOwn()
+      .then(response => {
+        setData(response.data.data)
+      })
+      .catch(error => console.error(error))
+  }, [])
+
+  const commitChanges = ({ added, changed, cancel }) => {
     if (added) {
       const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0
-      setData([...data, { id: startingAddedId, ...added }])
+      appointmentService.add(added)
+        .then(response => setData([...data, { id: startingAddedId, ...response.data }]))
+        .catch(error => console.error(error))
     }
     if (changed) {
       setData(data.map(appointment => (
         changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment)))
     }
-    if (deleted !== undefined) {
-      setDeletedAppointmentId(deleted)
+    if (cancel !== undefined) {
+      setDeletedAppointmentId(cancel)
       toggleDeleteDialogVisible()
     }
     return { data, addedAppointment: {} }
@@ -69,8 +79,17 @@ const Calendar = () => {
   }
 
   const commitDeletedAppointment = () => {
-    setData(data.filter(appointment => appointment.id !== deletedAppointmentId))
     setDeletedAppointmentId(null)
+
+    appointmentService.cancel(deletedAppointmentId)
+      .then(response => {
+        setData((prev) => {
+          const startingAddedId = prev.length > 0 ? prev[data.length - 1].id + 1 : 0
+          return [...prev.filter(appointment => appointment.id !== deletedAppointmentId), { id: startingAddedId, ...response.data }]
+        })
+      })
+      .catch(error => console.error(error))
+
     toggleDeleteDialogVisible()
   }
 
@@ -144,6 +163,7 @@ const Calendar = () => {
           showCloseButton
           showDeleteButton
           showOpenButton
+//          contentComponent={AppointmentTooltipContent}
         />
 
         <AppointmentForm
