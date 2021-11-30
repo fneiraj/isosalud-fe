@@ -1,259 +1,337 @@
-import { Grid, makeStyles, TextField } from '@material-ui/core'
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Button, IconButton, Modal, Paper, Step, StepLabel, Stepper, withStyles } from '@material-ui/core'
+import { Close } from '@material-ui/icons'
+import styles from './styles'
+import { boxService } from 'services/box/BoxService'
+import { patientService } from 'services/patient/PatientService'
+import { appointmentTypesService } from 'services/appointment-types/AppointmentTypesService'
+import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from './form'
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: 'flex',
-    height: '100%'
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`
+const FormNewUser = (props) => {
+  const {
+    classes,
+    visible,
+    visibleChange,
+    cancelAppointment,
+    appointmentData = {},
+    commitChanges,
+    currentPatientData
+  } = props
+
+  const [appointmentChanges, setAppointmentChanges] = useState({})
+  const [activeStep, setActiveStep] = useState(0)
+  const [boxes, setBoxes] = useState([])
+  const [patients, setPatients] = useState([])
+  const [appointmentTypes, setAppointmentTypes] = useState([])
+  const [isNextBtnEnabled, setNextBtnEnabled] = useState(false)
+
+  useEffect(() => {
+    boxService.getAll()
+      .then(response => setBoxes(response.data.data))
+      .catch(error => console.error(error))
+
+    patientService.getAll()
+      .then(response => setPatients(response.data.data))
+      .catch(error => console.error(error))
+
+    appointmentTypesService.getAll()
+      .then(response => setAppointmentTypes(response.data.data))
+      .catch(error => console.error(error))
+  }, [])
+
+  useEffect(() => {
+    if (activeStep === steps.length - 1) {
+      setNextBtnEnabled(true)
+    }
+  }, [activeStep])
+
+  useEffect(() => {
+    if (appointmentData.id !== undefined) {
+      setNextBtnEnabled(true)
+    }
+  }, [appointmentData, activeStep])
+
+  const changeAppointment = ({ field, changes }) => {
+    setAppointmentChanges((prev) => {
+      const next = {
+        ...prev,
+        [field]: changes
+      }
+      handleTextEditorOnChange(next, field, changes)
+      return next
+    })
   }
-}))
 
-const FormNewPatient = () => {
-  const classes = useStyles()
+  const changeAppointments = ({ f1, c1 }, { f2, c2 }) => {
+    const nextChanges = {
+      ...appointmentChanges,
+      [f1]: c1,
+      [f2]: c2
+    }
 
-  const styles = {}
-
-  const userEmpty = {
-    firstName: '',
-    lastName: '',
-    rut: '',
-    email: '',
-    convenio: '',
-    sexo: '',
-    dateOfBirth: '',
-    phone: '',
-    cellPhone: '',
-    address: '',
-    commune: '',
-    city: ''
+    setAppointmentChanges(nextChanges)
+    handleTextEditorOnChange(f1, c1)
+    handleTextEditorOnChange(f2, c2)
   }
 
-  const [userData, setUserData] = useState(userEmpty)
+  const commitAppointment = (type) => {
+    const appointment = {
+      ...appointmentData,
+      ...appointmentChanges
+    }
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: userData,
-    validationSchema:
-      Yup.object().shape({
-        firstName: Yup.string().required('Debes ingresar el nombre de usuario.'),
-        lastName: Yup.string().required('Debes ingresar la contraseña.'),
-        rut: Yup.string().required('Debes ingresar el rut'),
-        email: Yup.string().optional(),
-        convenio: Yup.string().required('Debes ingresar el convenio'),
-        sexo: Yup.string().required(),
-        dateOfBirth: Yup.string().required(),
-        phone: Yup.string().required(),
-        cellPhone: Yup.string().required(),
-        address: Yup.string().optional(),
-        commune: Yup.string().optional(),
-        city: Yup.string().optional()
-      }),
-    onSubmit (user, { setStatus, setSubmitting }) {
-      setStatus()
-      /*      userService.updatePatient(user)
-                .then(
-                    user => {
-                        console.log('actualizado')
-                    },
-                    error => {
-                        setStatus(error);
-                    }
-                );
-                */
-      setUserData({ ...userData, ...user })
-      setSubmitting(false)
+    if (type === 'cancel') {
+      commitChanges({ [type]: appointment.id })
+    } else if (type === 'changed') {
+      commitChanges({ [type]: { [appointment.id]: appointment } })
+    } else {
+      commitChanges({ [type]: appointment })
+    }
+
+    setAppointmentChanges({})
+  }
+
+  const displayAppointmentData = {
+    ...appointmentData,
+    ...appointmentChanges
+  }
+
+  const isNewAppointment = appointmentData.id === undefined
+  const applyChanges = isNewAppointment
+    ? () => commitAppointment('added')
+    : () => commitAppointment('changed')
+
+  const checkFieldAndValue = (prev, fieldWanted, actualField, value) => {
+    return (
+      String(actualField) === fieldWanted ? (value !== null && value !== undefined && value !== '') : (prev[fieldWanted] !== undefined && prev[fieldWanted] !== '')
+    )
+  }
+
+  const handleTextEditorOnChange = (prev, field, value) => {
+    if (activeStep === 0) {
+      const isTitleOk = checkFieldAndValue(prev, 'title', field, value)
+      const isBoxOk = checkFieldAndValue(prev, 'box', field, value)
+      const isCommentOk = checkFieldAndValue(prev, 'comment', field, value)
+      const isAppointmentTypeOk = checkFieldAndValue(prev, 'type', field, value)
+
+      if (!isTitleOk || !isBoxOk || !isCommentOk || !isAppointmentTypeOk) {
+        setNextBtnEnabled(false)
+        return
+      }
+    } else if (activeStep === 1) {
+      const isPatientSelectedOk = String(field) === 'patient' && (value !== undefined)
+
+      if (!isPatientSelectedOk) {
+        setNextBtnEnabled(false)
+        return
+      }
+    }
+
+    setNextBtnEnabled(true)
+  }
+
+  const textEditorProps = field => ({
+    variant: 'outlined',
+    onChange: ({ target: change }) => {
+      changeAppointment({
+        field: [field], changes: change.value
+      })
+    },
+    value: displayAppointmentData[field] || '',
+    label: field[0].toUpperCase() + field.slice(1),
+    className: classes.textField
+  })
+
+  const getMinDate = () => {
+    if (isNewAppointment) return { minDate: new Date() }
+
+    return {}
+  }
+
+  const pickerEditorProps = field => ({
+    className: classes.picker,
+    // keyboard: true,
+    ampm: false,
+    value: displayAppointmentData[field],
+    onChange: date => changeAppointment({
+      field: [field], changes: date || new Date(displayAppointmentData[field])
+    }),
+    ...getMinDate(),
+    inputVariant: 'outlined',
+    format: 'dd/MM/yyyy',
+    onError: () => null,
+    variant: 'dialog',
+    cancelLabel: 'Cancelar'
+  })
+
+  const pickerEditorPropsStartDate = field => ({
+    ...pickerEditorProps(field),
+    onChange: date => {
+      const newEndDate = isNewAppointment ? date : displayAppointmentData.endDate
+
+      if (!isNewAppointment) {
+        newEndDate.setFullYear(date.getFullYear())
+        newEndDate.setDate(date.getDate())
+        newEndDate.setMonth(date.getMonth())
+      }
+
+      //      changeAppointment({ field: [field], changes: date || new Date(displayAppointmentData[field]) })
+      //      changeAppointment({ field: ['endDate'], changes: newEndDate })
+
+      changeAppointments(
+        { f1: [field], c1: date || new Date(displayAppointmentData[field]) },
+        { f2: ['endDate'], c2: newEndDate }
+      )
     }
   })
 
+  const cancelChanges = () => {
+    setAppointmentChanges({})
+    visibleChange()
+    if (cancelAppointment !== undefined) {
+      cancelAppointment()
+    }
+  }
+
+  const handleBack = () => {
+    setActiveStep(activeStep - 1)
+  }
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1)
+  }
+
+  const steps = [
+    {
+      stepName: 'Cita',
+      component: <AppointmentInfoForm
+        textEditorProps={textEditorProps}
+        pickerEditorProps={pickerEditorProps}
+        pickerEditorPropsStartDate={pickerEditorPropsStartDate}
+        displayAppointmentData={displayAppointmentData}
+        boxes={boxes}
+        appointmentTypes={appointmentTypes}
+        setNextBtnEnabled={setNextBtnEnabled}
+        changeAppointment={changeAppointment}
+        {...props}
+                 />
+    },
+    {
+      stepName: 'Paciente',
+      component: <PatientInfoForm
+        textEditorProps={textEditorProps}
+        pickerEditorProps={pickerEditorProps}
+        pickerEditorPropsStartDate={pickerEditorPropsStartDate}
+        displayAppointmentData={displayAppointmentData}
+        changeAppointment={changeAppointment}
+        patients={patients}
+        setNextBtnEnabled={setNextBtnEnabled}
+        currentPatientData={currentPatientData}
+        {...props}
+                 />
+    },
+    {
+      stepName: 'Confirmación',
+      component: <ConfirmationForm
+        textEditorProps={textEditorProps}
+        pickerEditorProps={pickerEditorProps}
+        pickerEditorPropsStartDate={pickerEditorPropsStartDate}
+        displayAppointmentData={displayAppointmentData}
+        setNextBtnEnabled={setNextBtnEnabled}
+        {...props}
+                 />
+    }
+  ]
+
+  const CancelButton = () => <Button onClick={cancelChanges}>Cancelar</Button>
+  const BackButton = () => (
+    <Button
+      disabled={activeStep === 0} onClick={handleBack}
+      className={classes.button}
+    >
+      Atras
+    </Button>)
+
+  const BackOrCloseButton = () => activeStep === 0 ? <CancelButton /> : <BackButton />
+
+  const isAppointmentCurrentlyCancel = () => {
+    console.log(displayAppointmentData)
+    return true
+  }
+
   return (
-    <form className={classes.form} onSubmit={formik.handleSubmit} noValidate>
-      <Grid item xs={12}>
-        <Grid container justify='flex-start' spacing={4}>
-          <Grid key='firstName' item>
-            <TextField
-              name='firstName'
-              id='firstName'
-              label='Nombres'
-              value={formik.values.firstName}
-              onChange={formik.handleChange}
-              error={formik.errors.firstName && formik.touched.firstName}
-              helperText={formik.errors.firstName}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='lastName' item>
-            <TextField
-              name='lastName'
-              id='lastName'
-              label='Apellidos'
-              value={formik.values.lastName}
-              onChange={formik.handleChange}
-              error={formik.errors.lastName && formik.touched.lastName}
-              helperText={formik.errors.lastName}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='rut' item>
-            <TextField
-              name='rut'
-              id='rut'
-              label='RUT'
-              value={formik.values.rut}
-              onChange={formik.handleChange}
-              error={formik.errors.rut && formik.touched.rut}
-              helperText={formik.errors.rut}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container justify='flex-start' spacing={4}>
-          <Grid key='email' item>
-            <TextField
-              name='email'
-              id='email'
-              label='Email'
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              error={formik.errors.email && formik.touched.email}
-              helperText={formik.errors.email}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='convenio' item>
-            <TextField
-              name='convenio'
-              id='convenio'
-              label='Convenio'
-              value={formik.values.convenio}
-              onChange={formik.handleChange}
-              error={formik.errors.convenio && formik.touched.convenio}
-              helperText={formik.errors.convenio}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='sexo' item>
-            <TextField
-              name='sexo'
-              id='sexo'
-              label='Sexo'
-              value={formik.values.sexo}
-              onChange={formik.handleChange}
-              error={formik.errors.sexo && formik.touched.sexo}
-              helperText={formik.errors.sexo}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container justify='flex-start' spacing={4}>
-          <Grid key='dateOfBirth' item>
-            <TextField
-              name='dateOfBirth'
-              id='dateOfBirth'
-              label='Fecha de nacimiento'
-              value={formik.values.dateOfBirth}
-              onChange={formik.handleChange}
-              error={formik.errors.dateOfBirth && formik.touched.dateOfBirth}
-              helperText={formik.errors.dateOfBirth}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='phone' item>
-            <TextField
-              name='phone'
-              id='phone'
-              label='Telefono'
-              value={formik.values.phone}
-              onChange={formik.handleChange}
-              error={formik.errors.phone && formik.touched.phone}
-              helperText={formik.errors.phone}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='cellPhone' item>
-            <TextField
-              name='cellPhone'
-              id='cellPhone'
-              label='Celular'
-              value={formik.values.cellPhone}
-              onChange={formik.handleChange}
-              error={formik.errors.cellPhone && formik.touched.cellPhone}
-              helperText={formik.errors.cellPhone}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-        </Grid>
-        <Grid container justify='flex-start' spacing={4}>
-          <Grid key='address' item>
-            <TextField
-              name='address'
-              id='address'
-              label='Direccion'
-              value={formik.values.address}
-              onChange={formik.handleChange}
-              error={formik.errors.address && formik.touched.address}
-              helperText={formik.errors.address}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='commune' item>
-            <TextField
-              name='commune'
-              id='commune'
-              label='Comuna'
-              value={formik.values.commune}
-              onChange={formik.handleChange}
-              error={formik.errors.commune && formik.touched.commune}
-              helperText={formik.errors.commune}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-          <Grid key='city' item>
-            <TextField
-              name='city'
-              id='city'
-              label='Ciudad'
-              value={formik.values.city}
-              onChange={formik.handleChange}
-              error={formik.errors.city && formik.touched.city}
-              helperText={formik.errors.city}
-              fullWidth
-              margin='normal'
-              InputLabelProps={{ style: styles.labelEditText }}
-            />
-          </Grid>
-        </Grid>
-      </Grid>
-    </form>
+    <Modal
+      open={visible}
+      onClose={visibleChange}
+      className={classes.modal}
+    >
+      <Paper className={classes.content}>
+        <div className={classes.header}>
+          <IconButton
+            className={classes.closeButton}
+            onClick={cancelChanges}
+          >
+            <Close color='action' />
+          </IconButton>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label) => {
+              const stepProps = {}
+              const labelProps = {}
+              return (
+                <Step key={label.stepName} {...stepProps}>
+                  <StepLabel {...labelProps}>{label.stepName}</StepLabel>
+                </Step>
+              )
+            })}
+          </Stepper>
+        </div>
+        <div>
+          <div style={{ width: '100%', height: '100%' }}>
+            {steps[activeStep]?.component}
+          </div>
+
+          <div style={{ bottom: 30, left: 15, position: 'absolute' }} className={classes.buttonGroup}>
+            {!isNewAppointment && displayAppointmentData.status.name !== 'Cancelada' && isAppointmentCurrentlyCancel() && (
+              <Button
+                variant='contained'
+                color='secondary'
+                className={classes.button}
+                style={{ float: 'left', left: 1 }}
+                onClick={() => {
+                  visibleChange()
+                  commitAppointment('cancel')
+                }}
+              >
+                Cancelar cita
+              </Button>
+            )}
+          </div>
+
+          <div style={{ bottom: 30, right: 15, position: 'absolute' }} className={classes.buttonGroup}>
+            <BackOrCloseButton />
+            <Button
+              key={'nextBtn' + activeStep}
+              variant='contained'
+              color='primary'
+              disabled={!isNextBtnEnabled}
+              onClick={() => {
+                if (activeStep === steps.length - 1) {
+                  visibleChange()
+                  applyChanges()
+                } else {
+                  handleNext()
+                  setNextBtnEnabled(false)
+                }
+              }}
+              className={classes.button}
+            >
+              {activeStep === steps.length - 1 ? (isNewAppointment ? 'Confirmar y guardar' : 'Guardar') : 'Siguiente'}
+            </Button>
+          </div>
+        </div>
+      </Paper>
+    </Modal>
   )
 }
 
-export default FormNewPatient
+export default withStyles(styles)(FormNewUser)

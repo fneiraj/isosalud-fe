@@ -8,9 +8,11 @@ import styles from './styles'
 import { useEffect, useState } from 'react'
 import LoginForm from 'pages/login/components/LoginForm'
 import FormWrapper from 'pages/login/components/FormWrapper'
+import { useToasts } from 'react-toast-notifications'
 
 const LoginPage = ({ classes, location, history }) => {
   const [message, setMesage] = useState()
+  const { addToast } = useToasts()
 
   useEffect(() => {
     if (location.state && location.state.msg) {
@@ -38,13 +40,12 @@ const LoginPage = ({ classes, location, history }) => {
       authenticationService.login(username, password)
         .then(async (user) => {
           // const { from } = location.state || { from: { pathname: '/' } }
+          addToast('Inicio de sesión correcto', { appearance: 'success', autoDismiss: true })
           history.replace('/')
         })
         .catch((error) => {
           setSubmitting(false)
-
-          console.error(error)
-
+          addToast(error?.response?.data?.code === 'AUTH001' ? 'Usuario o contraseña incorrectos.' : 'Error al autenticar.', { appearance: 'error', autoDismiss: true })
           setStatus(error?.response?.data?.code === 'AUTH001' ? 'Usuario o contraseña incorrectos.' : 'Error al autenticar.')
         })
     }

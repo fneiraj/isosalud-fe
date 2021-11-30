@@ -6,8 +6,10 @@ import { history } from 'helpers'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import classNames from 'classnames'
+import { useToasts } from 'react-toast-notifications'
 
 const SessionMenu = ({ classes, onDrawerToggle, location }) => {
+  const { addToast } = useToasts()
   const CategoryHeader = ({ title }) => (
     <ListItem className={classes.categoryHeader}>
       <ListItemText
@@ -52,7 +54,8 @@ const SessionMenu = ({ classes, onDrawerToggle, location }) => {
   }
   const logout = () => {
     authenticationService.logout()
-    history.go(0)
+    addToast('Sesión finalizada con éxito', { appearance: 'success', autoDismiss: true })
+    history.replace('/')
   }
 
   const options = [{

@@ -27,6 +27,7 @@ import MonthTimeTableCell from 'pages/my-dates/calendar/components/calendar/mont
 import DayTimeTableCell from 'pages/my-dates/calendar/components/calendar/day-table-cell'
 import useToggle from 'hooks/useToggle'
 import { appointmentService } from 'services/appointment/AppointmentService'
+import { useToasts } from 'react-toast-notifications'
 
 const Calendar = () => {
   const currentDate = new Date()
@@ -42,6 +43,7 @@ const Calendar = () => {
   const [previousAppointment, setPreviousAppointment] = useState(undefined)
   const [addedAppointment, setAddedAppointment] = useState({})
   const [isNewAppointment, setIsNewAppointment] = useState(false)
+  const { addToast } = useToasts()
 
   useEffect(() => {
     appointmentService.getAllOwn()
@@ -55,8 +57,14 @@ const Calendar = () => {
     if (added) {
       const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0
       appointmentService.add(added)
-        .then(response => setData([...data, { id: startingAddedId, ...response.data }]))
-        .catch(error => console.error(error))
+        .then(response => {
+          setData([...data, { id: startingAddedId, ...response.data }])
+          addToast('Cita agendada correctamente', { appearance: 'success', autoDismiss: true })
+        })
+        .catch(error => {
+          console.error(error)
+          addToast('Error al agregar cita', { appearance: 'error', autoDismiss: true })
+        })
     }
     if (changed) {
       setData(data.map(appointment => (
@@ -87,8 +95,12 @@ const Calendar = () => {
           const startingAddedId = prev.length > 0 ? prev[data.length - 1].id + 1 : 0
           return [...prev.filter(appointment => appointment.id !== deletedAppointmentId), { id: startingAddedId, ...response.data }]
         })
+        addToast('Cita cancelada correctamente', { appearance: 'success', autoDismiss: true })
       })
-      .catch(error => console.error(error))
+      .catch(error => {
+        console.error(error)
+        addToast('Error al cancelar cita', { appearance: 'error', autoDismiss: true })
+      })
 
     toggleDeleteDialogVisible()
   }

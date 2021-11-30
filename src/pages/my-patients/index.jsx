@@ -3,13 +3,13 @@ import { withStyles } from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TablePagination from 'components/data-page/table-pagination'
 import Paper from '@material-ui/core/Paper'
-import FormNewPatient from './components/FormNewPatient'
 import styles from './styles'
 import HeaderData from 'components/data-page/header'
 import TableHeader from 'components/data-page/table-header'
 import { patientService } from 'services/patient/PatientService'
 import TableData from './components/table-data'
 import useToggle from 'hooks/useToggle'
+import FormNewPatient from 'forms/patient/new'
 
 const rows = [
   { id: 'name', numeric: false, disablePadding: false, label: 'Nombre' },
@@ -126,7 +126,10 @@ const PatientsPage = ({ classes }) => {
         />
       </Paper>
 
-      <FormNewPatient visible={newPatientFormVisible} toggleVisible={toggleNewPatientFormVisible} />
+      <FormNewPatient
+        visible={newPatientFormVisible}
+        toggleVisible={toggleNewPatientFormVisible}
+      />
     </>
   )
 }

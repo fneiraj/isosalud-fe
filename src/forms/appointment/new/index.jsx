@@ -159,7 +159,9 @@ const NewAppointmentForm = (props) => {
     ...getMinDate(),
     inputVariant: 'outlined',
     format: 'dd/MM/yyyy',
-    onError: () => null
+    onError: () => null,
+    variant: 'dialog',
+    cancelLabel: 'Cancelar'
   })
 
   const pickerEditorPropsStartDate = field => ({
@@ -186,7 +188,9 @@ const NewAppointmentForm = (props) => {
   const cancelChanges = () => {
     setAppointmentChanges({})
     visibleChange()
-    cancelAppointment()
+    if (cancelAppointment !== undefined) {
+      cancelAppointment()
+    }
   }
 
   const handleBack = () => {
@@ -208,6 +212,7 @@ const NewAppointmentForm = (props) => {
         boxes={boxes}
         appointmentTypes={appointmentTypes}
         setNextBtnEnabled={setNextBtnEnabled}
+        changeAppointment={changeAppointment}
         {...props}
                  />
     },

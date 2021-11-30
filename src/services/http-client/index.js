@@ -1,5 +1,5 @@
 import { authenticationService } from 'services/auth/AuthenticationService'
-import { authHeader } from 'helpers'
+import { authHeader, history } from 'helpers'
 
 const axios = require('axios')
 
@@ -20,7 +20,7 @@ axios.interceptors.response.use(function (config) {
     if ([401, 403].indexOf(response.status) !== -1) {
       // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
       authenticationService.logout()
-      window.location.reload()
+      history.replace('/')
     }
 
     const error = (response.data && response.data.message) || response.statusText

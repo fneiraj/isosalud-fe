@@ -1,17 +1,21 @@
 import {
   AdminCalendarPage,
   DashboardAdmin,
-  DashboardPage, FormPage,
-  HomePage, InventoryPage,
-  MyDatesPage, MyPatientsPage, PatientProfilePage, RadiographsPage,
-  ScheduleMeetPage, TreatmentPlansPage,
-  UsersPage
+  DashboardPage,
+  HomePage,
+  InventoryPage,
+  MyDatesPage,
+  MyPatientsPage,
+  PatientProfilePage,
+  RadiographsPage,
+  ScheduleMeetPage,
+  TreatmentPlansPage,
+  UsersPage,
+  SiteOptionsPage, UserProfilePage
 } from 'pages'
 import { Role } from 'models/Role'
 import EvolutionsPage from 'pages/patient-profile/evolutions'
 import MyProfilePage from 'pages/my-profile'
-import BasicTables from 'pages/Table/BasicTables'
-import DataTables from 'pages/Table/DataTables'
 
 export const privateRoutes = [
   {
@@ -30,19 +34,26 @@ export const privateRoutes = [
     exact: true
   },
   {
+    path: '/admin/opciones-sitio',
+    component: SiteOptionsPage,
+    roles: [Role.Admin],
+    exact: true
+  },
+  {
     path: '/admin/calendario',
     component: AdminCalendarPage,
     roles: [Role.Admin]
   },
   {
-    path: '/admin/usuarios',
+    path: '/usuarios',
     component: UsersPage,
-    roles: [Role.Admin]
+    roles: [Role.Admin],
+    exact: true
   },
   {
-    path: '/user',
-    component: () => <>Soy user</>,
-    roles: [Role.User]
+    path: '/usuarios/:id',
+    component: UserProfilePage,
+    exact: true
   },
   {
     path: '/mis-citas',
@@ -90,21 +101,5 @@ export const privateRoutes = [
     path: '/mi-perfil',
     component: MyProfilePage,
     exact: true
-  },
-  {
-    path: '/form',
-    component: FormPage
-  },
-  {
-    path: '/table/basic',
-    component: BasicTables
-  },
-  {
-    path: '/table/data',
-    component: DataTables
-  },
-  {
-    path: '/test',
-    component: () => <></>
   }
 ]

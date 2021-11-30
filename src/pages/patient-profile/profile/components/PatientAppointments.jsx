@@ -21,6 +21,7 @@ import Scrollable from '../../../../components/scrollable'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import NewAppointmentForm from 'forms/appointment/new'
 import useToggle from 'hooks/useToggle'
+import { useToasts } from 'react-toast-notifications'
 
 const dateFns = new DateFnsAdapter()
 
@@ -55,6 +56,7 @@ const useStyles = makeStyles(() => ({
 
 const PatientAppointments = ({ handleAddNote, userData }) => {
   const classes = useStyles()
+  const { addToast } = useToasts()
   const [appointments, setAppointments] = useState([])
   const [isFormVisible, toggleFormVisible] = useToggle(false)
 
@@ -65,6 +67,23 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
         .catch(error => console.error(error))
     }
   }, [userData])
+
+  const commitChanges = ({ added }) => {
+    if (added) {
+      const startingAddedId = appointments.length > 0 ? appointments[appointments.length - 1].id + 1 : 0
+      appointmentService.add(added)
+        .then(response => {
+          setAppointments([...appointments, { id: startingAddedId, ...response.data }])
+          addToast('Cita agendada correctamente', { appearance: 'success', autoDismiss: true })
+        })
+        .catch(error => {
+          console.error(error)
+          addToast('Error al agregar cita', { appearance: 'error', autoDismiss: true })
+        })
+    }
+
+    return { appointments, addedAppointment: {} }
+  }
 
   const Title = () => (
     <Typography className={classes.title} color='textSecondary' gutterBottom>
@@ -193,6 +212,8 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
         </CardContent>
       </Card>
       <NewAppointmentForm
+        key={`form-new-appointment-${isFormVisible}`}
+        commitChanges={commitChanges}
         visible={isFormVisible}
         visibleChange={toggleFormVisible}
         currentPatientData={userData}

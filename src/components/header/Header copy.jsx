@@ -12,9 +12,8 @@ import { history } from 'helpers'
 import styles from './styles'
 
 const Header = ({ handleChangeNavDrawer, classes, navDrawerOpen }) => {
-
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null)
-  let anchorEl = null
+  const anchorEl = null
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget)
@@ -26,6 +25,7 @@ const Header = ({ handleChangeNavDrawer, classes, navDrawerOpen }) => {
 
   const logout = () => {
     authenticationService.logout()
+
     history.go(0)
   }
 
@@ -42,12 +42,12 @@ const Header = ({ handleChangeNavDrawer, classes, navDrawerOpen }) => {
     >
       <IconButton
         aria-owns={isMenuOpen ? 'material-appbar' : null}
-        aria-haspopup="true"
+        aria-haspopup='true'
         onClick={logout}
-        color="inherit"
+        color='inherit'
       >
-        <ExitToAppIcon/>
-        <div style={{ marginLeft: 5, fontSize: 16 }}>{'Cerrar sesión'}</div>
+        <ExitToAppIcon />
+        <div style={{ marginLeft: 5, fontSize: 16 }}>Cerrar sesión</div>
       </IconButton>
     </Menu>
   )
@@ -56,38 +56,38 @@ const Header = ({ handleChangeNavDrawer, classes, navDrawerOpen }) => {
     <div>
       <AppBar
         className={classNames(classes.appBar, {
-          [classes.appBarShift]: navDrawerOpen,
+          [classes.appBarShift]: navDrawerOpen
         })}
       >
         <Toolbar>
           <IconButton
             className={classes.menuButton}
-            color="inherit"
-            aria-label="Open drawer"
+            color='inherit'
+            aria-label='Open drawer'
             onClick={handleChangeNavDrawer}
           >
-            <MenuIcon/>
+            <MenuIcon />
           </IconButton>
-          <div className={classes.grow}/>
+          <div className={classes.grow} />
           <div className={classes.sectionMobile}>
             <IconButton
-              aria-haspopup="true"
+              aria-haspopup='true'
               onClick={handleMobileMenuOpen}
-              color="inherit"
+              color='inherit'
             >
-              <MoreIcon/>
+              <MoreIcon />
             </IconButton>
             {renderMobileMenu}
           </div>
           <div className={classes.sectionDesktop}>
-            <Tooltip title="Cerrar sesión">
+            <Tooltip title='Cerrar sesión'>
               <IconButton
                 aria-owns={isMenuOpen ? 'material-appbar' : null}
-                aria-haspopup="true"
+                aria-haspopup='true'
                 onClick={logout}
-                color="inherit"
+                color='inherit'
               >
-                <ExitToAppIcon/>
+                <ExitToAppIcon />
               </IconButton>
             </Tooltip>
           </div>

@@ -3,6 +3,7 @@ import EventIcon from '@material-ui/icons/Event'
 import PeopleIcon from '@material-ui/icons/People'
 import LayersIcon from '@material-ui/icons/Layers'
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle'
+import SettingsIcon from '@material-ui/icons/Settings'
 import { Role } from 'models/Role'
 
 const menus = [
@@ -29,7 +30,8 @@ const menus = [
     children: [
       { id: 'Dashboard admin', icon: <SupervisedUserCircleIcon />, link: '/admin' },
       { id: 'Calendario', icon: <EventIcon />, link: '/admin/calendario' },
-      { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/admin/usuarios' }
+      { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/usuarios' },
+      { id: 'Opciones sitio', icon: <SettingsIcon />, link: '/admin/opciones-sitio' }
     ]
   }
 ]
