@@ -25,10 +25,10 @@ const styles = theme => ({
     marginLeft: theme.spacing(2)
   },
   picker: {
-    marginRight: theme.spacing(2),
-    '&:last-child': {
-      marginRight: 0
-    },
+    //    marginRight: theme.spacing(2),
+    //   '&:last-child': {
+    //     marginRight: 0
+    //   },
     width: '50%'
   },
   timePicker: {
@@ -53,8 +53,8 @@ const styles = theme => ({
   modal: {
     margin: 'auto',
     overflow: 'hidden',
-    width: '85%',
-    height: '85%'
+    width: '70%',
+    height: '70%'
   }
 })
 

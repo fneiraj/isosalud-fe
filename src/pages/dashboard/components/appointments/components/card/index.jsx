@@ -2,12 +2,13 @@ import { Box, Card, CardContent, CardHeader, Grid, Link as MuiLink, Typography }
 import { Link } from 'react-router-dom'
 import Scrollable from 'components/scrollable'
 import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
 
-const dateFnsInstance = new DateFnsAdapter()
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const HeaderCard = ({ id, startDate, endDate }) => {
-  const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
-  const endDateParsed = dateFnsInstance.parse(endDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
+  const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd HH:mm')
+  const endDateParsed = dateFnsInstance.parse(endDate, 'yyyy-MM-dd HH:mm')
   const startHour = dateFnsInstance.format(startDateParsed, 'HH:mm')
   const endHour = dateFnsInstance.format(endDateParsed, 'HH:mm')
 

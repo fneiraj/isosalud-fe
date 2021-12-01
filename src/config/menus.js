@@ -55,6 +55,10 @@ const extraPaths = [
   },
   {
     title: 'Mi Perfil', link: '/mi-perfil'
+  },
+  {
+    title: 'Perfil Usuario',
+    link: '/usuarios/:id'
   }
 ]
 

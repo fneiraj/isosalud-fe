@@ -3,8 +3,9 @@ import React from 'react'
 import styles from '../styles'
 import { makeStyles } from '@material-ui/core/styles'
 import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
 
-const dateFnsInstance = new DateFnsAdapter()
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -111,7 +112,7 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
   const dateRegisterFormatted = () => {
     if (!info?.dateCreated) return null
 
-    const dateParsed = dateFnsInstance.parse(info?.dateCreated, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSSSS\'Z\'')
+    const dateParsed = dateFnsInstance.parse(info?.dateCreated, 'yyyy-MM-dd HH:mm:ss')
 
     return dateFnsInstance.format(dateParsed, 'dd-MM-yyyy')
   }

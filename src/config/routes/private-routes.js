@@ -8,7 +8,6 @@ import {
   MyPatientsPage,
   PatientProfilePage,
   RadiographsPage,
-  ScheduleMeetPage,
   TreatmentPlansPage,
   UsersPage,
   SiteOptionsPage, UserProfilePage
@@ -59,10 +58,6 @@ export const privateRoutes = [
     path: '/mis-citas',
     component: MyDatesPage,
     exact: true
-  },
-  {
-    path: '/mis-citas/agendar',
-    component: ScheduleMeetPage
   },
   {
     path: '/pacientes',

@@ -2,8 +2,9 @@ import { MonthView } from '@devexpress/dx-react-scheduler-material-ui'
 import DateFnsAdapter from '@date-io/date-fns'
 import { makeStyles } from '@material-ui/core'
 import { sub } from 'date-fns'
+import esLocale from 'date-fns/locale/es/'
 
-const dateFnsInstance = new DateFnsAdapter()
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const useStyles = makeStyles((theme) => ({
   cursorNotAllowed: {

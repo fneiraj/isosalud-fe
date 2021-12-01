@@ -13,6 +13,7 @@
     "@material-ui/lab": "^4.0.0-alpha.60",
     "@material-ui/pickers": "3.3.10",
     "@material-ui/styles": "^4.11.4",
+    "autosuggest-highlight": "^3.2.0",
     "classnames": "^2.3.1",
     "date-fns": "^2.24.0",
     "faker": "^5.5.3",

@@ -22,8 +22,9 @@ import { appointmentService } from 'services/appointment/AppointmentService'
 import NewAppointmentForm from 'forms/appointment/new'
 import useToggle from 'hooks/useToggle'
 import { useToasts } from 'react-toast-notifications'
+import esLocale from 'date-fns/locale/es/'
 
-const dateFns = new DateFnsAdapter()
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const useStyles = makeStyles(() => ({
   leftSide: {
@@ -101,7 +102,7 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
   )
 
   const renderTimelineItem = ({ id, title, startDate: date, medic, status, type }, isLast) => {
-    const dateFormated = dateFns.parse(date, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
+    const dateFormated = dateFnsInstance.parse(date, 'yyyy-MM-dd HH:mm')
 
     let statusIcon
 
@@ -134,11 +135,11 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
                   <Typography align='center'>
                     <span
                       className={classNames(classes.bold, classes.date)}
-                    >{dateFns.format(dateFormated, 'dd \'de\' MMMM \'de\' y')}
+                    >{dateFnsInstance.format(dateFormated, 'dd \'de\' MMMM \'del\' yyyy')}
                     </span><br />
                     <span
                       className={classes.fontWeight200}
-                    >{dateFns.format(dateFormated, 'hh:mm a').toUpperCase()}
+                    >{dateFnsInstance.format(dateFormated, 'hh:mm').toUpperCase()}
                     </span>
                   </Typography>
                 </Grid>

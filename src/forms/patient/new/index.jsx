@@ -2,42 +2,25 @@ import { useEffect, useState } from 'react'
 import { Button, IconButton, Modal, Paper, Step, StepLabel, Stepper, withStyles } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import styles from './styles'
-import { boxService } from 'services/box/BoxService'
-import { patientService } from 'services/patient/PatientService'
-import { appointmentTypesService } from 'services/appointment-types/AppointmentTypesService'
-import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from './form'
+import { PersonInfoForm, ConfirmationForm } from './form'
+import { userService } from 'services/user/UserService'
+import PersonalInfoForm from 'forms/patient/new/form/PersonalInfoForm'
 
 const FormNewUser = (props) => {
   const {
     classes,
     visible,
-    visibleChange,
+    toggleVisible: visibleChange,
     cancelAppointment,
     appointmentData = {},
-    commitChanges,
-    currentPatientData
+    commitChanges
   } = props
 
   const [appointmentChanges, setAppointmentChanges] = useState({})
   const [activeStep, setActiveStep] = useState(0)
-  const [boxes, setBoxes] = useState([])
-  const [patients, setPatients] = useState([])
-  const [appointmentTypes, setAppointmentTypes] = useState([])
   const [isNextBtnEnabled, setNextBtnEnabled] = useState(false)
-
-  useEffect(() => {
-    boxService.getAll()
-      .then(response => setBoxes(response.data.data))
-      .catch(error => console.error(error))
-
-    patientService.getAll()
-      .then(response => setPatients(response.data.data))
-      .catch(error => console.error(error))
-
-    appointmentTypesService.getAll()
-      .then(response => setAppointmentTypes(response.data.data))
-      .catch(error => console.error(error))
-  }, [])
+  const [rutValidationAndPreloadData, setRutValidationAndPreloadData] = useState({})
+  const [messageError, setMessageError] = useState(undefined)
 
   useEffect(() => {
     if (activeStep === steps.length - 1) {
@@ -107,27 +90,54 @@ const FormNewUser = (props) => {
     )
   }
 
+  const validateRut = (prev, fieldWanted, actualField, value) => {
+    const rutStr = String(actualField) === fieldWanted ? value : prev[fieldWanted]
+
+    return (String(rutStr).length > 7 && String(rutStr).includes('-'))
+  }
+
   const handleTextEditorOnChange = (prev, field, value) => {
     if (activeStep === 0) {
-      const isTitleOk = checkFieldAndValue(prev, 'title', field, value)
-      const isBoxOk = checkFieldAndValue(prev, 'box', field, value)
-      const isCommentOk = checkFieldAndValue(prev, 'comment', field, value)
-      const isAppointmentTypeOk = checkFieldAndValue(prev, 'type', field, value)
+      const isFirstNameOk = checkFieldAndValue(prev, 'firstName', field, value)
+      const isLastNameOk = checkFieldAndValue(prev, 'lastName', field, value)
+      const isRutOk = checkFieldAndValue(prev, 'rut', field, value) && validateRut(prev, 'rut', field, value)
+      const isPhoneOk = checkFieldAndValue(prev, 'phone', field, value)
+      const isCellphoneOk = checkFieldAndValue(prev, 'cellphone', field, value)
 
-      if (!isTitleOk || !isBoxOk || !isCommentOk || !isAppointmentTypeOk) {
+      if (isFirstNameOk && isLastNameOk && isRutOk) {
+        userService.validate({ rut: prev.rut, firstName: prev.firstName, lastName: prev.lastName })
+          .then(response => {
+            if (response.data.statusCode === 'OK') {
+              setMessageError(undefined)
+              setRutValidationAndPreloadData(response.data)
+            } else {
+              setNextBtnEnabled(false)
+              setMessageError('Error: ' + response.data.errorMsg)
+            }
+          })
+      }
+
+      const isRoleNameOk = checkFieldAndValue(prev, 'roleName', field, value)
+      const isContactMeanNameOk = checkFieldAndValue(prev, 'preferredContactMeanName', field, value)
+      const isEmailOk = checkFieldAndValue(prev, 'email', field, value)
+
+      if (!isFirstNameOk || !isLastNameOk || !isRutOk || !isPhoneOk || !isCellphoneOk || !isRoleNameOk || !isContactMeanNameOk || !isEmailOk) {
         setNextBtnEnabled(false)
-        return
+      } else {
+        setNextBtnEnabled(true)
       }
     } else if (activeStep === 1) {
-      const isPatientSelectedOk = String(field) === 'patient' && (value !== undefined)
+      const isCommuneSelected = checkFieldAndValue(prev, 'commune', field, value)
+      const isAddressOk = checkFieldAndValue(prev, 'address', field, value)
+      const isGenderOk = checkFieldAndValue(prev, 'gender', field, value)
+      const isPrevisionOk = checkFieldAndValue(prev, 'prevision', field, value)
 
-      if (!isPatientSelectedOk) {
+      if (!isCommuneSelected || !isAddressOk || !isGenderOk || !isPrevisionOk) {
         setNextBtnEnabled(false)
-        return
+      } else {
+        setNextBtnEnabled(true)
       }
     }
-
-    setNextBtnEnabled(true)
   }
 
   const textEditorProps = field => ({
@@ -142,12 +152,6 @@ const FormNewUser = (props) => {
     className: classes.textField
   })
 
-  const getMinDate = () => {
-    if (isNewAppointment) return { minDate: new Date() }
-
-    return {}
-  }
-
   const pickerEditorProps = field => ({
     className: classes.picker,
     // keyboard: true,
@@ -156,7 +160,6 @@ const FormNewUser = (props) => {
     onChange: date => changeAppointment({
       field: [field], changes: date || new Date(displayAppointmentData[field])
     }),
-    ...getMinDate(),
     inputVariant: 'outlined',
     format: 'dd/MM/yyyy',
     onError: () => null,
@@ -203,31 +206,29 @@ const FormNewUser = (props) => {
 
   const steps = [
     {
-      stepName: 'Cita',
-      component: <AppointmentInfoForm
+      stepName: 'Persona',
+      component: <PersonInfoForm
         textEditorProps={textEditorProps}
         pickerEditorProps={pickerEditorProps}
         pickerEditorPropsStartDate={pickerEditorPropsStartDate}
         displayAppointmentData={displayAppointmentData}
-        boxes={boxes}
-        appointmentTypes={appointmentTypes}
         setNextBtnEnabled={setNextBtnEnabled}
         changeAppointment={changeAppointment}
+        messageError={messageError}
+        preloadData={rutValidationAndPreloadData}
         {...props}
                  />
     },
     {
-      stepName: 'Paciente',
-      component: <PatientInfoForm
+      stepName: 'Personal',
+      component: <PersonalInfoForm
+        classes={classes}
         textEditorProps={textEditorProps}
         pickerEditorProps={pickerEditorProps}
         pickerEditorPropsStartDate={pickerEditorPropsStartDate}
         displayAppointmentData={displayAppointmentData}
         changeAppointment={changeAppointment}
-        patients={patients}
         setNextBtnEnabled={setNextBtnEnabled}
-        currentPatientData={currentPatientData}
-        {...props}
                  />
     },
     {
@@ -238,6 +239,8 @@ const FormNewUser = (props) => {
         pickerEditorPropsStartDate={pickerEditorPropsStartDate}
         displayAppointmentData={displayAppointmentData}
         setNextBtnEnabled={setNextBtnEnabled}
+        messageError={messageError}
+        preloadData={rutValidationAndPreloadData}
         {...props}
                  />
     }
@@ -255,7 +258,6 @@ const FormNewUser = (props) => {
   const BackOrCloseButton = () => activeStep === 0 ? <CancelButton /> : <BackButton />
 
   const isAppointmentCurrentlyCancel = () => {
-    console.log(displayAppointmentData)
     return true
   }
 

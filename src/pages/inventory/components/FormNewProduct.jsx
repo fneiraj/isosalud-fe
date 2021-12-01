@@ -92,7 +92,6 @@ const FormNewProduct = ({ classes, visible, toggleVisible, onCreateCallback, onU
         productTypeId: Yup.number().positive().required('Debes seleccionar el tipo de producto')
       }),
     onSubmit (product, { setStatus, setSubmitting }) {
-      console.log(product)
       setStatus()
       setSubmitting(false)
       if (currentProductEditing !== undefined) {

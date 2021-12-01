@@ -4,34 +4,55 @@ import RoomIcon from '@material-ui/icons/Room'
 import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers'
 import esLocale from 'date-fns/locale/es/'
 import DateFnsUtils from '@date-io/date-fns'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import Alert from '@material-ui/lab/Alert'
+import { set } from 'date-fns'
+import { feriadosService } from 'services/api/feriados/FeriadosService'
+
+const dateFnsInstance = new DateFnsUtils({ locale: esLocale })
 
 const AppointmentInfoForm = ({
   classes,
-  cancelChanges,
-  isNewAppointment,
   textEditorProps,
   pickerEditorPropsStartDate,
   pickerEditorProps,
   displayAppointmentData,
   changeAppointment,
-  visibleChange,
-  commitAppointment,
-  applyChanges,
   boxes,
-  appointmentTypes
+  appointmentTypes,
+  messageError
 }) => {
+  const [feriados, setFeriados] = useState([])
+
   useEffect(() => {
-    changeAppointment({
-      field: ['startDate'], changes: new Date()
-    })
-    changeAppointment({
-      field: ['endDate'], changes: new Date()
-    })
+    if (!displayAppointmentData.startDate) {
+      changeAppointment({
+        field: ['startDate'], changes: undefined
+      })
+      changeAppointment({
+        field: ['endDate'], changes: undefined
+      })
+    }
   }, [])
+
+  useEffect(() => {
+    feriadosService.getAll().then(response => setFeriados(response.data)).catch(error => console.error(error))
+  }, [])
+
+  const isStartHourValid = dateFnsInstance.isValid(dateFnsInstance.parse(displayAppointmentData.startDate, 'yyyy-MM-dd HH:mm'))
+  const defaultStartHour = isStartHourValid ? dateFnsInstance.parse(displayAppointmentData.startDate, 'yyyy-MM-dd HH:mm') : set(new Date(), { hours: 8, minutes: 0 })
+
+  const isEndHourValid = dateFnsInstance.isValid(dateFnsInstance.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm'))
+  const defaultEndHour = isEndHourValid ? dateFnsInstance.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm') : set(new Date(), { hours: 8, minutes: 30 })
 
   return (
     <>
+      {
+        messageError &&
+          <div className={classes.errorDiv}>
+            <Alert severity='error'>{messageError}</Alert>
+          </div>
+      }
       <div className={classes.content}>
         <div className={classes.wrapper}>
           <Create className={classes.icon} color='action' />
@@ -49,13 +70,16 @@ const AppointmentInfoForm = ({
               {...pickerEditorPropsStartDate('startDate')}
               format={'EEEE dd \'de\' LLLL \'del\' yyyy'}
               shouldDisableDate={(date) => {
-                return date.getDay() === 0 || date.getDay() === 6
+                const dateFormatted = dateFnsInstance.format(date, 'yyyy-MM-dd')
+                const isFeriado = feriados.map(feriado => feriado.fecha).includes(dateFormatted)
+                return date.getDay() === 0 || date.getDay() === 6 || isFeriado
               }}
             />
             <TimePicker
               id='startHour'
               label='Hora de inicio'
               {...pickerEditorProps('startDate')}
+              value={defaultStartHour}
               className={classes.timePicker}
               format='HH:mm'
               renderInput={(params) => <TextField {...params} />}
@@ -67,6 +91,7 @@ const AppointmentInfoForm = ({
               id='endHour'
               label='Hora de termino'
               {...pickerEditorProps('endDate')}
+              value={defaultEndHour}
               className={classes.timePicker}
               format='HH:mm'
               renderInput={(params) => <TextField {...params} />}

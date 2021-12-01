@@ -8,23 +8,21 @@ import AppointmentCard from 'pages/dashboard/components/appointments/components/
 import { useEffect, useState } from 'react'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
 
-const dateFnsInstance = new DateFnsAdapter()
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([])
 
   const isToday = ({ startDate }) => {
-    const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
-
-    console.log('startDateParsed => ' + startDateParsed)
+    const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd HH:mm')
     return dateFnsInstance.isSameDay(new Date(), startDateParsed)
   }
 
   useEffect(() => {
     appointmentService.getAllOwn()
       .then(response => {
-        console.log(response.data.data.filter(isToday))
         setAppointments(response.data.data.filter(a => isToday(a)))
       })
       .catch(error => console.error(error))

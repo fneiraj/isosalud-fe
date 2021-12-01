@@ -1,7 +1,6 @@
 import { Box, makeStyles, Tab, Tabs, TextField, Typography } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import { useEffect, useState } from 'react'
-import FormNewPatient from 'forms/patient/new'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,7 +99,6 @@ const PatientInfoForm = ({
       </TabPanel>
       <TabPanel value={tabValue} index={1}>
         <Typography>Ingresa datos del paciente</Typography>
-        <FormNewPatient />
       </TabPanel>
     </div>
   )

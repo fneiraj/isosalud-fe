@@ -1,9 +1,11 @@
 import { HttpClient } from 'services/http-client'
+import { format } from 'date-fns'
 
 export const userService = {
   getAll,
   getById: getByUsername,
-  create
+  create,
+  validate
 }
 
 function getAll () {
@@ -14,22 +16,28 @@ function getByUsername (username) {
   return HttpClient.get(`/user/search?username=${username}`)
 }
 
-function create ({ rut, firstName, lastName, email, phone, cellphone, dateOfBirth, roleName, preferredContactMeanName, profileImgUri = null }) {
+function create ({ gender, prevision, commune, address: street, rut, firstName, lastName, email, phone, cellphone, dateOfBirth, roleName, preferredContactMeanName, profileImgUri = null }) {
   const payload = {
     // id: 37,
     //    username: 'fneiraa',
     password: '12345',
-    personDto: {
-    //  _id: 40,
+    personInfo: {
+      //  _id: 40,
       rut,
       firstName,
       lastName,
       email,
       phone,
       cellphone,
-      dateOfBirth
-    //  _dateCreated: '2028-08-02',
-    //  _dateUpdated: 1936429266121
+      dateOfBirth: format(dateOfBirth, 'yyyy-MM-dd'),
+      gender,
+      prevision,
+      addressInfo: {
+        commune,
+        street
+      }
+      //  _dateCreated: '2028-08-02',
+      //  _dateUpdated: 1936429266121
     },
     roleName,
     // _dateCreated: '2022-11-23',
@@ -39,4 +47,16 @@ function create ({ rut, firstName, lastName, email, phone, cellphone, dateOfBirt
   }
 
   return HttpClient.post('/user', payload)
+}
+
+function validate ({ rut, firstName, lastName }) {
+  const payload = {
+    personInfo: {
+      rut,
+      firstName,
+      lastName
+    }
+  }
+
+  return HttpClient.post('/user/pre-validate', payload)
 }

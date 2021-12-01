@@ -5,73 +5,57 @@ import esLocale from 'date-fns/locale/es/'
 const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const ConfirmationForm = ({
-  classes,
-  cancelChanges,
-  isNewAppointment,
-  textEditorProps,
-  pickerEditorPropsStartDate,
-  pickerEditorProps,
   displayAppointmentData,
-  changeAppointment,
-  visibleChange,
-  commitAppointment,
-  applyChanges
+  preloadData
 }) => {
-  const startDateParsed = (displayAppointmentData?.startDate instanceof Date) ? displayAppointmentData?.startDate : dateFnsInstance.parse(displayAppointmentData?.startDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
-  const endDateParsed = (displayAppointmentData?.endDate instanceof Date) ? displayAppointmentData?.endDate : dateFnsInstance.parse(displayAppointmentData?.endDate, 'yyyy-MM-dd\'T\'HH:mm:ss.SSSXXX')
-
-  const startDateFormatted = dateFnsInstance.format(startDateParsed, 'EEEE dd \'de\' LLLL \'del\' yyyy \'desde\' HH:mm')
-  const endDateFormatted = dateFnsInstance.format(endDateParsed, 'HH:mm')
-
-  const patientFirstname = displayAppointmentData?.patient?.firstName !== undefined ? displayAppointmentData?.patient?.firstName : displayAppointmentData?.patient?.personInfo?.firstName
-  const patientLastname = displayAppointmentData?.patient?.lastName !== undefined ? displayAppointmentData?.patient?.lastName : displayAppointmentData?.patient?.personInfo?.lastName
-  const patientRut = displayAppointmentData?.patient?.rut !== undefined ? displayAppointmentData?.patient?.rut : displayAppointmentData?.patient?.personInfo?.rut
+  // eslint-disable-next-line no-unused-vars
+  const dateOfBirthParsed = (displayAppointmentData?.dateOfBirth instanceof Date) ? displayAppointmentData?.dateOfBirth : dateFnsInstance.parse(displayAppointmentData?.dateOfBirth, 'yyyy-MM-dd')
 
   return (
     <Grid container spacing={1}>
 
       <Grid item xs={12}>
-        <Typography variant='h4' align='center'>Resumen cita<br /></Typography>
+        <Typography variant='h4' align='center'>Resumen usuario<br /></Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Titulo cita:</b> {displayAppointmentData?.title}</Typography>
+        <Typography><b>Nombre:</b> {`${displayAppointmentData?.firstName} ${displayAppointmentData?.lastName}`}</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Cuando:</b> {startDateFormatted} a {endDateFormatted}</Typography>
+        <Typography><b>RUT:</b> {displayAppointmentData?.rut} </Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Comentario:</b> <br /> {displayAppointmentData?.comment}</Typography>
+        <Typography><b>Fecha de nacimiento:</b> {displayAppointmentData?.dateOfBirth.toString()}.</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <hr />
+        <Typography><b>Email:</b> {displayAppointmentData?.email}</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography variant='h4' align='center'>Datos paciente<br /></Typography>
+        <Typography><b>Celular:</b> {displayAppointmentData?.cellphone} </Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Nombre:</b> {`${patientFirstname} ${patientLastname}`}</Typography>
+        <Typography><b>Telefono:</b> {displayAppointmentData?.phone !== undefined ? displayAppointmentData?.phone : 'Sin telefono'}</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>RUT:</b> {patientRut}</Typography>
+        <Typography><b>Medio de contacto preferido:</b> {displayAppointmentData?.preferredContactMeanName}</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Email:</b> {displayAppointmentData?.patient?.email}.</Typography>
+        <Typography><b>Rol usuario:</b> {displayAppointmentData?.roleName}</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Celular:</b> {displayAppointmentData?.patient?.cellphone}.</Typography>
+        <Typography><b>Usuario:</b> {preloadData?.username}</Typography>
       </Grid>
 
       <Grid item xs={12}>
-        <hr />
+        <Typography><b>Contraseña:</b> {preloadData?.username}</Typography>
       </Grid>
 
     </Grid>

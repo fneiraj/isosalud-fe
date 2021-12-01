@@ -25,6 +25,9 @@ function cancel (id) {
 }
 
 function add ({ box, comment, endDate, startDate, patient, title, type }) {
+  console.log(startDate)
+  console.log(endDate)
+
   const payload = {
     title,
     startDate,

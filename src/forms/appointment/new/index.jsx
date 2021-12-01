@@ -6,6 +6,11 @@ import { boxService } from 'services/box/BoxService'
 import { patientService } from 'services/patient/PatientService'
 import { appointmentTypesService } from 'services/appointment-types/AppointmentTypesService'
 import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from 'forms/appointment/new/form'
+import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
+import { set } from 'date-fns'
+
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const NewAppointmentForm = (props) => {
   const {
@@ -24,6 +29,7 @@ const NewAppointmentForm = (props) => {
   const [patients, setPatients] = useState([])
   const [appointmentTypes, setAppointmentTypes] = useState([])
   const [isNextBtnEnabled, setNextBtnEnabled] = useState(false)
+  const [messageError, setMessageError] = useState(undefined)
 
   useEffect(() => {
     boxService.getAll()
@@ -109,12 +115,15 @@ const NewAppointmentForm = (props) => {
 
   const handleTextEditorOnChange = (prev, field, value) => {
     if (activeStep === 0) {
+      const isStartDateOk = validateHourStart(String(field) === 'startDate' ? value : prev.startDate)
+      const isEndDateOk = validateHourEnd(String(field) === 'endDate' ? value : prev.endDate)
       const isTitleOk = checkFieldAndValue(prev, 'title', field, value)
       const isBoxOk = checkFieldAndValue(prev, 'box', field, value)
       const isCommentOk = checkFieldAndValue(prev, 'comment', field, value)
       const isAppointmentTypeOk = checkFieldAndValue(prev, 'type', field, value)
+      const isHoursOk = isStartDateOk && isEndDateOk ? validateHourStartAndHourEnd(prev) : false
 
-      if (!isTitleOk || !isBoxOk || !isCommentOk || !isAppointmentTypeOk) {
+      if (!isTitleOk || !isBoxOk || !isCommentOk || !isAppointmentTypeOk || !isStartDateOk || !isEndDateOk || !isHoursOk) {
         setNextBtnEnabled(false)
         return
       }
@@ -148,13 +157,65 @@ const NewAppointmentForm = (props) => {
     return {}
   }
 
+  const getDate = (date, field) => {
+    const dateP = date || new Date(displayAppointmentData[field])
+    return dateFnsInstance.format(dateP, 'yyyy-MM-dd HH:mm')
+  }
+
+  const validateHourStart = (value) => {
+    const dateParsedStartHour = dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm')
+    const dateParsedStartHourOk = set(dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm'), { hours: 7, minutes: 59, seconds: 0 })
+
+    if (dateFnsInstance.isAfter(dateParsedStartHour, dateParsedStartHourOk)) {
+      setMessageError(undefined)
+      return true
+    } else {
+      if (value !== undefined) {
+        setMessageError('La hora de inicio debe ser desde las 08:00 horas.')
+      }
+      return false
+    }
+  }
+
+  const validateHourEnd = (value) => {
+    const dateParsedEndHour = dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm')
+    const dateParsedEndHourOk = set(dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm'), { hours: 19, minutes: 1, seconds: 0 })
+
+    if (dateFnsInstance.isBefore(dateParsedEndHour, dateParsedEndHourOk)) {
+      setMessageError(undefined)
+      return true
+    } else {
+      if (value !== undefined) {
+        setMessageError('La hora de termino debe ser hasta las 19:00 horas.')
+      }
+      return false
+    }
+  }
+
+  const validateHourStartAndHourEnd = (prev) => {
+    const startDateValue = prev.startDate
+    const endDateValue = prev.endDate
+    const startDateParsed = dateFnsInstance.parse(prev.startDate, 'yyyy-MM-dd HH:mm')
+    const endDateParsed = dateFnsInstance.parse(prev.endDate, 'yyyy-MM-dd HH:mm')
+
+    if (dateFnsInstance.isBefore(startDateParsed, endDateParsed)) {
+      setMessageError(undefined)
+      return true
+    } else {
+      if (startDateValue !== undefined && endDateValue !== undefined) {
+        setMessageError('La hora de termino no puede ser antes de la hora de inicio.')
+      }
+      return false
+    }
+  }
+
   const pickerEditorProps = field => ({
     className: classes.picker,
     // keyboard: true,
     ampm: false,
     value: displayAppointmentData[field],
     onChange: date => changeAppointment({
-      field: [field], changes: date || new Date(displayAppointmentData[field])
+      field: [field], changes: getDate(date, field)
     }),
     ...getMinDate(),
     inputVariant: 'outlined',
@@ -167,20 +228,20 @@ const NewAppointmentForm = (props) => {
   const pickerEditorPropsStartDate = field => ({
     ...pickerEditorProps(field),
     onChange: date => {
-      const newEndDate = isNewAppointment ? date : displayAppointmentData.endDate
+      const newEndDate = displayAppointmentData.endDate !== undefined ? dateFnsInstance.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm') : date
 
-      if (!isNewAppointment) {
-        newEndDate.setFullYear(date.getFullYear())
-        newEndDate.setDate(date.getDate())
-        newEndDate.setMonth(date.getMonth())
-      }
+      newEndDate.setFullYear(date.getFullYear())
+      newEndDate.setDate(date.getDate())
+      newEndDate.setMonth(date.getMonth())
 
       //      changeAppointment({ field: [field], changes: date || new Date(displayAppointmentData[field]) })
       //      changeAppointment({ field: ['endDate'], changes: newEndDate })
 
+      const dateActual = getDate(date, field)
+
       changeAppointments(
-        { f1: [field], c1: date || new Date(displayAppointmentData[field]) },
-        { f2: ['endDate'], c2: newEndDate }
+        { f1: [field], c1: dateActual },
+        { f2: ['endDate'], c2: getDate(newEndDate, 'endDate') }
       )
     }
   })
@@ -213,6 +274,7 @@ const NewAppointmentForm = (props) => {
         appointmentTypes={appointmentTypes}
         setNextBtnEnabled={setNextBtnEnabled}
         changeAppointment={changeAppointment}
+        messageError={messageError}
         {...props}
                  />
     },
@@ -254,11 +316,6 @@ const NewAppointmentForm = (props) => {
 
   const BackOrCloseButton = () => activeStep === 0 ? <CancelButton /> : <BackButton />
 
-  const isAppointmentCurrentlyCancel = () => {
-    console.log(displayAppointmentData)
-    return true
-  }
-
   return (
     <Modal
       open={visible}
@@ -291,7 +348,7 @@ const NewAppointmentForm = (props) => {
           </div>
 
           <div style={{ bottom: 30, left: 15, position: 'absolute' }} className={classes.buttonGroup}>
-            {!isNewAppointment && displayAppointmentData.status.name !== 'Cancelada' && isAppointmentCurrentlyCancel() && (
+            {!isNewAppointment && displayAppointmentData.status.name !== 'Cancelada' && (
               <Button
                 variant='contained'
                 color='secondary'

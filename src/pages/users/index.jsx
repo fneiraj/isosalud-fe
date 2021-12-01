@@ -10,6 +10,9 @@ import TableData from './components/table-data'
 import useToggle from 'hooks/useToggle'
 import { userService } from 'services/user/UserService'
 import FormNewPatient from 'forms/patient/new'
+import { appointmentService } from 'services/appointment/AppointmentService'
+import { useToasts } from 'react-toast-notifications'
+import DeletePatientDialog from 'forms/patient/new/components/delete-dialog'
 
 const rows = [
   { id: 'username', numeric: false, disablePadding: false, label: 'Usuario' },
@@ -30,6 +33,9 @@ const UsersPage = ({ classes }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [currentData, setCurrentData] = useState([])
   const [selected, setSelected] = useState([])
+  const [deletedAppointmentId, setDeletedAppointmentId] = useState(undefined)
+  const [isDeleteDialogVisible, toggleDeleteDialogVisible] = useToggle()
+  const { addToast } = useToasts()
 
   useEffect(() => {
     userService.getAll()
@@ -71,6 +77,49 @@ const UsersPage = ({ classes }) => {
     } else {
       setCurrentData(data)
     }
+  }
+
+  const commitChanges = ({ added, changed, cancel }) => {
+    if (added) {
+      const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0
+      userService.create(added)
+        .then(response => {
+          setData([...data, { id: startingAddedId, ...response.data }])
+          addToast('Usuario agregado correctamente', { appearance: 'success', autoDismiss: true })
+        })
+        .catch(error => {
+          console.error(error)
+          addToast('Error al agregar usuario', { appearance: 'error', autoDismiss: true })
+        })
+    }
+    if (changed) {
+      setData(data.map(appointment => (
+        changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment)))
+    }
+    if (cancel !== undefined) {
+      setDeletedAppointmentId(cancel)
+      toggleDeleteDialogVisible()
+    }
+    return { data, addedAppointment: {} }
+  }
+
+  const commitDeletedAppointment = () => {
+    setDeletedAppointmentId(null)
+
+    appointmentService.cancel(deletedAppointmentId)
+      .then(response => {
+        setData((prev) => {
+          const startingAddedId = prev.length > 0 ? prev[data.length - 1].id + 1 : 0
+          return [...prev.filter(appointment => appointment.id !== deletedAppointmentId), { id: startingAddedId, ...response.data }]
+        })
+        addToast('Cita cancelada correctamente', { appearance: 'success', autoDismiss: true })
+      })
+      .catch(error => {
+        console.error(error)
+        addToast('Error al cancelar cita', { appearance: 'error', autoDismiss: true })
+      })
+
+    toggleDeleteDialogVisible()
   }
 
   return (
@@ -124,8 +173,16 @@ const UsersPage = ({ classes }) => {
       </Paper>
 
       <FormNewPatient
+        key={isNewUserFormVisible ? 'form-visible' : 'form-no-visible'}
+        commitChanges={commitChanges}
         visible={isNewUserFormVisible}
         toggleVisible={toggleNewUserFormVisible}
+      />
+
+      <DeletePatientDialog
+        commitDeletedAppointment={commitDeletedAppointment}
+        toggleConfirmationVisible={toggleDeleteDialogVisible}
+        confirmationVisible={isDeleteDialogVisible}
       />
     </>
   )

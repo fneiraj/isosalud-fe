@@ -111,8 +111,6 @@ const InventoryPage = ({ classes }) => {
   }
 
   const plusOneHandler = (id) => {
-    console.log(data.filter(p => p.id !== id))
-
     inventoryService
       .updateQuantity({ id: id, action: 'plus' })
       .then(response => {
@@ -125,7 +123,7 @@ const InventoryPage = ({ classes }) => {
       })
       .catch(error => {
         addToast('Error al actualizar Stock', { appearance: 'error', autoDismiss: true })
-        console.log(error)
+        console.error(error)
       })
   }
 
@@ -147,7 +145,7 @@ const InventoryPage = ({ classes }) => {
       })
       .catch(error => {
         addToast('Error al actualizar Stock', { appearance: 'error', autoDismiss: true })
-        console.log(error)
+        console.error(error)
       })
   }
 

@@ -1,9 +1,9 @@
 export {
-  default as AppointmentInfoForm
-} from './AppointmentInfoForm'
+  default as PersonInfoForm
+} from 'forms/patient/new/form/PersonInfoForm'
 export {
   default as PatientInfoForm
-} from './PatientInfoForm'
+} from 'forms/patient/new/form/PersonalInfoForm'
 export {
   default as ConfirmationForm
 } from './ConfirmationForm'

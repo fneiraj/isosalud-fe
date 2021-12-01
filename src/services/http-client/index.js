@@ -3,7 +3,7 @@ import { authHeader, history } from 'helpers'
 
 const axios = require('axios')
 
-const host = 'http://localhost:8080'
+const host = 'http://181.161.163.151:8080'
 
 const readUrl = (url = '') =>
   url.startsWith('http://') || url.startsWith('https://')
@@ -32,7 +32,9 @@ axios.interceptors.response.use(function (config) {
 
 // Axios request interceptor
 axios.interceptors.request.use(function (config) {
-  config.headers.Authorization = authHeader().Authorization
+  if (config.url.includes(host)) {
+    config.headers.Authorization = authHeader().Authorization
+  }
   return config
 }, function (error) {
   return Promise.reject(error)
