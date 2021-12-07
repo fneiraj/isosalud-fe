@@ -13,6 +13,10 @@ import FormNewPatient from 'forms/patient/new'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import { useToasts } from 'react-toast-notifications'
 import DeletePatientDialog from 'forms/patient/new/components/delete-dialog'
+import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
+
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const rows = [
   { id: 'username', numeric: false, disablePadding: false, label: 'Usuario' },
@@ -20,6 +24,7 @@ const rows = [
   { id: 'personInfo.rut', numeric: false, disablePadding: false, label: 'RUT' },
   { id: 'cellphone', numeric: false, disablePadding: false, label: 'Celular' },
   { id: 'lastLogin', numeric: false, disablePadding: false, label: 'Último acceso' },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Estado' },
   { id: 'actions', numeric: false, disablePadding: false, disableSort: true, label: 'Acciones' }
 ]
 
@@ -35,6 +40,7 @@ const UsersPage = ({ classes }) => {
   const [selected, setSelected] = useState([])
   const [deletedAppointmentId, setDeletedAppointmentId] = useState(undefined)
   const [isDeleteDialogVisible, toggleDeleteDialogVisible] = useToggle()
+  const [currentUserEditing, setCurrentUserEditing] = useState(undefined)
   const { addToast } = useToasts()
 
   useEffect(() => {
@@ -81,10 +87,13 @@ const UsersPage = ({ classes }) => {
 
   const commitChanges = ({ added, changed, cancel }) => {
     if (added) {
-      const startingAddedId = data.length > 0 ? data[data.length - 1].id + 1 : 0
       userService.create(added)
         .then(response => {
-          setData([...data, { id: startingAddedId, ...response.data }])
+          setData(prev => {
+            const newData = [...prev, response.data]
+            setCurrentData(newData)
+            return newData
+          })
           addToast('Usuario agregado correctamente', { appearance: 'success', autoDismiss: true })
         })
         .catch(error => {
@@ -93,14 +102,67 @@ const UsersPage = ({ classes }) => {
         })
     }
     if (changed) {
+      console.log({ changed })
+
+      userService.edit(changed)
+        .then(response => {
+          setData(prev => {
+            const newData = [...prev.filter(u => u.id !== response.data.id), response.data]
+            setCurrentData(newData)
+            return newData
+          })
+          addToast('Usuario editado correctamente', { appearance: 'success', autoDismiss: true })
+        })
+        .catch(error => {
+          console.error(error)
+          addToast('Error al editar usuario', { appearance: 'error', autoDismiss: true })
+        })
+
       setData(data.map(appointment => (
-        changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment)))
+        changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment))
+      )
+
+      setCurrentUserEditing(undefined)
     }
     if (cancel !== undefined) {
       setDeletedAppointmentId(cancel)
       toggleDeleteDialogVisible()
     }
     return { data, addedAppointment: {} }
+  }
+
+  const setUser = (user) => {
+    setData(prev => {
+      const tmp = [...prev.filter(u => u.id !== user.id), user]
+      setCurrentData(tmp)
+      return tmp
+    })
+  }
+
+  const onEditButtonClick = (id) => {
+    const user = data.find(u => u.id === id)
+    const dateOfBirth = dateFnsInstance.parse(user.personInfo?.dateOfBirth, 'yyyy-MM-dd')
+
+    setCurrentUserEditing({
+      id: id,
+      dateOfBirth: dateOfBirth,
+      firstName: user.personInfo?.firstName,
+      lastName: user.personInfo?.lastName,
+      rut: user.personInfo?.rut,
+      phone: user.personInfo?.phone,
+      cellphone: user.personInfo?.cellphone,
+      roleName: user.roleName,
+      preferredContactMeanName: user.preferredContactMeanName,
+      email: user.personInfo?.email,
+      commune: user.personInfo?.addressInfo,
+      region: user.personInfo?.addressInfo?.region,
+      address: user.personInfo?.addressInfo?.street,
+      gender: user.personInfo?.gender,
+      prevision: user.personInfo?.prevision,
+      username: user.username,
+      status: user.status
+    })
+    toggleNewUserFormVisible()
   }
 
   const commitDeletedAppointment = () => {
@@ -158,6 +220,8 @@ const UsersPage = ({ classes }) => {
               rowsPerPage={rowsPerPage}
               selected={selected}
               setSelected={setSelected}
+              setUser={setUser}
+              onEditButtonClick={onEditButtonClick}
             />
 
           </Table>
@@ -177,6 +241,8 @@ const UsersPage = ({ classes }) => {
         commitChanges={commitChanges}
         visible={isNewUserFormVisible}
         toggleVisible={toggleNewUserFormVisible}
+        currentUserData={currentUserEditing}
+        setCurrentUserEditing={setCurrentUserEditing}
       />
 
       <DeletePatientDialog

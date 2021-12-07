@@ -2,18 +2,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { TextField } from '@material-ui/core'
 import match from 'autosuggest-highlight/match'
 import parse from 'autosuggest-highlight/parse'
-import React, { useEffect, useState } from 'react'
-import { locationService } from 'services/locations/LocationService'
+import React from 'react'
 
-const RegionSelect = ({ regionSelected, setRegionSelected, ...rest }) => {
-  const [locations, setLocations] = useState([])
-
-  useEffect(() => {
-    locationService.getAll()
-      .then(response => setLocations(response.data.data))
-      .catch(error => console.error(error))
-  }, [])
-
+const RegionSelect = ({ locations, regionSelected, setRegionSelected, ...rest }) => {
   return (
     <Autocomplete
       key={regionSelected}
@@ -27,6 +18,9 @@ const RegionSelect = ({ regionSelected, setRegionSelected, ...rest }) => {
       renderInput={(params) => (
         <TextField {...params} label='Región' variant='outlined' margin='normal' style={{ backgroundColor: 'white' }} />
       )}
+      getOptionSelected={(option, value) => {
+        return option?.id === value
+      }}
       renderOption={(option, { inputValue }) => {
         const matches = match(option.name, inputValue)
         const parts = parse(option.name, matches)

@@ -2,13 +2,19 @@ import TableBody from '@material-ui/core/TableBody'
 import TableRow from '@material-ui/core/TableRow'
 import TableCell from '@material-ui/core/TableCell'
 import Checkbox from '@material-ui/core/Checkbox'
-import { Link } from 'react-router-dom'
-import Button from '@material-ui/core/Button'
-import { Tooltip } from '@material-ui/core'
+import { Fade, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@material-ui/core'
 import VisibilityIcon from '@material-ui/icons/Visibility'
+import EditIcon from '@material-ui/icons/Edit'
+import BlockIcon from '@material-ui/icons/Block'
+import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded'
 import Animation from 'components/animation'
 import DateFnsAdapter from '@date-io/date-fns'
 import esLocale from 'date-fns/locale/es/'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import { useState } from 'react'
+import { history } from 'helpers'
+import { userService } from 'services/user/UserService'
+import { useToasts } from 'react-toast-notifications'
 
 const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
@@ -20,8 +26,13 @@ const TableData = ({
   page,
   rowsPerPage,
   selected,
-  setSelected
+  setSelected,
+  setUser,
+  onEditButtonClick
 }) => {
+  const [anchorEls, setAnchorEls] = useState({ })
+  const { addToast } = useToasts()
+
   const stableSort = (array, cmp) => {
     const stabilizedThis = array.map((el, index) => [el, index])
     stabilizedThis.sort((a, b) => {
@@ -83,6 +94,55 @@ const TableData = ({
     </TableBody>
   )
 
+  const handleClickActions = (id, event) => {
+    setAnchorEls(prev => {
+      return { ...prev, [id]: event.currentTarget }
+    })
+  }
+
+  const handleCloseActions = (id) => {
+    setAnchorEls(prev => {
+      return { ...prev, [id]: null }
+    })
+  }
+
+  const actions = ({ id, status }) => {
+    return [
+      {
+        id: 'view-profile-' + id,
+        label: 'Ver perfil',
+        icon: <VisibilityIcon />,
+        onClick: () => {
+          history.push('/usuarios/' + id)
+        }
+      },
+      {
+        id: 'edit-profile-' + id,
+        label: 'Editar',
+        icon: <EditIcon />,
+        onClick: () => {
+          onEditButtonClick(id)
+        }
+      },
+      {
+        id: 'enable-disable-profile-' + id,
+        label: status === 'Habilitado' ? 'Deshabilitar' : 'Habilitar',
+        icon: status === 'Habilitado' ? <BlockIcon /> : <CheckCircleOutlineRoundedIcon />,
+        onClick: () => {
+          userService.changeStatus({ userId: id, status: status === 'Habilitado' ? 'Deshabilitado' : 'Habilitado' })
+            .then(response => {
+              addToast('Usuario ' + (status === 'Habilitado' ? 'Deshabilitado' : 'Habilitado') + ' con éxito', { appearance: 'success', autoDismiss: true })
+              setUser(response.data)
+            })
+            .catch(error => {
+              addToast('Error al ' + (status === 'Habilitado' ? 'Deshabilitar' : 'Habilitar') + ' usuario', { appearance: 'error', autoDismiss: true })
+              console.error(error)
+            })
+        }
+      }
+    ]
+  }
+
   const renderRows = () => {
     return stableSort(currentData, getSorting(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -90,6 +150,7 @@ const TableData = ({
         const lastLoginFormated = n.lastLogin ? dateFnsInstance.format(dateFnsInstance.parse(n.lastLogin, 'yyyy-MM-dd HH:mm:ss'), 'dd-MM-yyy HH:mm') : 'Sin registro'
 
         const isActualSelected = isSelected(n.id)
+
         return (
           <TableRow
             hover
@@ -106,27 +167,42 @@ const TableData = ({
               <TableCell padding='checkbox'>
                 <Checkbox checked={isActualSelected} />
               </TableCell>}
-            {/* <TableCell component="th" scope="row" padding="none">
-                        {n.name}
-                      </TableCell>
-                      <TableCell align="right">{n.calories}</TableCell>
-                      <TableCell align="right">{n.fat}</TableCell>
-                      <TableCell align="right">{n.carbs}</TableCell>
-                      <TableCell align="right">{n.protein}</TableCell> */}
-            {/* <TableCell>{n.id}</TableCell> */}
             <TableCell>{n.username}</TableCell>
             <TableCell>{n.personInfo?.firstName} {n.personInfo?.lastName}</TableCell>
             <TableCell>{n.personInfo?.rut}</TableCell>
             <TableCell>{n.personInfo?.cellphone}</TableCell>
             <TableCell>{lastLoginFormated}</TableCell>
+            <TableCell>{n.status}</TableCell>
             <TableCell>
-              <Link className='button' to={`/usuarios/${n.id}`}>
-                <Button>
-                  <Tooltip title='Ver perfil'>
-                    <VisibilityIcon />
-                  </Tooltip>
-                </Button>
-              </Link>
+              <IconButton
+                onClick={(event) => handleClickActions(n.id, event)}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id={n.id}
+                anchorEl={anchorEls[n.id]}
+                open={Boolean(anchorEls[n.id])}
+                keepMounted
+                TransitionComponent={Fade}
+                onClose={(event) => handleCloseActions(n.id, event)}
+              >
+                {actions(n).map(a =>
+                  <MenuItem
+                    key={'view-profile-' + n.id}
+                    onClick={() => {
+                      handleCloseActions(n.id)
+                      a.onClick()
+                    }}
+                  >
+                    <ListItemIcon>
+                      {a.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={a.label} />
+                  </MenuItem>
+                )}
+
+              </Menu>
             </TableCell>
           </TableRow>
         )

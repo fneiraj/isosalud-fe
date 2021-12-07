@@ -9,6 +9,7 @@ import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from 'forms/ap
 import DateFnsAdapter from '@date-io/date-fns'
 import esLocale from 'date-fns/locale/es/'
 import { set } from 'date-fns'
+import { dentistService } from 'services/dentist/DentistService'
 
 const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
@@ -28,8 +29,11 @@ const NewAppointmentForm = (props) => {
   const [boxes, setBoxes] = useState([])
   const [patients, setPatients] = useState([])
   const [appointmentTypes, setAppointmentTypes] = useState([])
+  const [dentists, setDentists] = useState([])
   const [isNextBtnEnabled, setNextBtnEnabled] = useState(false)
   const [messageError, setMessageError] = useState(undefined)
+  const [isNewAppointment, setIsNewAppointment] = useState()
+  const [flagDataPassed, setFlagDataPassed] = useState(false)
 
   useEffect(() => {
     boxService.getAll()
@@ -43,6 +47,10 @@ const NewAppointmentForm = (props) => {
     appointmentTypesService.getAll()
       .then(response => setAppointmentTypes(response.data.data))
       .catch(error => console.error(error))
+
+    dentistService.getAll()
+      .then(response => setDentists(response.data.data))
+      .catch(error => console.error(error))
   }, [])
 
   useEffect(() => {
@@ -53,9 +61,23 @@ const NewAppointmentForm = (props) => {
 
   useEffect(() => {
     if (appointmentData.id !== undefined) {
+      if (!flagDataPassed) {
+        setAppointmentChanges(appointmentData)
+        setFlagDataPassed(true)
+      }
       setNextBtnEnabled(true)
     }
   }, [appointmentData, activeStep])
+
+  useEffect(() => {
+    if (appointmentData.id !== undefined) {
+      setNextBtnEnabled(true)
+    }
+  }, [appointmentData, activeStep])
+
+  useEffect(() => {
+    setIsNewAppointment(appointmentData.id === undefined)
+  }, [])
 
   const changeAppointment = ({ field, changes }) => {
     setAppointmentChanges((prev) => {
@@ -89,7 +111,7 @@ const NewAppointmentForm = (props) => {
     if (type === 'cancel') {
       commitChanges({ [type]: appointment.id })
     } else if (type === 'changed') {
-      commitChanges({ [type]: { [appointment.id]: appointment } })
+      commitChanges({ [type]: appointment })
     } else {
       commitChanges({ [type]: appointment })
     }
@@ -102,7 +124,6 @@ const NewAppointmentForm = (props) => {
     ...appointmentChanges
   }
 
-  const isNewAppointment = appointmentData.id === undefined
   const applyChanges = isNewAppointment
     ? () => commitAppointment('added')
     : () => commitAppointment('changed')
@@ -119,11 +140,11 @@ const NewAppointmentForm = (props) => {
       const isEndDateOk = validateHourEnd(String(field) === 'endDate' ? value : prev.endDate)
       const isTitleOk = checkFieldAndValue(prev, 'title', field, value)
       const isBoxOk = checkFieldAndValue(prev, 'box', field, value)
-      const isCommentOk = checkFieldAndValue(prev, 'comment', field, value)
+      //      const isCommentOk = checkFieldAndValue(prev, 'comment', field, value)
       const isAppointmentTypeOk = checkFieldAndValue(prev, 'type', field, value)
       const isHoursOk = isStartDateOk && isEndDateOk ? validateHourStartAndHourEnd(prev) : false
 
-      if (!isTitleOk || !isBoxOk || !isCommentOk || !isAppointmentTypeOk || !isStartDateOk || !isEndDateOk || !isHoursOk) {
+      if (!isTitleOk || !isBoxOk || !isAppointmentTypeOk || !isStartDateOk || !isEndDateOk || !isHoursOk) {
         setNextBtnEnabled(false)
         return
       }
@@ -272,6 +293,7 @@ const NewAppointmentForm = (props) => {
         displayAppointmentData={displayAppointmentData}
         boxes={boxes}
         appointmentTypes={appointmentTypes}
+        dentists={dentists}
         setNextBtnEnabled={setNextBtnEnabled}
         changeAppointment={changeAppointment}
         messageError={messageError}
@@ -348,7 +370,7 @@ const NewAppointmentForm = (props) => {
           </div>
 
           <div style={{ bottom: 30, left: 15, position: 'absolute' }} className={classes.buttonGroup}>
-            {!isNewAppointment && displayAppointmentData.status.name !== 'Cancelada' && (
+            {!isNewAppointment && displayAppointmentData?.status?.name !== 'Cancelada' && (
               <Button
                 variant='contained'
                 color='secondary'

@@ -40,6 +40,20 @@ const LoginPage = ({ classes, location, history }) => {
       authenticationService.login(username, password)
         .then(async (user) => {
           // const { from } = location.state || { from: { pathname: '/' } }
+          if (!['ROLE_ADMIN', 'ROLE_DENTIST'].includes(user.role)) {
+            addToast('Tu cuenta no tiene acceso a esta plataforma.', { appearance: 'error', autoDismiss: true })
+            setStatus('Tu cuenta no tiene acceso a esta plataforma.')
+            setSubmitting(false)
+            return
+          }
+
+          if (user.status !== 'Habilitado') {
+            addToast('Tu cuenta esta deshabilitada.', { appearance: 'error', autoDismiss: true })
+            setStatus('Tu cuenta se encuentra deshabilitada.')
+            setSubmitting(false)
+            return
+          }
+
           addToast('Inicio de sesión correcto', { appearance: 'success', autoDismiss: true })
           history.replace('/')
         })

@@ -7,6 +7,10 @@ import Button from '@material-ui/core/Button'
 import { Tooltip } from '@material-ui/core'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import Animation from 'components/animation'
+import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
+
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const TableData = ({
   enableSelect,
@@ -83,6 +87,8 @@ const TableData = ({
     return stableSort(currentData, getSorting(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
       .map(n => {
+        const nextMeetingFormatted = n.nextMeeting ? dateFnsInstance.format(dateFnsInstance.parse(n.nextMeeting, 'yyyy-MM-dd HH:mm:ss'), 'dd-MM-yyy HH:mm') : 'Sin registro'
+
         const isActualSelected = isSelected(n.id)
         return (
           <TableRow
@@ -110,7 +116,7 @@ const TableData = ({
             {/* <TableCell>{n.id}</TableCell> */}
             <TableCell>{n.personInfo?.firstName} {n.personInfo?.lastName}</TableCell>
             <TableCell>{n.personInfo?.rut}</TableCell>
-            <TableCell>{n.meetingsInfo?.nextMeeting || 'Sin asignar'}</TableCell>
+            <TableCell>{nextMeetingFormatted}</TableCell>
             <TableCell>{n.personInfo?.cellphone}</TableCell>
             <TableCell>
               <Link className='button' to={`/pacientes/${n.id}`}>

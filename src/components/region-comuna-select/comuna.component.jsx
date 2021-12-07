@@ -20,6 +20,9 @@ const ComunaSelect = ({ regionSelected, comunaSelected, setComunaSelected, ...re
         <TextField {...params} label='Comuna' variant='outlined' margin='normal' style={{ backgroundColor: 'white' }} />
       )}
       noOptionsText='Debes seleccionar una región'
+      getOptionSelected={(option, value) => {
+        return option?.id === value
+      }}
       renderOption={(option, { inputValue }) => {
         const matches = match(option.name, inputValue)
         const parts = parse(option.name, matches)

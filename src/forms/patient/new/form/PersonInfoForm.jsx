@@ -14,15 +14,25 @@ const PersonInfoForm = ({
   changeAppointment,
   messageError,
   displayAppointmentData,
-  preloadData
+  preloadData,
+  isEditing,
+  rolDefault
 }) => {
   const [roles, setRoles] = useState([])
   const [contactMeans, setContactMeans] = useState([])
 
   useEffect(() => {
-    changeAppointment({
-      field: ['dateOfBirth'], changes: new Date(1, 1, 1990)
-    })
+    if (!displayAppointmentData.dateOfBirth) {
+      changeAppointment({
+        field: ['dateOfBirth'], changes: new Date(1, 1, 1990)
+      })
+    }
+
+    if (rolDefault) {
+      changeAppointment({
+        field: ['roleName'], changes: 'ROLE_PATIENT'
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -62,6 +72,7 @@ const PersonInfoForm = ({
             {...textEditorProps('rut')}
             label='RUT'
             style={{ width: '50%' }}
+            disabled={isEditing}
           />
           <div style={{ marginLeft: 10, marginRight: 10 }} />
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={esLocale}>
@@ -95,7 +106,7 @@ const PersonInfoForm = ({
             style={{ width: '50%' }}
             disabled
             key={preloadData ? 'username' : 'username-waiting'}
-            value={preloadData?.username || ''}
+            value={preloadData?.username || displayAppointmentData?.username || ''}
           />
           <div style={{ marginLeft: 10, marginRight: 10 }} />
           <TextField
@@ -104,7 +115,7 @@ const PersonInfoForm = ({
             style={{ width: '50%' }}
             disabled
             defaultValue=''
-            value={preloadData?.username || ''}
+            value={preloadData?.username || (displayAppointmentData?.username ? '*******' : '') || ''}
           />
         </div>
         <div className={classes.wrapper}>
@@ -113,6 +124,7 @@ const PersonInfoForm = ({
             <Select
               fullWidth
               {...textEditorProps('roleName')}
+              key={'roleName-' + displayAppointmentData?.roleName}
               value={displayAppointmentData?.roleName}
             >
               {roles.map(box => <MenuItem key={box.id} value={box.name}>{box.spanishName}</MenuItem>)}

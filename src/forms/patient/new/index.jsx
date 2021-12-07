@@ -12,8 +12,10 @@ const FormNewUser = (props) => {
     visible,
     toggleVisible: visibleChange,
     cancelAppointment,
-    appointmentData = {},
-    commitChanges
+    currentUserData = {},
+    commitChanges,
+    setCurrentUserEditing,
+    rolDefault
   } = props
 
   const [appointmentChanges, setAppointmentChanges] = useState({})
@@ -21,6 +23,8 @@ const FormNewUser = (props) => {
   const [isNextBtnEnabled, setNextBtnEnabled] = useState(false)
   const [rutValidationAndPreloadData, setRutValidationAndPreloadData] = useState({})
   const [messageError, setMessageError] = useState(undefined)
+  const [isNewAppointment, setIsNewAppointment] = useState()
+  const [flagDataPassed, setFlagDataPassed] = useState(false)
 
   useEffect(() => {
     if (activeStep === steps.length - 1) {
@@ -29,10 +33,18 @@ const FormNewUser = (props) => {
   }, [activeStep])
 
   useEffect(() => {
-    if (appointmentData.id !== undefined) {
+    if (currentUserData.id !== undefined) {
+      if (!flagDataPassed) {
+        setAppointmentChanges(currentUserData)
+        setFlagDataPassed(true)
+      }
       setNextBtnEnabled(true)
     }
-  }, [appointmentData, activeStep])
+  }, [currentUserData, activeStep])
+
+  useEffect(() => {
+    setIsNewAppointment(currentUserData.id === undefined)
+  }, [])
 
   const changeAppointment = ({ field, changes }) => {
     setAppointmentChanges((prev) => {
@@ -45,41 +57,31 @@ const FormNewUser = (props) => {
     })
   }
 
-  const changeAppointments = ({ f1, c1 }, { f2, c2 }) => {
-    const nextChanges = {
-      ...appointmentChanges,
-      [f1]: c1,
-      [f2]: c2
-    }
-
-    setAppointmentChanges(nextChanges)
-    handleTextEditorOnChange(f1, c1)
-    handleTextEditorOnChange(f2, c2)
-  }
-
   const commitAppointment = (type) => {
     const appointment = {
-      ...appointmentData,
+      ...currentUserData,
       ...appointmentChanges
     }
-
     if (type === 'cancel') {
       commitChanges({ [type]: appointment.id })
     } else if (type === 'changed') {
-      commitChanges({ [type]: { [appointment.id]: appointment } })
-    } else {
+      if (typeof appointment.commune === 'object' || appointment.commune instanceof Object) {
+        appointment.commune = appointment.commune.commune
+      }
+
       commitChanges({ [type]: appointment })
+    } else {
+      commitChanges({ [type]: { ...appointment, username: rutValidationAndPreloadData.username, password: rutValidationAndPreloadData.username } })
     }
 
     setAppointmentChanges({})
   }
 
   const displayAppointmentData = {
-    ...appointmentData,
+    ...currentUserData,
     ...appointmentChanges
   }
 
-  const isNewAppointment = appointmentData.id === undefined
   const applyChanges = isNewAppointment
     ? () => commitAppointment('added')
     : () => commitAppointment('changed')
@@ -105,16 +107,18 @@ const FormNewUser = (props) => {
       const isCellphoneOk = checkFieldAndValue(prev, 'cellphone', field, value)
 
       if (isFirstNameOk && isLastNameOk && isRutOk) {
-        userService.validate({ rut: prev.rut, firstName: prev.firstName, lastName: prev.lastName })
-          .then(response => {
-            if (response.data.statusCode === 'OK') {
-              setMessageError(undefined)
-              setRutValidationAndPreloadData(response.data)
-            } else {
-              setNextBtnEnabled(false)
-              setMessageError('Error: ' + response.data.errorMsg)
-            }
-          })
+        if (isNewAppointment) {
+          userService.validate({ rut: prev.rut, firstName: prev.firstName, lastName: prev.lastName })
+            .then(response => {
+              if (response.data.statusCode === 'OK') {
+                setMessageError(undefined)
+                setRutValidationAndPreloadData(response.data)
+              } else {
+                setNextBtnEnabled(false)
+                setMessageError('Error: ' + response.data.errorMsg)
+              }
+            })
+        }
       }
 
       const isRoleNameOk = checkFieldAndValue(prev, 'roleName', field, value)
@@ -170,26 +174,16 @@ const FormNewUser = (props) => {
   const pickerEditorPropsStartDate = field => ({
     ...pickerEditorProps(field),
     onChange: date => {
-      const newEndDate = isNewAppointment ? date : displayAppointmentData.endDate
-
-      if (!isNewAppointment) {
-        newEndDate.setFullYear(date.getFullYear())
-        newEndDate.setDate(date.getDate())
-        newEndDate.setMonth(date.getMonth())
-      }
-
       //      changeAppointment({ field: [field], changes: date || new Date(displayAppointmentData[field]) })
       //      changeAppointment({ field: ['endDate'], changes: newEndDate })
 
-      changeAppointments(
-        { f1: [field], c1: date || new Date(displayAppointmentData[field]) },
-        { f2: ['endDate'], c2: newEndDate }
-      )
+      changeAppointment({ field: [field], changes: date || new Date(displayAppointmentData[field]) })
     }
   })
 
   const cancelChanges = () => {
     setAppointmentChanges({})
+    setCurrentUserEditing(undefined)
     visibleChange()
     if (cancelAppointment !== undefined) {
       cancelAppointment()
@@ -216,6 +210,8 @@ const FormNewUser = (props) => {
         changeAppointment={changeAppointment}
         messageError={messageError}
         preloadData={rutValidationAndPreloadData}
+        isEditing={!isNewAppointment}
+        rolDefault={rolDefault}
         {...props}
                  />
     },
@@ -229,6 +225,7 @@ const FormNewUser = (props) => {
         displayAppointmentData={displayAppointmentData}
         changeAppointment={changeAppointment}
         setNextBtnEnabled={setNextBtnEnabled}
+        isEditing={!isNewAppointment}
                  />
     },
     {
@@ -257,14 +254,10 @@ const FormNewUser = (props) => {
 
   const BackOrCloseButton = () => activeStep === 0 ? <CancelButton /> : <BackButton />
 
-  const isAppointmentCurrentlyCancel = () => {
-    return true
-  }
-
   return (
     <Modal
       open={visible}
-      onClose={visibleChange}
+      onClose={cancelChanges}
       className={classes.modal}
     >
       <Paper className={classes.content}>
@@ -290,23 +283,6 @@ const FormNewUser = (props) => {
         <div>
           <div style={{ width: '100%', height: '100%' }}>
             {steps[activeStep]?.component}
-          </div>
-
-          <div style={{ bottom: 30, left: 15, position: 'absolute' }} className={classes.buttonGroup}>
-            {!isNewAppointment && displayAppointmentData.status.name !== 'Cancelada' && isAppointmentCurrentlyCancel() && (
-              <Button
-                variant='contained'
-                color='secondary'
-                className={classes.button}
-                style={{ float: 'left', left: 1 }}
-                onClick={() => {
-                  visibleChange()
-                  commitAppointment('cancel')
-                }}
-              >
-                Cancelar cita
-              </Button>
-            )}
           </div>
 
           <div style={{ bottom: 30, right: 15, position: 'absolute' }} className={classes.buttonGroup}>

@@ -1,5 +1,5 @@
 import { withStyles } from '@material-ui/core'
-import styles from 'pages/my-dates/calendar/styles'
+import styles from 'pages/my-dates/styles'
 import { Appointments } from '@devexpress/dx-react-scheduler-material-ui'
 
 const AppointmentContent = ({ classes, ...restProps }) => (

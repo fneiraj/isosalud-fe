@@ -3,7 +3,7 @@ import { authHeader, history } from 'helpers'
 
 const axios = require('axios')
 
-const host = 'http://181.161.163.151:8080'
+const host = 'http://isosalud.ddns.net:8080'
 
 const readUrl = (url = '') =>
   url.startsWith('http://') || url.startsWith('https://')

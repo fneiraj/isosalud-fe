@@ -6,42 +6,49 @@ import Paper from '@material-ui/core/Paper'
 import styles from './styles'
 import HeaderData from 'components/data-page/header'
 import TableHeader from 'components/data-page/table-header'
-import { patientService } from 'services/patient/PatientService'
 import TableData from './components/table-data'
 import useToggle from 'hooks/useToggle'
+import { userService } from 'services/user/UserService'
 import FormNewPatient from 'forms/patient/new'
+import { appointmentService } from 'services/appointment/AppointmentService'
+import { useToasts } from 'react-toast-notifications'
+import DeletePatientDialog from 'forms/patient/new/components/delete-dialog'
+import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
+
+const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
 
 const rows = [
   { id: 'name', numeric: false, disablePadding: false, label: 'Nombre' },
-  { id: 'treatments', numeric: false, disablePadding: false, label: 'RUT' },
+  { id: 'rut', numeric: false, disablePadding: false, label: 'RUT' },
   { id: 'nextMeeting', numeric: false, disablePadding: false, label: 'Próxima cita' },
-  { id: 'phone', numeric: false, disablePadding: false, label: 'Celular' },
-  { id: 'actions', numeric: false, disablePadding: false, disableSort: true, label: 'Acciones' }
+  { id: 'cellphone', numeric: false, disablePadding: false, label: 'Celular' },
+  { id: 'actions', numeric: false, disablePadding: false, label: 'Acciones' }
 ]
 
 const PatientsPage = ({ classes }) => {
   const [data, setData] = useState([])
   const [searchText, setSearchText] = useState('')
-  const [newPatientFormVisible, toggleNewPatientFormVisible] = useToggle()
+  const [isNewUserFormVisible, toggleNewUserFormVisible] = useToggle()
   const [orderBy, setOrderBy] = useState('id')
   const [order, setOrder] = useState('asc')
   const [page, setPage] = useState(1)
   const [rowsPerPage, setRowsPerPage] = useState(10)
   const [currentData, setCurrentData] = useState([])
   const [selected, setSelected] = useState([])
+  const [deletedAppointmentId, setDeletedAppointmentId] = useState(undefined)
+  const [isDeleteDialogVisible, toggleDeleteDialogVisible] = useToggle()
+  const [currentUserEditing, setCurrentUserEditing] = useState(undefined)
+  const { addToast } = useToasts()
 
   useEffect(() => {
-    patientService.getAll()
+    userService.getAll()
       .then(res => {
         setData(res.data.data)
         setCurrentData(res.data.data)
       })
       .catch(error => console.error(error))
   }, [])
-
-  const toggleNewPatientFormVisibility = () => {
-    toggleNewPatientFormVisible()
-  }
 
   const handleRequestSort = (event, property) => {
     const newOrderBy = property
@@ -76,6 +83,105 @@ const PatientsPage = ({ classes }) => {
     }
   }
 
+  const commitChanges = ({ added, changed, cancel }) => {
+    if (added) {
+      userService.create(added)
+        .then(response => {
+          setData(prev => {
+            const newData = [...prev, response.data]
+            setCurrentData(newData)
+            return newData
+          })
+          addToast('Usuario agregado correctamente', { appearance: 'success', autoDismiss: true })
+        })
+        .catch(error => {
+          console.error(error)
+          addToast('Error al agregar usuario', { appearance: 'error', autoDismiss: true })
+        })
+    }
+    if (changed) {
+      console.log({ changed })
+
+      userService.edit(changed)
+        .then(response => {
+          setData(prev => {
+            const newData = [...prev.filter(u => u.id !== response.data.id), response.data]
+            setCurrentData(newData)
+            return newData
+          })
+          addToast('Usuario editado correctamente', { appearance: 'success', autoDismiss: true })
+        })
+        .catch(error => {
+          console.error(error)
+          addToast('Error al editar usuario', { appearance: 'error', autoDismiss: true })
+        })
+
+      setData(data.map(appointment => (
+        changed[appointment.id] ? { ...appointment, ...changed[appointment.id] } : appointment))
+      )
+
+      setCurrentUserEditing(undefined)
+    }
+    if (cancel !== undefined) {
+      setDeletedAppointmentId(cancel)
+      toggleDeleteDialogVisible()
+    }
+    return { data, addedAppointment: {} }
+  }
+
+  const setUser = (user) => {
+    setData(prev => {
+      const tmp = [...prev.filter(u => u.id !== user.id), user]
+      setCurrentData(tmp)
+      return tmp
+    })
+  }
+
+  const onEditButtonClick = (id) => {
+    const user = data.find(u => u.id === id)
+    const dateOfBirth = dateFnsInstance.parse(user.personInfo?.dateOfBirth, 'yyyy-MM-dd')
+
+    setCurrentUserEditing({
+      id: id,
+      dateOfBirth: dateOfBirth,
+      firstName: user.personInfo?.firstName,
+      lastName: user.personInfo?.lastName,
+      rut: user.personInfo?.rut,
+      phone: user.personInfo?.phone,
+      cellphone: user.personInfo?.cellphone,
+      roleName: user.roleName,
+      preferredContactMeanName: user.preferredContactMeanName,
+      email: user.personInfo?.email,
+      commune: user.personInfo?.addressInfo,
+      region: user.personInfo?.addressInfo?.region,
+      address: user.personInfo?.addressInfo?.street,
+      gender: user.personInfo?.gender,
+      prevision: user.personInfo?.prevision,
+      username: user.username,
+      status: user.status
+    })
+    toggleNewUserFormVisible()
+  }
+
+  const commitDeletedAppointment = () => {
+    setDeletedAppointmentId(null)
+
+    appointmentService.cancel(deletedAppointmentId)
+      .then(response => {
+        setData((prev) => {
+          const startingAddedId = prev.length > 0 ? prev[data.length - 1].id + 1 : 0
+          return [...prev.filter(appointment => appointment.id !== deletedAppointmentId), { id: startingAddedId, ...response.data }]
+        })
+        addToast('Cita cancelada correctamente', { appearance: 'success', autoDismiss: true })
+      })
+      .catch(error => {
+        console.error(error)
+        addToast('Error al cancelar cita', { appearance: 'error', autoDismiss: true })
+      })
+
+    toggleDeleteDialogVisible()
+  }
+
   return (
     <>
       <Paper className={classes.root}>
@@ -83,15 +189,15 @@ const PatientsPage = ({ classes }) => {
         <HeaderData
           searchText={searchText}
           handleSearch={handleSearch}
-          placeholderSearchInput='Buscar paciente por Nombre o RUT...'
+          placeholderSearchInput='Buscar usuario por Nombre, RUT o usuario...'
           enableRefreshData={false}
           enableButtonNewData
-          handleOnClickNewData={toggleNewPatientFormVisibility}
-          newDataText='Agregar paciente'
+          handleOnClickNewData={toggleNewUserFormVisible}
+          newDataText='Agregar usuario'
         />
 
         <div className={classes.tableWrapper}>
-          <Table className={classes.table} aria-labelledby='Pacientes'>
+          <Table className={classes.table} aria-labelledby='Usuarios'>
 
             <TableHeader
               enableSelectAll={false}
@@ -112,6 +218,8 @@ const PatientsPage = ({ classes }) => {
               rowsPerPage={rowsPerPage}
               selected={selected}
               setSelected={setSelected}
+              setUser={setUser}
+              onEditButtonClick={onEditButtonClick}
             />
 
           </Table>
@@ -127,8 +235,19 @@ const PatientsPage = ({ classes }) => {
       </Paper>
 
       <FormNewPatient
-        visible={newPatientFormVisible}
-        toggleVisible={toggleNewPatientFormVisible}
+        key={isNewUserFormVisible ? 'form-visible' : 'form-no-visible'}
+        commitChanges={commitChanges}
+        visible={isNewUserFormVisible}
+        toggleVisible={toggleNewUserFormVisible}
+        currentUserData={currentUserEditing}
+        setCurrentUserEditing={setCurrentUserEditing}
+        rolDefault='patient'
+      />
+
+      <DeletePatientDialog
+        commitDeletedAppointment={commitDeletedAppointment}
+        toggleConfirmationVisible={toggleDeleteDialogVisible}
+        confirmationVisible={isDeleteDialogVisible}
       />
     </>
   )

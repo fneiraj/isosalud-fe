@@ -69,7 +69,15 @@ const initProductData = {
   productTypeId: ''
 }
 
-const FormNewProduct = ({ classes, visible, toggleVisible, onCreateCallback, onUpdateCallback, currentProductEditing, setCurrentProductEditing }) => {
+const FormNewProduct = ({
+  classes,
+  visible,
+  toggleVisible,
+  onCreateCallback,
+  onUpdateCallback,
+  currentProductEditing,
+  setCurrentProductEditing
+}) => {
   const [productTypes, setProductTypes] = useState([])
 
   useEffect(() => {

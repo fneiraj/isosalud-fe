@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import Alert from '@material-ui/lab/Alert'
 import { set } from 'date-fns'
 import { feriadosService } from 'services/api/feriados/FeriadosService'
+import { authenticationService } from 'services'
 
 const dateFnsInstance = new DateFnsUtils({ locale: esLocale })
 
@@ -19,10 +20,20 @@ const AppointmentInfoForm = ({
   displayAppointmentData,
   changeAppointment,
   boxes,
+  dentists,
   appointmentTypes,
   messageError
 }) => {
   const [feriados, setFeriados] = useState([])
+  const currentUser = authenticationService.currentUserValue
+
+  useEffect(() => {
+    if (currentUser && !displayAppointmentData.medic) {
+      changeAppointment({
+        field: ['medic'], changes: currentUser.personInfo?.id
+      })
+    }
+  }, [currentUser])
 
   useEffect(() => {
     if (!displayAppointmentData.startDate) {
@@ -121,6 +132,20 @@ const AppointmentInfoForm = ({
               value={displayAppointmentData?.type?.id || displayAppointmentData?.type}
             >
               {appointmentTypes.map(type => <MenuItem key={type.id} value={type.id}>{type.name}</MenuItem>)}
+            </Select>
+          </FormControl>
+        </div>
+        <div className={classes.wrapper}>
+          <RoomIcon className={classes.icon} color='action' />
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel style={{ paddingLeft: 15 }}>Médico</InputLabel>
+            <Select
+              fullWidth
+              {...textEditorProps('medic')}
+              key={'medic-' + (displayAppointmentData?.medic?.id || displayAppointmentData?.personInfo?.id || displayAppointmentData?.medic)}
+              value={displayAppointmentData?.medic?.id || displayAppointmentData?.personInfo?.id || displayAppointmentData?.medic}
+            >
+              {dentists.map(dentist => <MenuItem key={dentist.personInfo?.id} value={dentist.personInfo?.id}>{`${dentist.personInfo?.firstName} ${dentist.personInfo?.lastName}`}</MenuItem>)}
             </Select>
           </FormControl>
         </div>

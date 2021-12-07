@@ -1,5 +1,5 @@
 import { withStyles } from '@material-ui/core'
-import styles from 'pages/my-dates/calendar/styles'
+import styles from 'pages/my-dates/styles'
 import { Appointments as DXAppointment } from '@devexpress/dx-react-scheduler-material-ui'
 import DateFnsAdapter from '@date-io/date-fns'
 import esLocale from 'date-fns/locale/es/'
