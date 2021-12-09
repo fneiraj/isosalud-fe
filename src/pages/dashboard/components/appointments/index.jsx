@@ -1,23 +1,16 @@
-import {
-  Button,
-  Grid, Hidden,
-  Typography
-} from '@material-ui/core'
+import { Button, Grid, Hidden, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import AppointmentCard from 'pages/dashboard/components/appointments/components/card'
 import { useEffect, useState } from 'react'
 import { appointmentService } from 'services/appointment/AppointmentService'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([])
 
   const isToday = ({ startDate }) => {
-    const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd HH:mm')
-    return dateFnsInstance.isSameDay(new Date(), startDateParsed)
+    const startDateParsed = dateUtils.parse(startDate, 'yyyy-MM-dd HH:mm')
+    return dateUtils.isSameDay(new Date(), startDateParsed)
   }
 
   useEffect(() => {

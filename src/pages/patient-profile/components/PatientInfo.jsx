@@ -1,11 +1,8 @@
 import { Avatar, Button, Card, CardContent, Grid, TextField, Typography } from '@material-ui/core'
 import React from 'react'
-import styles from '../styles'
+import styles from 'pages/patient-profile/styles'
 import { makeStyles } from '@material-ui/core/styles'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -112,17 +109,15 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
   const dateRegisterFormatted = () => {
     if (!info?.dateCreated) return null
 
-    const dateParsed = dateFnsInstance.parse(info?.dateCreated, 'yyyy-MM-dd HH:mm:ss')
-
-    return dateFnsInstance.format(dateParsed, 'dd-MM-yyyy')
+    const dateParsed = dateUtils.parse(info?.dateCreated, 'yyyy-MM-dd HH:mm:ss')
+    return dateUtils.format(dateParsed, 'dd-MM-yyyy')
   }
 
   const dateBirthdayFormatted = () => {
     if (!info?.dateOfBirth) return null
 
-    const dateParsed = dateFnsInstance.parse(info?.dateOfBirth, 'yyyy-MM-dd')
-
-    return dateFnsInstance.format(dateParsed, 'dd-MM-yyyy')
+    const dateParsed = dateUtils.parse(info?.dateOfBirth, 'yyyy-MM-dd')
+    return dateUtils.format(dateParsed, 'dd-MM-yyyy')
   }
 
   const PersonalInfo = () => (

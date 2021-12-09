@@ -20,7 +20,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight'
 import CancelIcon from '@material-ui/icons/Cancel'
 import PrintIcon from '@material-ui/icons/Print'
 import { DataMock } from 'mock/data'
-import ToothArches from './tooth-arches/ToothArches'
+import ToothArches from 'pages/patient-profile/sub-pages/treatments/components/tooth-arches/ToothArches'
 
 const styles = (theme) => ({
   modal: {

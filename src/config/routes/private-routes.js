@@ -7,14 +7,19 @@ import {
   MyDatesPage,
   MyPatientsPage,
   PatientProfilePage,
-  RadiographsPage,
-  TreatmentPlansPage,
   UsersPage,
-  SiteOptionsPage, UserProfilePage
+  SiteOptionsPage,
+  UserProfilePage,
+  MyProfilePage
 } from 'pages'
+
+import {
+  EvolutionsPage,
+  FilesPage,
+  TreatmentsPage
+} from 'pages/patient-profile/sub-pages'
+
 import { Role } from 'models/Role'
-import EvolutionsPage from 'pages/patient-profile/evolutions'
-import MyProfilePage from 'pages/my-profile'
 
 export const privateRoutes = [
   {
@@ -83,13 +88,13 @@ export const privateRoutes = [
     exact: true
   },
   {
-    path: '/pacientes/:id/ficha-clinica/radiografias',
-    component: RadiographsPage,
+    path: '/pacientes/:id/ficha-clinica/archivos',
+    component: FilesPage,
     exact: true
   },
   {
     path: '/pacientes/:id/planes-tratamiento',
-    component: TreatmentPlansPage,
+    component: TreatmentsPage,
     exact: true
   },
   {

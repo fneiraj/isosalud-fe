@@ -1,11 +1,8 @@
 import { MonthView } from '@devexpress/dx-react-scheduler-material-ui'
-import DateFnsAdapter from '@date-io/date-fns'
 import { makeStyles } from '@material-ui/core'
 import { sub } from 'date-fns'
-import esLocale from 'date-fns/locale/es/'
 import clsx from 'clsx'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const useStyles = makeStyles((theme) => ({
   cursorNotAllowed: {
@@ -22,9 +19,9 @@ const useStyles = makeStyles((theme) => ({
 const MonthTimeTableCell = ({ onDoubleClick, feriados, ...restProps }) => {
   const { startDate } = restProps
   const classes = useStyles()
-  const isBefore = dateFnsInstance.isBefore(sub(new Date(), { days: 1 }), startDate)
+  const isBefore = dateUtils.isBefore(sub(new Date(), { days: 1 }), startDate)
   const isHabil = startDate.getDay() !== 6 && startDate.getDay() !== 0
-  const isFeriado = feriados.map(feriado => feriado.fecha).includes(dateFnsInstance.format(startDate, 'yyyy-MM-dd'))
+  const isFeriado = feriados.map(feriado => feriado.fecha).includes(dateUtils.format(startDate, 'yyyy-MM-dd'))
 
   return (
     <MonthView.TimeTableCell

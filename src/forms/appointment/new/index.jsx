@@ -6,12 +6,9 @@ import { boxService } from 'services/box/BoxService'
 import { patientService } from 'services/patient/PatientService'
 import { appointmentTypesService } from 'services/appointment-types/AppointmentTypesService'
 import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from 'forms/appointment/new/form'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
 import { set } from 'date-fns'
 import { dentistService } from 'services/dentist/DentistService'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const NewAppointmentForm = (props) => {
   const {
@@ -180,14 +177,14 @@ const NewAppointmentForm = (props) => {
 
   const getDate = (date, field) => {
     const dateP = date || new Date(displayAppointmentData[field])
-    return dateFnsInstance.format(dateP, 'yyyy-MM-dd HH:mm')
+    return dateUtils.format(dateP, 'yyyy-MM-dd HH:mm')
   }
 
   const validateHourStart = (value) => {
-    const dateParsedStartHour = dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm')
-    const dateParsedStartHourOk = set(dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm'), { hours: 7, minutes: 59, seconds: 0 })
+    const dateParsedStartHour = dateUtils.parse(value, 'yyyy-MM-dd HH:mm')
+    const dateParsedStartHourOk = set(dateUtils.parse(value, 'yyyy-MM-dd HH:mm'), { hours: 7, minutes: 59, seconds: 0 })
 
-    if (dateFnsInstance.isAfter(dateParsedStartHour, dateParsedStartHourOk)) {
+    if (dateUtils.isAfter(dateParsedStartHour, dateParsedStartHourOk)) {
       setMessageError(undefined)
       return true
     } else {
@@ -199,10 +196,10 @@ const NewAppointmentForm = (props) => {
   }
 
   const validateHourEnd = (value) => {
-    const dateParsedEndHour = dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm')
-    const dateParsedEndHourOk = set(dateFnsInstance.parse(value, 'yyyy-MM-dd HH:mm'), { hours: 19, minutes: 1, seconds: 0 })
+    const dateParsedEndHour = dateUtils.parse(value, 'yyyy-MM-dd HH:mm')
+    const dateParsedEndHourOk = set(dateUtils.parse(value, 'yyyy-MM-dd HH:mm'), { hours: 19, minutes: 1, seconds: 0 })
 
-    if (dateFnsInstance.isBefore(dateParsedEndHour, dateParsedEndHourOk)) {
+    if (dateUtils.isBefore(dateParsedEndHour, dateParsedEndHourOk)) {
       setMessageError(undefined)
       return true
     } else {
@@ -216,10 +213,10 @@ const NewAppointmentForm = (props) => {
   const validateHourStartAndHourEnd = (prev) => {
     const startDateValue = prev.startDate
     const endDateValue = prev.endDate
-    const startDateParsed = dateFnsInstance.parse(prev.startDate, 'yyyy-MM-dd HH:mm')
-    const endDateParsed = dateFnsInstance.parse(prev.endDate, 'yyyy-MM-dd HH:mm')
+    const startDateParsed = dateUtils.parse(prev.startDate, 'yyyy-MM-dd HH:mm')
+    const endDateParsed = dateUtils.parse(prev.endDate, 'yyyy-MM-dd HH:mm')
 
-    if (dateFnsInstance.isBefore(startDateParsed, endDateParsed)) {
+    if (dateUtils.isBefore(startDateParsed, endDateParsed)) {
       setMessageError(undefined)
       return true
     } else {
@@ -249,7 +246,7 @@ const NewAppointmentForm = (props) => {
   const pickerEditorPropsStartDate = field => ({
     ...pickerEditorProps(field),
     onChange: date => {
-      const newEndDate = displayAppointmentData.endDate !== undefined ? dateFnsInstance.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm') : date
+      const newEndDate = displayAppointmentData.endDate !== undefined ? dateUtils.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm') : date
 
       newEndDate.setFullYear(date.getFullYear())
       newEndDate.setDate(date.getDate())

@@ -13,10 +13,7 @@ import FormNewPatient from 'forms/patient/new'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import { useToasts } from 'react-toast-notifications'
 import DeletePatientDialog from 'forms/patient/new/components/delete-dialog'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const rows = [
   { id: 'username', numeric: false, disablePadding: false, label: 'Usuario' },
@@ -141,7 +138,7 @@ const UsersPage = ({ classes }) => {
 
   const onEditButtonClick = (id) => {
     const user = data.find(u => u.id === id)
-    const dateOfBirth = dateFnsInstance.parse(user.personInfo?.dateOfBirth, 'yyyy-MM-dd')
+    const dateOfBirth = dateUtils.parse(user.personInfo?.dateOfBirth, 'yyyy-MM-dd')
 
     setCurrentUserEditing({
       id: id,

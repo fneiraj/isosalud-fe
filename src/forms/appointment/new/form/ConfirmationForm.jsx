@@ -1,20 +1,17 @@
 import { Grid, Typography } from '@material-ui/core'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const ConfirmationForm = ({
   displayAppointmentData
 }) => {
-  const startDateParsed = dateFnsInstance.parse(displayAppointmentData?.startDate, 'yyyy-MM-dd HH:mm')
-  const endDateParsed = dateFnsInstance.parse(displayAppointmentData?.endDate, 'yyyy-MM-dd HH:mm')
+  const startDateParsed = dateUtils.parse(displayAppointmentData?.startDate, 'yyyy-MM-dd HH:mm')
+  const endDateParsed = dateUtils.parse(displayAppointmentData?.endDate, 'yyyy-MM-dd HH:mm')
 
   let startDateFormatted = null
   let endDateFormatted = null
   try {
-    startDateFormatted = dateFnsInstance.format(startDateParsed || new Date(), 'EEEE dd \'de\' LLLL \'del\' yyyy \'desde\' HH:mm')
-    endDateFormatted = dateFnsInstance.format(endDateParsed, 'HH:mm')
+    startDateFormatted = dateUtils.format(startDateParsed || new Date(), 'EEEE dd \'de\' LLLL \'del\' yyyy \'desde\' HH:mm')
+    endDateFormatted = dateUtils.format(endDateParsed, 'HH:mm')
   } catch (error) {
     console.error(error)
   }

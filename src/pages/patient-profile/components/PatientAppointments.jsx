@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Divider, Grid, Hidden, Typography } from '@material-ui/core'
+import { Button, Card, CardContent, Divider, Grid, Hidden, Modal, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import EventIcon from '@material-ui/icons/Event'
@@ -7,7 +7,6 @@ import HighlightOffIcon from '@material-ui/icons/HighlightOff'
 import DescriptionIcon from '@material-ui/icons/Description'
 import PlayCircleFilledWhiteOutlinedIcon from '@material-ui/icons/PlayCircleFilledWhiteOutlined'
 import ScheduleRoundedIcon from '@material-ui/icons/ScheduleRounded'
-import DateFnsAdapter from '@date-io/date-fns'
 import {
   Timeline,
   TimelineConnector,
@@ -17,16 +16,17 @@ import {
   TimelineSeparator
 } from '@material-ui/lab'
 import classNames from 'classnames'
-import Scrollable from '../../../../components/scrollable'
+import Scrollable from 'components/scrollable'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import NewAppointmentForm from 'forms/appointment/new'
 import useToggle from 'hooks/useToggle'
 import { useToasts } from 'react-toast-notifications'
-import esLocale from 'date-fns/locale/es/'
+import Paper from '@material-ui/core/Paper'
+import IconButton from '@material-ui/core/IconButton'
+import { Close } from '@material-ui/icons'
+import dateUtils from 'utils/date-utils'
 
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   leftSide: {
     // TODO: adjust this value accordingly
     flex: 0
@@ -52,14 +52,41 @@ const useStyles = makeStyles(() => ({
     maxHeight: '270px',
     width: '100%',
     overflow: 'auto'
+  },
+  modal: {
+    marginTop: 250,
+    marginBottom: 250,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    overflow: 'hidden',
+    width: '30%'
+  },
+  content: {
+    padding: theme.spacing(1, 3, 2),
+    width: '100%',
+    height: '100%'
+  },
+  header: {
+    overflow: 'hidden',
+    paddingTop: theme.spacing(0.5)
+  },
+  closeButton: {
+    float: 'right'
+  },
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 2)
   }
 }))
 
-const PatientAppointments = ({ handleAddNote, userData }) => {
+const PatientAppointments = ({ userData }) => {
   const classes = useStyles()
   const { addToast } = useToasts()
   const [appointments, setAppointments] = useState([])
   const [isFormVisible, toggleFormVisible] = useToggle(false)
+  const [isCommentsModalVisible, toggleCommentsModalVisible] = useToggle()
+  const [currentComments, setCurrentComment] = useState(undefined)
 
   useEffect(() => {
     if (userData?.personInfo?.rut) {
@@ -101,8 +128,8 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
     </Typography>
   )
 
-  const renderTimelineItem = ({ id, title, startDate: date, medic, status, type }, isLast) => {
-    const dateFormated = dateFnsInstance.parse(date, 'yyyy-MM-dd HH:mm')
+  const renderTimelineItem = ({ id, title, startDate: date, medic, status, type, comment }, isLast) => {
+    const dateFormated = dateUtils.parse(date, 'yyyy-MM-dd HH:mm')
 
     let statusIcon
 
@@ -135,11 +162,11 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
                   <Typography align='center'>
                     <span
                       className={classNames(classes.bold, classes.date)}
-                    >{dateFnsInstance.format(dateFormated, 'dd \'de\' MMMM \'del\' yyyy')}
+                    >{dateUtils.format(dateFormated, 'dd \'de\' MMMM \'del\' yyyy')}
                     </span><br />
                     <span
                       className={classes.fontWeight200}
-                    >{dateFnsInstance.format(dateFormated, 'hh:mm').toUpperCase()}
+                    >{dateUtils.format(dateFormated, 'hh:mm').toUpperCase()}
                     </span>
                   </Typography>
                 </Grid>
@@ -178,6 +205,10 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
                     variant='text'
                     color='primary'
                     startIcon={<DescriptionIcon />}
+                    onClick={() => {
+                      setCurrentComment(comment)
+                      toggleCommentsModalVisible()
+                    }}
                   >
                     Comentarios
                   </Button>
@@ -202,6 +233,54 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
     )
   }
 
+  const ModalComments = ({ visible, toggleVisible }) => {
+    const handleClose = () => {
+      toggleVisible()
+      setCurrentComment(undefined)
+    }
+
+    return (
+      <Modal
+        open={visible}
+        onClose={handleClose}
+        className={classes.modal}
+      >
+        <Paper className={classes.content}>
+          <div className={classes.header}>
+            <Typography variant='h5'>
+              Comentario
+              <IconButton
+                className={classes.closeButton}
+                onClick={handleClose}
+              >
+                <Close color='action' />
+              </IconButton>
+            </Typography>
+
+          </div>
+          <div>
+            <div style={{ width: '75%', height: '75%', alignItems: 'center' }}>
+              <>
+                {currentComments}
+              </>
+            </div>
+
+            <div style={{ bottom: 30, right: 15, position: 'absolute' }} className={classes.buttonGroup}>
+              <Button
+                variant='contained'
+                color='primary'
+                onClick={handleClose}
+                className={classes.button}
+              >
+                Aceptar
+              </Button>
+            </div>
+          </div>
+        </Paper>
+      </Modal>
+    )
+  }
+
   return (
     <>
       <Card variant='outlined'>
@@ -218,6 +297,11 @@ const PatientAppointments = ({ handleAddNote, userData }) => {
         visible={isFormVisible}
         visibleChange={toggleFormVisible}
         currentPatientData={userData}
+      />
+      <ModalComments
+        key={`modal-comments-${isCommentsModalVisible}`}
+        visible={isCommentsModalVisible}
+        toggleVisible={toggleCommentsModalVisible}
       />
     </>
   )

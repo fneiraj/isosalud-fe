@@ -1,7 +1,7 @@
 import { Button, Grid, Paper } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
-import EvolutionCard from './components/EvolutionCard'
+import EvolutionCard from 'pages/patient-profile/sub-pages/evolutions/components/EvolutionCard'
 import { DataMock } from 'mock/data'
 
 const styles = {

@@ -2,15 +2,14 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-
 import { CalendarToday, Create, Notes } from '@material-ui/icons'
 import RoomIcon from '@material-ui/icons/Room'
 import { DatePicker, MuiPickersUtilsProvider, TimePicker } from '@material-ui/pickers'
-import esLocale from 'date-fns/locale/es/'
-import DateFnsUtils from '@date-io/date-fns'
 import { useEffect, useState } from 'react'
 import Alert from '@material-ui/lab/Alert'
 import { set } from 'date-fns'
 import { feriadosService } from 'services/api/feriados/FeriadosService'
 import { authenticationService } from 'services'
-
-const dateFnsInstance = new DateFnsUtils({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
+import DateFnsAdapter from '@date-io/date-fns'
+import esLocale from 'date-fns/locale/es/'
 
 const AppointmentInfoForm = ({
   classes,
@@ -50,11 +49,11 @@ const AppointmentInfoForm = ({
     feriadosService.getAll().then(response => setFeriados(response.data)).catch(error => console.error(error))
   }, [])
 
-  const isStartHourValid = dateFnsInstance.isValid(dateFnsInstance.parse(displayAppointmentData.startDate, 'yyyy-MM-dd HH:mm'))
-  const defaultStartHour = isStartHourValid ? dateFnsInstance.parse(displayAppointmentData.startDate, 'yyyy-MM-dd HH:mm') : set(new Date(), { hours: 8, minutes: 0 })
+  const isStartHourValid = dateUtils.isValid(dateUtils.parse(displayAppointmentData.startDate, 'yyyy-MM-dd HH:mm'))
+  const defaultStartHour = isStartHourValid ? dateUtils.parse(displayAppointmentData.startDate, 'yyyy-MM-dd HH:mm') : set(new Date(), { hours: 8, minutes: 0 })
 
-  const isEndHourValid = dateFnsInstance.isValid(dateFnsInstance.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm'))
-  const defaultEndHour = isEndHourValid ? dateFnsInstance.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm') : set(new Date(), { hours: 8, minutes: 30 })
+  const isEndHourValid = dateUtils.isValid(dateUtils.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm'))
+  const defaultEndHour = isEndHourValid ? dateUtils.parse(displayAppointmentData.endDate, 'yyyy-MM-dd HH:mm') : set(new Date(), { hours: 8, minutes: 30 })
 
   return (
     <>
@@ -74,14 +73,14 @@ const AppointmentInfoForm = ({
         </div>
         <div className={classes.wrapper}>
           <CalendarToday className={classes.icon} color='action' />
-          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={esLocale}>
+          <MuiPickersUtilsProvider utils={DateFnsAdapter} locale={esLocale}>
             <DatePicker
               id='startDate'
               label='Fecha'
               {...pickerEditorPropsStartDate('startDate')}
               format={'EEEE dd \'de\' LLLL \'del\' yyyy'}
               shouldDisableDate={(date) => {
-                const dateFormatted = dateFnsInstance.format(date, 'yyyy-MM-dd')
+                const dateFormatted = dateUtils.format(date, 'yyyy-MM-dd')
                 const isFeriado = feriados.map(feriado => feriado.fecha).includes(dateFormatted)
                 return date.getDay() === 0 || date.getDay() === 6 || isFeriado
               }}

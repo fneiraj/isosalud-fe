@@ -47,7 +47,7 @@ const extraPaths = [
         link: '/pacientes/:id/ficha-clinica',
         tabs: [
           { title: 'Evoluciones', link: '/pacientes/:id/ficha-clinica/evoluciones' },
-          { title: 'Radiografias', link: '/pacientes/:id/ficha-clinica/radiografias' }
+          { title: 'Archivos', link: '/pacientes/:id/ficha-clinica/archivos' }
         ]
       },
       { title: 'Planes de tratamiento', link: '/pacientes/:id/planes-tratamiento' }

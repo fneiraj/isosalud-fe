@@ -1,16 +1,13 @@
 import { Box, Card, CardContent, CardHeader, Grid, Link as MuiLink, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import Scrollable from 'components/scrollable'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const HeaderCard = ({ id, startDate, endDate }) => {
-  const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd HH:mm')
-  const endDateParsed = dateFnsInstance.parse(endDate, 'yyyy-MM-dd HH:mm')
-  const startHour = dateFnsInstance.format(startDateParsed, 'HH:mm')
-  const endHour = dateFnsInstance.format(endDateParsed, 'HH:mm')
+  const startDateParsed = dateUtils.parse(startDate, 'yyyy-MM-dd HH:mm')
+  const endDateParsed = dateUtils.parse(endDate, 'yyyy-MM-dd HH:mm')
+  const startHour = dateUtils.format(startDateParsed, 'HH:mm')
+  const endHour = dateUtils.format(endDateParsed, 'HH:mm')
 
   return (
     <div style={{ backgroundColor: '#30a8e7', color: '#ffffff', paddingTop: '15px', paddingBottom: '15px' }}>

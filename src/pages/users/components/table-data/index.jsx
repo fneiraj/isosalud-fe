@@ -8,15 +8,12 @@ import EditIcon from '@material-ui/icons/Edit'
 import BlockIcon from '@material-ui/icons/Block'
 import CheckCircleOutlineRoundedIcon from '@material-ui/icons/CheckCircleOutlineRounded'
 import Animation from 'components/animation'
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
 import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { useState } from 'react'
 import { history } from 'helpers'
 import { userService } from 'services/user/UserService'
 import { useToasts } from 'react-toast-notifications'
-
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+import dateUtils from 'utils/date-utils'
 
 const TableData = ({
   enableSelect,
@@ -147,7 +144,7 @@ const TableData = ({
     return stableSort(currentData, getSorting(order, orderBy))
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
       .map(n => {
-        const lastLoginFormated = n.lastLogin ? dateFnsInstance.format(dateFnsInstance.parse(n.lastLogin, 'yyyy-MM-dd HH:mm:ss'), 'dd-MM-yyy HH:mm') : 'Sin registro'
+        const lastLoginFormated = n.lastLogin ? dateUtils.format(dateUtils.parse(n.lastLogin, 'yyyy-MM-dd HH:mm:ss'), 'dd-MM-yyy HH:mm') : 'Sin registro'
 
         const isActualSelected = isSelected(n.id)
 

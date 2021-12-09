@@ -1,26 +1,51 @@
-import { authHeader, handleResponse } from 'helpers'
+import { HttpClient } from 'services/http-client'
 
-const config = {
-  apiUrl: 'http://localhost:8080'
-}
-
-const add = (note) => {
-  const requestOptions = { method: 'POST', headers: authHeader() }
-  return fetch(`${config.apiUrl}/notes`, requestOptions).then(handleResponse)
+export const notesService = {
+  getAll,
+  getById,
+  getByIdPatient,
+  getNoteTypes,
+  create,
+  update,
+  remove
 }
 
 function getAll () {
-  const requestOptions = { method: 'GET', headers: authHeader() }
-  return fetch(`${config.apiUrl}/notes`, requestOptions).then(handleResponse)
+  return HttpClient.get('/notes')
 }
 
 function getById (id) {
-  const requestOptions = { method: 'GET', headers: authHeader() }
-  return fetch(`${config.apiUrl}/notes/${id}`, requestOptions).then(handleResponse)
+  return HttpClient.get(`/notes/search?id=${id}`)
 }
 
-export const notesServices = {
-  add,
-  getAll,
-  getById
+function getByIdPatient (id) {
+  return HttpClient.get(`/notes/search-patient?id=${id}`)
+}
+
+function getNoteTypes () {
+  return HttpClient.get('/notes/types')
+}
+
+function create ({ comment, userTargetId, noteType }) {
+  const payload = {
+    comment,
+    destinatario: {
+      id: userTargetId !== undefined ? userTargetId : undefined
+    },
+    noteType
+  }
+
+  return HttpClient.post('/notes', payload)
+}
+
+function update (note) {
+  const payload = {
+    ...note
+  }
+
+  return HttpClient.post(`/notes/update?id=${note.id}`, payload)
+}
+
+function remove (noteId) {
+  return HttpClient.post(`/notes/delete?id=${noteId}`)
 }

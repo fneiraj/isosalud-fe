@@ -1,11 +1,11 @@
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import esLocale from 'date-fns/locale/es/'
-import DateFnsUtils from '@date-io/date-fns'
 import { useEffect, useState } from 'react'
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 import { rolesService } from 'services/roles/RolesService'
 import { contactMeansService } from 'services/contact-means/ContactMeansService'
 import Alert from '@material-ui/lab/Alert'
+import DateFnsUtils from '@date-io/date-fns'
 
 const PersonInfoForm = ({
   classes,

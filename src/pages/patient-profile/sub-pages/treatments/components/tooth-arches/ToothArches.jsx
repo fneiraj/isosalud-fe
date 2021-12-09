@@ -2,8 +2,8 @@
 /* eslint-disable */
 
 import { createRef } from 'react'
-import AdultToothArches from './AdultToothArches'
-import KidToothArches from './KidToothArches'
+import AdultToothArches from 'pages/patient-profile/sub-pages/treatments/components/tooth-arches/AdultToothArches'
+import KidToothArches from 'pages/patient-profile/sub-pages/treatments/components/tooth-arches/KidToothArches'
 
 const ToothArches = ({ type }) => {
   const toothRefs = new Map()
