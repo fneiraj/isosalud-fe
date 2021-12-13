@@ -12,13 +12,13 @@ const PatientInfo = ({
   pickerEditorPropsStartDate,
   change,
   messageError,
-  displayAppointmentData,
   patient
 }) => {
   const [previsions, setPrevisions] = useState([])
 
   useEffect(() => {
     if (patient) {
+      change({ field: ['patientId'], changes: patient.id })
       change({ field: ['patientName'], changes: `${patient.personInfo?.firstName} ${patient.personInfo?.lastName}` })
       change({ field: ['patientRut'], changes: patient.personInfo?.rut })
       change({ field: ['patientPhone'], changes: patient.personInfo?.phone })

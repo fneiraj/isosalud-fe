@@ -30,8 +30,31 @@ const menus = [
     children: [
       { id: 'Dashboard admin', icon: <SupervisedUserCircleIcon />, link: '/admin' },
       { id: 'Calendario', icon: <EventIcon />, link: '/admin/calendario' },
-      { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/usuarios' },
-      { id: 'Opciones sitio', icon: <SettingsIcon />, link: '/admin/opciones-sitio' }
+      { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/admin/usuarios' },
+      {
+        id: 'Configuración sitio',
+        icon: <SettingsIcon />,
+        link: '/admin/configuracion-sitio',
+        tabs: [
+          { title: 'General', link: '/admin/configuracion-sitio/general' },
+          {
+            title: 'Mantenedores',
+            link: '/admin/configuracion-sitio/mantenedores',
+            tabs: [
+              { title: 'Procesos clinicos', link: '/admin/configuracion-sitio/procesos-clinicos' },
+              { title: 'ads', link: '/admin/configuracion-sitio/asds' }
+            ]
+          },
+          {
+            title: 'Notificaciones',
+            link: '/admin/configuracion-sitio/notificaciones/',
+            tabs: [
+              { title: 'Sms', link: '/admin/configuracion-sitio/notificaciones/sms' },
+              { title: 'Llamadas', link: '/admin/configuracion-sitio/notificaciones/llamadas' }
+            ]
+          }
+        ]
+      }
     ]
   }
 ]
@@ -58,14 +81,13 @@ const extraPaths = [
   },
   {
     title: 'Perfil Usuario',
-    link: '/usuarios/:id'
+    link: '/admin/usuarios/:id'
   }
 ]
 
 const filterPath = (menu, path) => {
   const link = menu.link
-  return ((link === path) || (link.includes(':id') && (path.startsWith(link.replace(':id', '')))) || (menu?.tabs?.find(tab => tab.link === path))
-  )
+  return ((link === path) || (link.includes(':id') && (path.startsWith(link.replace(':id', '')))) || (menu?.tabs?.find(tab => tab.link === path)))
 }
 
 export const getPageProps = (currentLink) => (

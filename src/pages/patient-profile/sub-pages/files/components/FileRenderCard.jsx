@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, Grid, Link, Typography } from '@material-ui/core'
 import { saveAs } from 'file-saver'
 import GetAppIcon from '@material-ui/icons/GetApp'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const RenderFile = ({ name, downloadUrl }) => {
   return (

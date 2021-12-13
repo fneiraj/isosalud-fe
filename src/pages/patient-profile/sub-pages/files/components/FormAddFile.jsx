@@ -97,7 +97,6 @@ const FormAddFile = ({
   const [errorMsg, setErrorMsg] = useState(undefined)
 
   const onDrop = useCallback(acceptedFiles => {
-    console.log({ acceptedFiles })
     acceptedFiles.forEach(file => setFilesSelected(prev => [...prev, file]))
   }, [])
 

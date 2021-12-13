@@ -13,7 +13,7 @@ import FormNewPatient from 'forms/patient/new'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import { useToasts } from 'react-toast-notifications'
 import DeletePatientDialog from 'forms/patient/new/components/delete-dialog'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const rows = [
   { id: 'username', numeric: false, disablePadding: false, label: 'Usuario' },
@@ -99,8 +99,6 @@ const UsersPage = ({ classes }) => {
         })
     }
     if (changed) {
-      console.log({ changed })
-
       userService.edit(changed)
         .then(response => {
           setData(prev => {

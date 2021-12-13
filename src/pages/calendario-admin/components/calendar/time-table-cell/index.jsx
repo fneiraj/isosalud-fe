@@ -1,7 +1,7 @@
 import { WeekView } from '@devexpress/dx-react-scheduler-material-ui'
 import { makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const useStyles = makeStyles((theme) => ({
   cursorNotAllowed: {

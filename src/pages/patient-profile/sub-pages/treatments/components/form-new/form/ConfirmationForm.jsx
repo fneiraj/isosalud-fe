@@ -1,18 +1,16 @@
+/* eslint-disable */
 import { Grid, Typography } from '@material-ui/core'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const ConfirmationForm = ({
   displayAppointmentData,
   preloadData
 }) => {
-  // eslint-disable-next-line no-unused-vars
-  const dateOfBirthParsed = (displayAppointmentData?.dateOfBirth instanceof Date) ? displayAppointmentData?.dateOfBirth : dateUtils.parse(displayAppointmentData?.dateOfBirth, 'yyyy-MM-dd')
-
   return (
     <Grid container spacing={1}>
 
       <Grid item xs={12}>
-        <Typography variant='h4' align='center'>Resumen usuario<br /></Typography>
+        <Typography variant='h4' align='center'>Resumen tratamiento<br /></Typography>
       </Grid>
 
       <Grid item xs={12}>
@@ -24,7 +22,7 @@ const ConfirmationForm = ({
       </Grid>
 
       <Grid item xs={12}>
-        <Typography><b>Fecha de nacimiento:</b> {displayAppointmentData?.dateOfBirth.toString()}.</Typography>
+        <Typography><b>Fecha de nacimiento:</b> .</Typography>
       </Grid>
 
       <Grid item xs={12}>
@@ -37,10 +35,6 @@ const ConfirmationForm = ({
 
       <Grid item xs={12}>
         <Typography><b>Telefono:</b> {displayAppointmentData?.phone !== undefined ? displayAppointmentData?.phone : 'Sin telefono'}</Typography>
-      </Grid>
-
-      <Grid item xs={12}>
-        <Typography><b>Medio de contacto preferido:</b> {displayAppointmentData?.preferredContactMeanName}</Typography>
       </Grid>
 
       <Grid item xs={12}>

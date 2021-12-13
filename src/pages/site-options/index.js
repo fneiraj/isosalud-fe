@@ -1,5 +1,1 @@
-const SiteOptionsPage = () => {
-  return <>opciones del sitio</>
-}
-
-export default SiteOptionsPage
+export { default as GeneralOptionsPage } from './pages/general'

@@ -5,7 +5,7 @@ import PatientFormAddNote from 'pages/patient-profile/components/PatientFormAddN
 import useToggle from 'hooks/useToggle'
 import { notesService } from 'services/notes/NotesService'
 import { useToasts } from 'react-toast-notifications'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 import DeleteNoteDialog from 'pages/patient-profile/components/PatientNoteDeleteDialog'
 
 const useStyles = makeStyles((theme) => ({

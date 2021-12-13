@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button'
 import { Tooltip } from '@material-ui/core'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 import Animation from 'components/animation'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const TableData = ({
   enableSelect,

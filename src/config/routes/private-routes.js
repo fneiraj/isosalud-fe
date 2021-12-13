@@ -8,7 +8,6 @@ import {
   MyPatientsPage,
   PatientProfilePage,
   UsersPage,
-  SiteOptionsPage,
   UserProfilePage,
   MyProfilePage
 } from 'pages'
@@ -19,7 +18,12 @@ import {
   TreatmentsPage
 } from 'pages/patient-profile/sub-pages'
 
+import {
+  GeneralOptionsPage
+} from 'pages/site-options'
+
 import { Role } from 'models/Role'
+import { NotificationsCallOptionsPage, NotificationsSmsOptionsPage } from 'pages/site-options/pages/notifications'
 
 export const privateRoutes = [
   {
@@ -38,8 +42,20 @@ export const privateRoutes = [
     exact: true
   },
   {
-    path: '/admin/opciones-sitio',
-    component: SiteOptionsPage,
+    path: '/admin/configuracion-sitio/general',
+    component: GeneralOptionsPage,
+    roles: [Role.Admin],
+    exact: true
+  },
+  {
+    path: '/admin/configuracion-sitio/notificaciones/sms',
+    component: NotificationsSmsOptionsPage,
+    roles: [Role.Admin],
+    exact: true
+  },
+  {
+    path: '/admin/configuracion-sitio/notificaciones/llamadas',
+    component: NotificationsCallOptionsPage,
     roles: [Role.Admin],
     exact: true
   },
@@ -49,13 +65,13 @@ export const privateRoutes = [
     roles: [Role.Admin]
   },
   {
-    path: '/usuarios',
+    path: '/admin/usuarios',
     component: UsersPage,
     roles: [Role.Admin],
     exact: true
   },
   {
-    path: '/usuarios/:id',
+    path: '/admin/usuarios/:id',
     component: UserProfilePage,
     exact: true
   },

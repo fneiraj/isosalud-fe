@@ -1,9 +1,11 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react'
 import { Button, IconButton, Modal, Paper, Step, StepLabel, Stepper, withStyles } from '@material-ui/core'
 import { Close } from '@material-ui/icons'
 import styles from './styles'
-import { PatientInfo, ConfirmationForm, PersonalInfoForm } from './form'
-import { userService } from 'services/user/UserService'
+import { PatientInfo, ConfirmationForm, ClinicalProccessForm } from './form'
+import MedicInfoForm from 'pages/patient-profile/sub-pages/treatments/components/form-new/form/MedicInfoForm'
+import { authenticationService } from 'services'
 
 const FormNewTreatment = ({
   classes,
@@ -17,19 +19,21 @@ const FormNewTreatment = ({
 }) => {
   const [changes, setChanges] = useState({})
   const [activeStep, setActiveStep] = useState(0)
-  const [isNextBtnEnabled, setNextBtnEnabled] = useState(false)
+  const [isNextBtnEnabled, setNextBtnEnabled] = useState(true)
   const [messageError, setMessageError] = useState(undefined)
   const [isNew, setIsNew] = useState()
   const [flagDataPassed, setFlagDataPassed] = useState(false)
+  const currentUser = authenticationService.currentUserValue
+
 
   useEffect(() => {
-    if (activeStep === steps.length - 1) {
+    if (activeStep === 0 || activeStep === steps.length - 1) {
       setNextBtnEnabled(true)
     }
   }, [activeStep])
 
   useEffect(() => {
-    if (currentTreatmentEditing.id !== undefined) {
+     if (currentTreatmentEditing.id !== undefined) {
       if (!flagDataPassed) {
         setChanges(currentTreatmentEditing)
         setFlagDataPassed(true)
@@ -91,7 +95,7 @@ const FormNewTreatment = ({
   }
 
   const handleTextEditorOnChange = (prev, field, value) => {
-    if (activeStep === 0) {
+/*    if (activeStep === 0) {
       const isFirstNameOk = checkFieldAndValue(prev, 'firstName', field, value)
       const isLastNameOk = checkFieldAndValue(prev, 'lastName', field, value)
       const isRutOk = checkFieldAndValue(prev, 'rut', field, value) && validateRut(prev, 'rut', field, value)
@@ -100,15 +104,6 @@ const FormNewTreatment = ({
 
       if (isFirstNameOk && isLastNameOk && isRutOk) {
         if (isNew) {
-          userService.validate({ rut: prev.rut, firstName: prev.firstName, lastName: prev.lastName })
-            .then(response => {
-              if (response.data.statusCode === 'OK') {
-                setMessageError(undefined)
-              } else {
-                setNextBtnEnabled(false)
-                setMessageError('Error: ' + response.data.errorMsg)
-              }
-            })
         }
       }
 
@@ -133,13 +128,15 @@ const FormNewTreatment = ({
         setNextBtnEnabled(true)
       }
     }
+
+ */
   }
 
   const textEditorProps = field => ({
     variant: 'outlined',
-    onChange: ({ target: change }) => {
+    onChange: ({ target }) => {
       change({
-        field: [field], changes: change.value
+        field: [field], changes: target.value
       })
     },
     value: displayData[field] || '',
@@ -182,44 +179,52 @@ const FormNewTreatment = ({
   }
 
   const handleBack = () => {
-    setActiveStep(activeStep - 1)
+    setActiveStep(prev => prev - 1)
   }
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1)
+    setActiveStep(prev => prev + 1)
   }
 
   const steps = [
     {
-      stepName: 'Primero',
+      stepName: 'Paciente',
       component: <PatientInfo
         classes={classes}
         textEditorProps={textEditorProps}
         pickerEditorProps={pickerEditorProps}
         pickerEditorPropsStartDate={pickerEditorPropsStartDate}
-        displayAppointmentData={displayData}
-        setNextBtnEnabled={setNextBtnEnabled}
         change={change}
         messageError={messageError}
-        isEditing={!isNew}
         patient={patient}
                  />
     },
     {
-      stepName: 'Segundo',
-      component: <PersonalInfoForm
+      stepName: 'Procedimientos',
+      component: <ClinicalProccessForm
+        classes={classes}
+        textEditorProps={textEditorProps}
+        displayData={displayData}
+        change={change}
+        setNextBtnEnable={setNextBtnEnabled}
+                 />
+    },
+    {
+      stepName: 'Médico',
+      component: <MedicInfoForm
         classes={classes}
         textEditorProps={textEditorProps}
         pickerEditorProps={pickerEditorProps}
         pickerEditorPropsStartDate={pickerEditorPropsStartDate}
-        displayAppointmentData={displayData}
-        changeAppointment={change}
+        displayData={displayData}
+        change={change}
         setNextBtnEnabled={setNextBtnEnabled}
-        isEditing={!isNew}
-                 />
+        messageError={messageError}
+        currentUser={currentUser}
+      />
     },
     {
-      stepName: 'Tercero',
+      stepName: 'Confirmación',
       component: <ConfirmationForm
         textEditorProps={textEditorProps}
         pickerEditorProps={pickerEditorProps}
@@ -227,7 +232,7 @@ const FormNewTreatment = ({
         displayAppointmentData={displayData}
         setNextBtnEnabled={setNextBtnEnabled}
         messageError={messageError}
-                 />
+      />
     }
   ]
 
@@ -276,7 +281,7 @@ const FormNewTreatment = ({
           <div style={{ bottom: 30, right: 15, position: 'absolute' }} className={classes.buttonGroup}>
             <BackOrCloseButton />
             <Button
-              key={'nextBtn' + activeStep}
+              key={'nextBtn' + isNextBtnEnabled + activeStep}
               variant='contained'
               color='primary'
               disabled={!isNextBtnEnabled}

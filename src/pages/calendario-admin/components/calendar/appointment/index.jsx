@@ -1,7 +1,7 @@
 import { withStyles } from '@material-ui/core'
 import styles from 'pages/my-dates/styles'
 import { Appointments as DXAppointment } from '@devexpress/dx-react-scheduler-material-ui'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const Appointment = ({ classes, ...restProps }) => {
   const { data } = restProps

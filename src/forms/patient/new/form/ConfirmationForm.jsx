@@ -1,5 +1,5 @@
 import { Grid, Typography } from '@material-ui/core'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const ConfirmationForm = ({
   displayAppointmentData,

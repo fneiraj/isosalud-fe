@@ -16,8 +16,6 @@ const AppointmentTooltipHeader = ({ appointmentData, commitChanges, ...rest }) =
   // eslint-disable-next-line no-unused-vars
   const { author, box, comment, endDate, id, patient, startDate, title } = appointmentData
 
-  console.log({ box })
-
   return (
     <AppointmentTooltip.Header
       {...rest}

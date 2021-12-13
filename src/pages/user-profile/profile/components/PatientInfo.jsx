@@ -2,7 +2,7 @@ import { Avatar, Button, Card, CardContent, Grid, TextField, Typography } from '
 import React from 'react'
 import styles from '../styles'
 import { makeStyles } from '@material-ui/core/styles'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {

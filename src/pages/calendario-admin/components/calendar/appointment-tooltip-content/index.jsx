@@ -20,8 +20,6 @@ const AppointmentTooltipContent = ({ appointmentData, ...rest }) => {
 
   const patientName = `${patient?.firstName} ${patient?.lastName}`
 
-  console.log({ box })
-
   return (
     <AppointmentTooltip.Content {...rest} appointmentData={appointmentData}>
       <Grid container alignItems='center'>

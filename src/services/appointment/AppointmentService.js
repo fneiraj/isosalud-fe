@@ -30,7 +30,7 @@ function cancel (id) {
   return HttpClient.post('/appointment/cancel', { id })
 }
 
-function add ({ box, comment, endDate, startDate, patient, title, type, medic }) {
+function add ({ box, comment, endDate, startDate, patient, title, type, medic, treatmentId }) {
   const payload = {
     title,
     startDate,
@@ -43,21 +43,20 @@ function add ({ box, comment, endDate, startDate, patient, title, type, medic })
     },
     comment,
     patient: {
-      id: patient?.personInfo?.id
+      id: patient?.id
     },
     medic: {
       id: medic
     },
-    _treatmentId: 1
+    treatment: {
+      id: treatmentId === -1 ? undefined : treatmentId
+    }
   }
 
   return HttpClient.post('/appointment', payload)
 }
 
 function edit ({ id, box, comment, endDate, startDate, patient, title, type, medic }) {
-  console.log({ patient })
-  console.log({ medic })
-
   const payload = {
     title,
     startDate,

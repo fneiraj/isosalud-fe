@@ -13,7 +13,7 @@ import { useState } from 'react'
 import { history } from 'helpers'
 import { userService } from 'services/user/UserService'
 import { useToasts } from 'react-toast-notifications'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const TableData = ({
   enableSelect,
@@ -110,7 +110,7 @@ const TableData = ({
         label: 'Ver perfil',
         icon: <VisibilityIcon />,
         onClick: () => {
-          history.push('/usuarios/' + id)
+          history.push('/admin/usuarios/' + id)
         }
       },
       {

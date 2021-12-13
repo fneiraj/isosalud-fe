@@ -7,7 +7,7 @@ import Alert from '@material-ui/lab/Alert'
 import { set } from 'date-fns'
 import { feriadosService } from 'services/api/feriados/FeriadosService'
 import { authenticationService } from 'services'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 import DateFnsAdapter from '@date-io/date-fns'
 import esLocale from 'date-fns/locale/es/'
 
@@ -29,7 +29,7 @@ const AppointmentInfoForm = ({
   useEffect(() => {
     if (currentUser && !displayAppointmentData.medic) {
       changeAppointment({
-        field: ['medic'], changes: currentUser.personInfo?.id
+        field: ['medic'], changes: currentUser.id
       })
     }
   }, [currentUser])
@@ -144,7 +144,7 @@ const AppointmentInfoForm = ({
               key={'medic-' + (displayAppointmentData?.medic?.id || displayAppointmentData?.personInfo?.id || displayAppointmentData?.medic)}
               value={displayAppointmentData?.medic?.id || displayAppointmentData?.personInfo?.id || displayAppointmentData?.medic}
             >
-              {dentists.map(dentist => <MenuItem key={dentist.personInfo?.id} value={dentist.personInfo?.id}>{`${dentist.personInfo?.firstName} ${dentist.personInfo?.lastName}`}</MenuItem>)}
+              {dentists.map(dentist => <MenuItem key={dentist.personInfo?.id} value={dentist.id}>{`${dentist.personInfo?.firstName} ${dentist.personInfo?.lastName}`}</MenuItem>)}
             </Select>
           </FormControl>
         </div>

@@ -24,7 +24,7 @@ import { useToasts } from 'react-toast-notifications'
 import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import { Close } from '@material-ui/icons'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const useStyles = makeStyles((theme) => ({
   leftSide: {
@@ -191,7 +191,7 @@ const PatientAppointments = ({ userData }) => {
                 <Grid item xs={12} md={3}>
                   <Typography align='center'>
                     <span className={classes.fontWeight200}>Doctor</span><br />
-                    <span className={classes.bold}>{`${medic.firstName} ${medic.lastName}`}</span>
+                    <span className={classes.bold}>{`${medic.personInfo?.firstName} ${medic.personInfo?.lastName}`}</span>
                   </Typography>
                 </Grid>
                 <Hidden mdDown>

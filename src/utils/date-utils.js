@@ -1,6 +1,10 @@
-import DateFnsAdapter from '@date-io/date-fns'
-import esLocale from 'date-fns/locale/es/'
+import { differenceInYears, parse } from 'date-fns'
 
-const dateFnsInstance = new DateFnsAdapter({ locale: esLocale })
+const calculateAge = (dob, format) => {
+  const date = parse(dob, format, new Date())
+  return differenceInYears(new Date(), date)
+}
 
-export default dateFnsInstance
+export default {
+  calculateAge
+}

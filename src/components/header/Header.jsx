@@ -65,7 +65,9 @@ const Header = (props) => {
   )
 
   const renderTabs = () => {
-    const currentTab = pageProps.tabs.findIndex(tab => (tab.link === props.match.path) || (tab.tabs && tab.tabs.find(subTab => subTab.link === props.match.path)))
+    const currentTab = pageProps.tabs.findIndex(tab => {
+      return (tab.link === props.match.path) || (tab.tabs && tab.tabs.find(subTab => subTab.link === props.match.path))
+    })
 
     return (
       <Tabs value={currentTab} textColor='inherit' variant='scrollable' scrollButtons='auto'>
@@ -94,7 +96,9 @@ const Header = (props) => {
 
   const renderSubTabs = () => {
     const subTabsCurrentPage = pageProps?.tabs?.filter(tab => tab.tabs).filter(tab => tab.tabs).find(tab => {
-      return tab.tabs.find(subTab => subTab.link === props.match.path)
+      return tab.tabs.find(subTab => {
+        return subTab.link === props.match.path
+      })
     })
 
     const currentTab = subTabsCurrentPage?.tabs.findIndex(tab => tab.link === props.match.path)

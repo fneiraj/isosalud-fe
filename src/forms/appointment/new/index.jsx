@@ -8,7 +8,7 @@ import { appointmentTypesService } from 'services/appointment-types/AppointmentT
 import { AppointmentInfoForm, ConfirmationForm, PatientInfoForm } from 'forms/appointment/new/form'
 import { set } from 'date-fns'
 import { dentistService } from 'services/dentist/DentistService'
-import dateUtils from 'utils/date-utils'
+import dateUtils from 'utils/date-fns-utils'
 
 const NewAppointmentForm = (props) => {
   const {
@@ -132,6 +132,7 @@ const NewAppointmentForm = (props) => {
   }
 
   const handleTextEditorOnChange = (prev, field, value) => {
+    console.log({ activeStep })
     if (activeStep === 0) {
       const isStartDateOk = validateHourStart(String(field) === 'startDate' ? value : prev.startDate)
       const isEndDateOk = validateHourEnd(String(field) === 'endDate' ? value : prev.endDate)
@@ -146,7 +147,7 @@ const NewAppointmentForm = (props) => {
         return
       }
     } else if (activeStep === 1) {
-      const isPatientSelectedOk = String(field) === 'patient' && (value !== undefined)
+      const isPatientSelectedOk = (String(field) === 'patient' && (value !== undefined)) || (prev.patient !== undefined)
 
       if (!isPatientSelectedOk) {
         setNextBtnEnabled(false)

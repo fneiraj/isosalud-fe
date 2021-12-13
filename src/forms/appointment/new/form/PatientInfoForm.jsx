@@ -1,6 +1,19 @@
-import { Box, makeStyles, Tab, Tabs, TextField, Typography } from '@material-ui/core'
+/* eslint-disable */
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  makeStyles,
+  MenuItem,
+  Select,
+  Tab,
+  Tabs,
+  TextField,
+  Typography
+} from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 import { useEffect, useState } from 'react'
+import { treatmentService } from 'services/treatments/TreatmentService'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -15,21 +28,25 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const PatientInfoForm = ({
-  cancelChanges,
-  isNewAppointment,
   textEditorProps,
-  pickerEditorPropsStartDate,
-  pickerEditorProps,
   displayAppointmentData,
   changeAppointment,
-  visibleChange,
-  commitAppointment,
-  applyChanges,
   patients,
-  currentPatientData
+  currentPatientData,
 }) => {
   const classes = useStyles()
   const [isFromProfile, setIsFromProfile] = useState(false)
+  const [patientTreatments, setPatientTreatments] = useState([])
+
+  useEffect(() => {
+    const currentId = currentPatientData?.id || displayAppointmentData?.patient?.id
+    if (currentId !== undefined) {
+      treatmentService.getAllByPatientId(currentId ? currentId : displayAppointmentData?.patient?.id)
+        .then(response => setPatientTreatments(response.data.data))
+        .catch(error => console.error(error))
+    }
+    changeAppointment({field: ['treatmentId'], changes: -1})
+  }, [displayAppointmentData?.patient?.id])
 
   useEffect(() => {
     if (currentPatientData !== undefined) {
@@ -95,6 +112,23 @@ const PatientInfoForm = ({
             renderInput={(params) => <TextField label='Nombre paciente' variant='outlined' {...params} />}
             onError={() => null}
           />
+        </div>
+        <div style={{marginTop: 30}}>
+          <FormControl style={{ width: '100%' }}>
+            <InputLabel style={{ paddingLeft: 15 }}>Tratamiento</InputLabel>
+            <Select
+              fullWidth
+              {...textEditorProps('medicId')}
+              key={'treatment-relation-'}
+              value={displayAppointmentData?.treatmentId}
+              onChange={(e) => {
+                changeAppointment({field: ['treatmentId'], changes: e.target.value})
+              }}
+            >
+              <MenuItem key={'none'} value={-1}>Ninguno</MenuItem>
+              {patientTreatments.map(tr => <MenuItem key={tr.id} value={tr.id}>{`${tr.specialization?.name} - ${tr.medic?.personInfo?.firstName} ${tr.medic?.personInfo?.lastName}`}</MenuItem>)}
+            </Select>
+          </FormControl>
         </div>
       </TabPanel>
       <TabPanel value={tabValue} index={1}>

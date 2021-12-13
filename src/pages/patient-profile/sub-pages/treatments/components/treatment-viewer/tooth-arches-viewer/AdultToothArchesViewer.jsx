@@ -1,13 +1,7 @@
-// TODO: Refactorizar esto
 /* eslint-disable */
 
-import React from 'react'
-
-const AdultToothArches = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent, handleOnMouseLeaveEvent }) => {
+const AdultToothArchesViewer = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent, handleOnMouseLeaveEvent }) => {
   const defaultValues = {
-    onMouseEnter: handleOnMouseEnterEvent,
-    onMouseLeave: handleOnMouseLeaveEvent,
-    onClick: handleOnClick,
     style: {
       fill: 'none',
       stroke: '#000000',
@@ -21,9 +15,6 @@ const AdultToothArches = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent,
   }
 
   const defaultValues2 = {
-    onMouseEnter: handleOnMouseEnterEvent,
-    onMouseLeave: handleOnMouseLeaveEvent,
-    onClick: handleOnClick,
     style: {
       fill: 'none',
       stroke: '#000000',
@@ -37,9 +28,6 @@ const AdultToothArches = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent,
   }
 
   const defaultValues3 = {
-    onMouseEnter: handleOnMouseEnterEvent,
-    onMouseLeave: handleOnMouseLeaveEvent,
-    onClick: handleOnClick,
     style: {
       fill: 'none',
       stroke: '#000000',
@@ -53,9 +41,6 @@ const AdultToothArches = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent,
   }
 
   const defaultValues4 = {
-    onMouseEnter: handleOnMouseEnterEvent,
-    onMouseLeave: handleOnMouseLeaveEvent,
-    onClick: handleOnClick,
     style: {
       fill: 'none',
       stroke: '#000000',
@@ -1058,4 +1043,4 @@ const AdultToothArches = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent,
   )
 }
 
-export default AdultToothArches
+export default AdultToothArchesViewer
