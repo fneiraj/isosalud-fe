@@ -1,5 +1,5 @@
 # pull the base image
-FROM node:16.13.0
+FROM node:16.13.0-stretch
 
 # set the working direction
 WORKDIR /app
