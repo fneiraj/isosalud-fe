@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core'
 import { CalendarToday, Create, Notes } from '@material-ui/icons'
 import RoomIcon from '@material-ui/icons/Room'
@@ -141,8 +142,11 @@ const AppointmentInfoForm = ({
             <Select
               fullWidth
               {...textEditorProps('medic')}
-              key={'medic-' + (displayAppointmentData?.medic?.id || displayAppointmentData?.personInfo?.id || displayAppointmentData?.medic)}
-              value={displayAppointmentData?.medic?.id || displayAppointmentData?.personInfo?.id || displayAppointmentData?.medic}
+              key={'medic-' + (displayAppointmentData?.medic?.id || displayAppointmentData?.medic)}
+              value={displayAppointmentData?.medic?.id || displayAppointmentData?.id}
+              onChange={(e) => {
+                changeAppointment({field: ['medic'], changes: {id: e.target.value}})
+              }}
             >
               {dentists.map(dentist => <MenuItem key={dentist.personInfo?.id} value={dentist.id}>{`${dentist.personInfo?.firstName} ${dentist.personInfo?.lastName}`}</MenuItem>)}
             </Select>

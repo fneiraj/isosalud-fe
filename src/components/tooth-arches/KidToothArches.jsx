@@ -1,13 +1,80 @@
 // TODO: Refactorizar esto
 /* eslint-disable */
 
-const KidToothArches = () => {
+const KidToothArches = ({ getToothRef, handleOnClick, handleOnMouseEnterEvent, handleOnMouseLeaveEvent }) => {
+
+  const defaultValues = {
+    onMouseEnter: handleOnMouseEnterEvent,
+    onMouseLeave: handleOnMouseLeaveEvent,
+    onClick: handleOnClick,
+    style: {
+      fill: 'none',
+      stroke: '#000000',
+      strokeWidth: 1,
+      strokeLinecap: 'round',
+      strokeLinejoin: 'miter',
+      strokeMiterlimit: 4,
+      strokeOpacity: 1,
+      strokeDasharray: 'none'
+    }
+  }
+
+  const defaultValues2 = {
+    onMouseEnter: handleOnMouseEnterEvent,
+    onMouseLeave: handleOnMouseLeaveEvent,
+    onClick: handleOnClick,
+    style: {
+      fill: 'none',
+      stroke: '#000000',
+      strokeWidth: 1,
+      strokeLinecap: 'butt',
+      strokeLinejoin: 'miter',
+      strokeMiterlimit: '4',
+      strokeOpacity: 1,
+      strokeDasharray: 'none'
+    }
+  }
+
+  const defaultValues3 = {
+    onMouseEnter: handleOnMouseEnterEvent,
+    onMouseLeave: handleOnMouseLeaveEvent,
+    onClick: handleOnClick,
+    style: {
+      fill: 'none',
+      stroke: '#000000',
+      strokeWidth: 1,
+      strokeLinecap: 'butt',
+      strokeLinejoin: 'round',
+      strokeMiterlimit: 4,
+      strokeOpacity: 1,
+      strokeDasharray: 'none'
+    }
+  }
+
+  const defaultValues4 = {
+    onMouseEnter: handleOnMouseEnterEvent,
+    onMouseLeave: handleOnMouseLeaveEvent,
+    onClick: handleOnClick,
+    style: {
+      fill: 'none',
+      stroke: '#000000',
+      strokeWidth: 1,
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      strokeMiterlimit: 4,
+      strokeOpacity: 1,
+      strokeDasharray: 'none',
+      markerStart: 'none',
+      markerMid: 'none'
+    }
+  }
 
   return (
     <>
       {/*<!-- Child Dentition -->*/}
       <path
-        className="child-tooth-51 child-tooth-51-parent"
+        ref={getToothRef('tooth-51-parent')}
+        className="tooth-51-parent"
         d="m 124.82021,113.33987 c 0.0372,0.31136 2.03838,3.51786 2.54294,4.9663 0.6822,1.56367 1.76853,2.97726 4.66113,3.72006 2.36193,-0.26358 4.75744,-0.31994 6.74559,-2.88856 l 4.88802,-6.73611 0.89133,-2.14285 c 0.64364,-1.54722 -0.75021,-2.96997 -2.05513,-3.57982 l -3.5383,-0.85742 c -2.0666,-0.1203 -3.43827,-0.67078 -7.47617,0.42903 l -3.78887,0.7507 c -1.37832,0.55227 -3.21888,0.3361 -3.25466,3.12031 0.0725,1.06423 -0.38632,2.04669 0.38412,3.21836 z"
         style={{
           fill: 'none',
@@ -20,7 +87,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-51"
+        className="tooth-51"
         d="m 128.44747,117.45968 -0.86624,-6.57101 c 0.46983,0 -0.52869,-1.32654 1.23491,-1.91862 6.44042,-2.27899 10.16234,-0.60845 11.21278,-0.10742 1.05044,0.50107 1.96238,1.87137 1.76084,3.31101 -0.20149,1.43962 -0.64251,1.78532 -0.94153,2.50024"
         style={{
           fill: 'none',
@@ -33,7 +100,8 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-52 child-tooth-52-parent "
+        ref={getToothRef('tooth-52-parent')}
+        className="tooth-52-parent"
         d="m 110.54038,116.16246 c 7.26885,-5.12134 5.77969,-3.6265 8.89074,-4.76501 1.08442,-0.41599 1.98459,-0.47815 2.44213,0.30939 l 1.68688,1.81986 c 1.14633,1.54619 1.07002,1.87443 1.21553,2.42363 0.54002,4.781 -0.0841,4.72099 -0.20441,6.75586 -0.83124,1.73196 -1.83506,3.27773 -3.53342,4.07416 -1.04808,0.79357 -2.49943,0.71568 -4.04124,0.44247 l -2.53533,-0.66262 c -0.994,0.16044 -1.85046,-0.55112 -2.72196,-1.16735 -1.83919,-1.38559 -2.3145,-3.35226 -2.94688,-5.25208 -0.1272,-1.22877 0.19854,-2.31724 0.94759,-3.27469 z"
         style={{
           fill: 'none',
@@ -46,7 +114,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-52"
+        className="tooth-52"
         d="m 112.58627,124.84061 c -0.97564,-1.62832 -2.53749,-2.94419 -0.64278,-6.10275 1.73794,-1.45551 3.09805,-1.90477 4.61068,-2.76021 1.30209,-0.7035 2.59424,-1.38589 3.52665,-1.30102 3.8828,-0.40005 2.28421,0.59546 3.3333,0.91692"
         style={{
           fill: 'none',
@@ -59,7 +127,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-52"
+        className="tooth-52"
         d="m 120.73164,117.50203 c 0.33235,1.866 0.64206,3.78039 1.5867,4.3407"
         style={{
           fill: 'none',
@@ -72,7 +140,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-52"
+        className="tooth-52"
         d="m 117.09124,123.9055 c 0.13748,-1.58912 -2.02127,-2.26145 -3.79782,-3.08637"
         style={{
           fill: 'none',
@@ -85,7 +153,8 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-53 child-tooth-53-parent "
+        ref={getToothRef('tooth-53-parent')}
+        className="tooth-53-parent"
         d="m 103.01062,138.38843 c -3.08304,-0.93467 -4.526843,-2.64459 -4.854532,-4.88241 -0.380883,-2.18802 0.04,-4.32209 1.493748,-6.38662 1.271494,-3.21518 2.533244,-3.03715 3.796044,-3.25309 1.12646,0.12908 2.15034,0.0704 3.14749,-0.0374 3.01396,-0.12134 4.13666,1.12068 4.86298,1.9331 2.54325,3.09457 2.26243,4.89771 2.88096,7.11205 0.31819,2.44502 0.1778,4.53569 -1.19659,5.67236 -4.18183,2.84207 -4.89268,1.4495 -6.64278,1.32478 -3.25902,-1.24726 -2.42079,-1.02305 -3.48732,-1.48294 z"
         style={{
           fill: 'none',
@@ -98,7 +167,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-53"
+        className="tooth-53"
         d="m 100.39514,134.53356 c 0.1465,-3.02657 0.42649,-5.89795 1.98804,-7.27916 1.5452,-1.47098 3.53329,-2.53728 6.25402,-2.93446"
         style={{
           fill: 'none',
@@ -111,7 +180,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-53"
+        className="tooth-53"
         d="m 108.49459,127.00418 c 1.84406,6.51847 2.6435,8.05682 -2.17536,4.01659"
         style={{
           fill: 'none',
@@ -124,7 +193,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-53"
+        className="tooth-53"
         d="m 106.18196,133.29479 c 4.06,4.46477 1.36698,3.80443 -3.00522,1.86967"
         style={{
           fill: 'none',
@@ -137,7 +206,8 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54 child-tooth-54-parent "
+        ref={getToothRef('tooth-54-parent')}
+        className="tooth-54-parent"
         d="m 89.282654,139.5966 c 5.648888,-4.45518 9.813436,-1.88186 13.978216,0.69037 1.12472,1.26818 2.22491,2.53628 3.76531,3.80542 4.71702,4.11931 3.8298,6.91486 1.09811,9.27483 -1.70251,1.71634 -3.33311,3.4002 -4.19163,4.7356 -0.98399,0.92064 -1.88868,1.62688 -2.65708,1.96492 -3.636271,1.48371 -5.024579,-0.58561 -7.06579,-1.623 -7.33366,-3.51233 -9.959925,-8.40502 -8.072869,-14.62108 0.207935,-2.3965 1.448348,-3.58013 3.145733,-4.22706 z"
         style={{
           fill: 'none',
@@ -150,7 +220,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54"
+        className="tooth-54"
         d="m 90.150883,145.00138 c -1.186546,-4.99812 1.676616,-4.44496 3.230208,-5.68702 2.699015,-0.58969 4.959824,-2.02567 9.478229,0.89864 3.36526,4.25514 2.35913,6.64392 2.78435,9.64383 0.20776,2.86428 -0.73857,4.60513 -2.02398,5.32485 -0.31985,1.54509 -0.24432,3.02368 -3.06573,4.3733 -2.401058,1.94542 -4.088587,0.27208 -5.862521,-0.96309 -2.671184,-0.65241 -3.10021,-2.24715 -3.040305,-4.46077 -5.435886,-2.14817 -2.396319,-6.20491 -1.500251,-9.12974 z"
         style={{
           fill: 'none',
@@ -163,7 +233,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54"
+        className="tooth-54"
         d="m 100.6896,140.35381 c -0.55264,0.5896 -1.290369,0.67048 -1.452949,2.33289 0.249861,1.70416 -0.780214,3.40521 -1.782327,5.10638 -1.036306,0.91642 -0.699891,3.40036 -0.979079,5.18135 1.015171,0.87922 2.03288,0.88911 3.050798,0.81037 l 1.923927,1.53778"
         style={{
           fill: 'none',
@@ -176,7 +246,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54"
+        className="tooth-54"
         d="m 91.193447,145.66094 c 0.68882,0.67833 1.203096,1.46173 3.129528,1.39462 1.0984,-0.12772 2.19665,-0.19216 3.292888,0.44589"
         style={{
           fill: 'none',
@@ -189,7 +259,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54"
+        className="tooth-54"
         d="m 103.32397,146.27386 c -2.105,0.32886 -5.216376,0.19749 -5.788465,1.22738"
         style={{
           fill: 'none',
@@ -202,7 +272,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54"
+        className="tooth-54"
         d="m 92.375329,153.76781 c 2.143597,0.88152 3.051647,-0.0435 4.179828,-0.64719"
         style={{
           fill: 'none',
@@ -215,7 +285,7 @@ const KidToothArches = () => {
           strokeDasharray: 'none'
         }}/>
       <path
-        className="child-tooth-54"
+        className="tooth-54"
         d="m 94.135111,156.47331 0.971964,-2.69902"
         style={{
           fill: 'none',

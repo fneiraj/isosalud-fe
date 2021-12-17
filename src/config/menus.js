@@ -1,3 +1,4 @@
+/* eslint-disable */
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import EventIcon from '@material-ui/icons/Event'
 import PeopleIcon from '@material-ui/icons/People'
@@ -31,7 +32,7 @@ const menus = [
       { id: 'Dashboard admin', icon: <SupervisedUserCircleIcon />, link: '/admin' },
       { id: 'Calendario', icon: <EventIcon />, link: '/admin/calendario' },
       { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/admin/usuarios' },
-      {
+/*      {
         id: 'Configuración sitio',
         icon: <SettingsIcon />,
         link: '/admin/configuracion-sitio',
@@ -54,7 +55,7 @@ const menus = [
             ]
           }
         ]
-      }
+      }*/
     ]
   }
 ]

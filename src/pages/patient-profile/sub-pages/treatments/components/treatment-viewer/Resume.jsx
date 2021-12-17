@@ -57,6 +57,20 @@ const Resume = ({ classes, treatment }) => {
     )
   }
 
+  const getPriceTotal = () => {
+    const price = treatment?.processes?.map(p => p.price).reduce((a, b) => a + b, 0)
+    return price
+  }
+
+  const moneyFormatter = new Intl.NumberFormat('es-CL', {
+    style: 'currency',
+    currency: 'CLP'
+  
+    // These options are needed to round to whole numbers if that's what you want.
+    // minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    // maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+  })
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -84,21 +98,21 @@ const Resume = ({ classes, treatment }) => {
               </Grid>
               <Grid item xs={4} />
               <Grid item xs={3}>
-                <span>$22.000</span>
+                <span>$0</span>
               </Grid>
               <Grid item xs={5}>
                 <span>Pendiente</span>
               </Grid>
               <Grid item xs={4} />
               <Grid item xs={3}>
-                <span>$72.000</span>
+                <span>{moneyFormatter.format(getPriceTotal())}</span>
               </Grid>
               <Grid item xs={6}>
                 <span>Total</span>
               </Grid>
               <Grid item xs={3} />
               <Grid item xs={3}>
-                <span>$557.000</span>
+                <span>{moneyFormatter.format(getPriceTotal())}</span>
               </Grid>
             </Grid>
           </Grid>

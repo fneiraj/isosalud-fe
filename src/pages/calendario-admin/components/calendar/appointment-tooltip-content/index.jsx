@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Grid, makeStyles } from '@material-ui/core'
 import { AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui'
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
@@ -16,9 +17,11 @@ const AppointmentTooltipContent = ({ appointmentData, ...rest }) => {
   const classes = useStyles()
 
   // eslint-disable-next-line no-unused-vars
-  const { author, box, comment, endDate, id, patient, startDate, title } = appointmentData
+  const { author, box, comment, endDate, id, patient, startDate, title, treatment } = appointmentData
 
-  const patientName = `${patient?.firstName} ${patient?.lastName}`
+  console.log({ patient })
+
+  const patientName = `${patient?.personInfo?.firstName} ${patient?.personInfo?.lastName}`
 
   return (
     <AppointmentTooltip.Content {...rest} appointmentData={appointmentData}>
@@ -43,7 +46,15 @@ const AppointmentTooltipContent = ({ appointmentData, ...rest }) => {
           <ChatBubbleOutlineOutlinedIcon />
         </Grid>
         <Grid item xs={10}>
-          <span>{comment}</span>
+          <span>{treatment?.specialization?.name || 'Sin tratamiento.'}</span>
+        </Grid>
+      </Grid>
+      <Grid container alignItems='center'>
+        <Grid item xs={2} className={classes.textCenter}>
+          <ChatBubbleOutlineOutlinedIcon />
+        </Grid>
+        <Grid item xs={10}>
+          <span>{comment || 'Sin comentarios.'}</span>
         </Grid>
       </Grid>
     </AppointmentTooltip.Content>

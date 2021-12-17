@@ -24,7 +24,7 @@ const PersonInfoForm = ({
   useEffect(() => {
     if (!displayAppointmentData.dateOfBirth) {
       changeAppointment({
-        field: ['dateOfBirth'], changes: new Date(1, 1, 1990)
+        field: ['dateOfBirth'], changes: new Date()
       })
     }
 

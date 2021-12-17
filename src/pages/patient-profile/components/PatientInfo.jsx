@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Avatar, Button, Card, CardContent, Grid, TextField, Typography } from '@material-ui/core'
 import React from 'react'
 import styles from 'pages/patient-profile/styles'
@@ -22,8 +23,8 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
   const { addressInfo: address = {} } = info
 
   const appointmentInfo = {
-    past: 5,
-    upcoming: 4
+    past: 0,
+    upcoming: 3
   }
 
   const BasicInfo = () => (
@@ -168,9 +169,9 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
               <Grid item>
                 <AppointmentsInfo />
               </Grid>
-              <Grid item>
+              {/*<Grid item>
                 <ContactPatient />
-              </Grid>
+              </Grid>*/}
             </Grid>
           </Grid>
           <Grid item sm={7} xs={12}>

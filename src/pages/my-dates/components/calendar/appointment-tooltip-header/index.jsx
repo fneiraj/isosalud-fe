@@ -14,7 +14,7 @@ const AppointmentTooltipHeader = ({ appointmentData, commitChanges, ...rest }) =
   const classes = useStyles()
 
   // eslint-disable-next-line no-unused-vars
-  const { author, box, comment, endDate, id, patient, startDate, title } = appointmentData
+  const { author, box, comment, endDate, id, patient, startDate, title, status } = appointmentData
 
   return (
     <AppointmentTooltip.Header
@@ -22,14 +22,15 @@ const AppointmentTooltipHeader = ({ appointmentData, commitChanges, ...rest }) =
       appointmentData={appointmentData}
       showDeleteButton={false}
     >
-      <IconButton
-        onClick={() => {
-          commitChanges({ cancel: id })
-        }}
-        className={classes.commandButton}
-      >
-        <CancelOutlinedIcon />
-      </IconButton>
+      {status?.name !== 'Cancelada' &&
+        <IconButton
+          onClick={() => {
+            commitChanges({ cancel: id })
+          }}
+          className={classes.commandButton}
+        >
+          <CancelOutlinedIcon />
+        </IconButton>}
     </AppointmentTooltip.Header>
   )
 }

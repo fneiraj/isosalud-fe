@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import styles from './styles'
 import { Grid, Paper } from '@material-ui/core'
@@ -6,11 +7,10 @@ import PatientNotes from './components/PatientNotes'
 import { withStyles } from '@material-ui/core/styles'
 import Payments from './components/Payments'
 import { patientService } from 'services/patient/PatientService'
+import PatientInfo2 from './components/PatientInfo2'
 
 const UserProfilePage = (props) => {
   const { classes, match } = props
-  // TODO: Refactorizar esto
-  // eslint-disable-next-line no-unused-vars
   const [isEditing, setIsEditing] = useState(false)
   const [userData, setUserData] = useState({})
 
@@ -25,21 +25,11 @@ const UserProfilePage = (props) => {
   return (
     <Paper className={classes.root} key={userData.id}>
       <Grid container justify='flex-start' spacing={3}>
-        <Grid key='patient_info' item xs={12} sm={7}>
-          <PatientInfo
+        <Grid key='patient_info2' item xs={12} sm={12}>
+          <PatientInfo2
             isEditing={isEditing}
             userData={userData}
           />
-        </Grid>
-        <Grid key='patient_notes' item xs={12} sm={5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <PatientNotes />
-            </Grid>
-            <Grid item xs={12}>
-              <Payments />
-            </Grid>
-          </Grid>
         </Grid>
       </Grid>
     </Paper>

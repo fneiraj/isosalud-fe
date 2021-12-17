@@ -13,7 +13,8 @@ const styles = {
     height: '100%',
     //    marginTop: theme.spacing(3)
     paddingTop: 15,
-    overflowX: 'hidden'
+    overflowX: 'hidden',
+    overflowY: 'hidden'
   },
   container: {
     marginLeft: 25,

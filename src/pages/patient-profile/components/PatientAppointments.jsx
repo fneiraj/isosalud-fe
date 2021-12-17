@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button, Card, CardContent, Divider, Grid, Hidden, Modal, Typography } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
@@ -25,6 +26,7 @@ import Paper from '@material-ui/core/Paper'
 import IconButton from '@material-ui/core/IconButton'
 import { Close } from '@material-ui/icons'
 import dateUtils from 'utils/date-fns-utils'
+import EmptyState from '../sub-pages/evolutions/components/EmptyState'
 
 const useStyles = makeStyles((theme) => ({
   leftSide: {
@@ -222,6 +224,11 @@ const PatientAppointments = ({ userData }) => {
   }
 
   const AppointmentsTimeline = () => {
+
+    if (appointments.length <= 0) {
+      return <EmptyState />
+    }
+
     appointments?.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
 
     return (
@@ -259,9 +266,9 @@ const PatientAppointments = ({ userData }) => {
 
           </div>
           <div>
-            <div style={{ width: '75%', height: '75%', alignItems: 'center' }}>
+            <div style={{ width: '75%', height: '75%', alignItems: 'center', marginTop: 15 }}>
               <>
-                {currentComments}
+                {currentComments || 'Sin comentarios'}
               </>
             </div>
 

@@ -63,6 +63,11 @@ const ClinicalProccessForm = ({
       return
     }
 
+    if (actualProcessSelected === undefined || actualProcessSelected === '') {
+      window.alert('Debes seleccionar el procedimiento')
+      return
+    }
+
     const process = clinicalProcesses.flatMap(c => c.processes).find(p => p.id === Number(actualProcessSelected))
     const pid = `${process.id}-${new Date().getTime()}`
     setProcessSelectedList(prev => {
@@ -96,7 +101,7 @@ const ClinicalProccessForm = ({
   }
 
   const handleAcceptOdontogramaType = () => {
-    if (odontogramaTypeSelected === '') {
+    if (odontogramaTypeSelected === '' || odontogramaTypeSelected === undefined) {
       return
     }
 
@@ -182,7 +187,7 @@ const ClinicalProccessForm = ({
         </div>
       </div>
       <Grid container spacing={2}>
-        <Grid item xs={5}>
+        <Grid item xs={5} style={{align: 'center'}}>
           {blockOdontogramaSelect
             && <ToothArches
               type={odontogramaTypeSelected}

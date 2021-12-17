@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const PatientInfo = ({ isEditing, onContactClick, userData }) => {
+const PatientInfo2 = ({ isEditing, onContactClick, userData }) => {
   const classes = useStyles()
 
   const { personInfo: info = {} } = userData
@@ -94,45 +94,48 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
     return dateUtils.format(dateParsed, 'dd-MM-yyyy')
   }
 
-  const dateBirthdayFormatted = () => {
-    if (!info?.dateOfBirth) return null
+  const dateLastLogin = () => {
+    if (!userData?.lastLogin) return null
 
-    const dateParsed = dateUtils.parse(info?.dateOfBirth, 'yyyy-MM-dd')
-    return dateUtils.format(dateParsed, 'dd-MM-yyyy')
+    const dateParsed = dateUtils.parse(userData?.lastLogin, 'yyyy-MM-dd HH:mm:ss')
+    return dateUtils.format(dateParsed, 'dd-MM-yyyy HH:mm:ss')
   }
+
+  const dateRegister = () => {
+    if (!userData?.dateCreated) return null
+
+    const dateParsed = dateUtils.parse(userData?.dateCreated, 'yyyy-MM-dd HH:mm:ss')
+    return dateUtils.format(dateParsed, 'dd-MM-yyyy HH:mm:ss')
+  }
+
+  const rol = () => (
+    userData?.roleName?.includes('ADMIN') ? 'Administrador' : userData?.roleName?.includes('DENTIST') ? 'Dentista' : 'Paciente'
+  )
 
   const PersonalInfo = () => (
     <Grid container>
       <Grid item xs={5}>
-        <TextField label='Telefono' value={info?.phone} {...textFieldProps} />
+        <TextField label='Identificador' value={userData.id} {...textFieldProps} />
       </Grid>
       <Grid item xs={2} />
       <Grid item xs={5}>
-        <TextField label='Direccion' value={address?.street} {...textFieldProps} />
+        <TextField label='Nombre de usuario' value={userData.username} {...textFieldProps} />
       </Grid>
 
       <Grid item xs={5}>
-        <TextField label='Region' value={address?.region?.name} {...textFieldProps} />
+        <TextField label='Rol sistema' value={rol()} {...textFieldProps} />
       </Grid>
       <Grid item xs={2} />
       <Grid item xs={5}>
-        <TextField label='Comuna' value={address?.commune} {...textFieldProps} />
+        <TextField label='Estado' value={userData.status} {...textFieldProps} />
       </Grid>
-
+      
       <Grid item xs={5}>
-        <TextField label='Nacimiento' value={dateBirthdayFormatted()} {...textFieldProps} />
+        <TextField label='Fecha creación' value={dateRegister()} {...textFieldProps} />
       </Grid>
-      <Grid item xs={2} />
+      <Grid item xs={2}/>
       <Grid item xs={5}>
-        <TextField label='Sexo' value={info?.gender} {...textFieldProps} />
-      </Grid>
-
-      <Grid item xs={5}>
-        <TextField label='Registro' value={dateRegisterFormatted()} {...textFieldProps} />
-      </Grid>
-      <Grid item xs={2} />
-      <Grid item xs={5}>
-        <TextField label='Estado' value={userData?.status} {...textFieldProps} />
+        <TextField label='Ultimo acceso' value={dateLastLogin()} {...textFieldProps} />
       </Grid>
     </Grid>
   )
@@ -164,4 +167,4 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
   )
 }
 
-export default PatientInfo
+export default PatientInfo2

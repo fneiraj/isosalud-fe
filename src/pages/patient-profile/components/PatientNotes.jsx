@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button, Card, CardContent, Grid, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
@@ -160,9 +161,9 @@ const PatientInfo = ({ currentUserId, notes, setNotes, handleShowAllNotes }) => 
             </Button>
           </Typography>
           {notes && notes.length > 0 ? <Notes /> : <EmptyState />}
-          <Button color='primary' onClick={handleShowAllNotes} className={classes.right}>
+          {/*<Button color='primary' onClick={handleShowAllNotes} className={classes.right}>
             Ver todas
-          </Button>
+          </Button>*/}
         </CardContent>
       </Card>
       <PatientFormAddNote

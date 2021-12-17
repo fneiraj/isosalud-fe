@@ -250,6 +250,12 @@ const ToothArches = ({ type, toothsSelected, setToothSelected, renderFlag, selec
 
   const ChildIndicator = () => (
     <>
+      <text x="10" y="17" style={{ ...textStyle, cursor: 'pointer' }}>
+        <tspan x="1" y="17" onClick={handleClickSelectAll}>Todas</tspan>
+      </text>
+      <text x="10" y="17" style={{ ...textStyle, cursor: 'pointer' }}>
+        <tspan x="250" y="17" onClick={handleClickSelectNone}>Ninguna</tspan>
+      </text>
       <text x="87.802124" y="124.42228" style={textStyle}>
         <tspan x="87.802124" y="124.42228">53</tspan>
       </text>
@@ -315,13 +321,18 @@ const ToothArches = ({ type, toothsSelected, setToothSelected, renderFlag, selec
         handleOnMouseEnterEvent={handleOnMouseEnterEvent}
         handleOnMouseLeaveEvent={handleOnMouseLeaveEvent}
       />
-      <AdultIndicator/>
+      <AdultIndicator />
     </>
   )
 
   const KidRender = () => (
     <>
-      <KidToothArches/>
+      <KidToothArches 
+        getToothRef={getToothRefInit}
+        handleOnClick={handleOnClick}
+        handleOnMouseEnterEvent={handleOnMouseEnterEvent}
+        handleOnMouseLeaveEvent={handleOnMouseLeaveEvent}
+      />
       <ChildIndicator />
     </>
   )
@@ -330,28 +341,28 @@ const ToothArches = ({ type, toothsSelected, setToothSelected, renderFlag, selec
     <>
 
       <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="289.61084"
-           height="370.54398">
+        height="370.54398">
         <defs>
           <marker refX="0" refY="0" orient="auto" overflow="visible">
-            <circle r="0.8" cy="0" cx="3"/>
-            <circle r="0.8" cy="0" cx="6.5"/>
-            <circle r="0.8" cy="0" cx="10"/>
+            <circle r="0.8" cy="0" cx="3" />
+            <circle r="0.8" cy="0" cx="6.5" />
+            <circle r="0.8" cy="0" cx="10" />
           </marker>
           <marker orient="auto" refY="0" refX="0" overflow="visible">
             <path d="m5.77 0-8.65 5 0-10 8.65 5z" transform="scale(-0.2,-0.2)"
-                  style={{ fillRule: 'evenodd', markerStart: 'none', strokeWidth: '1pt', stroke: '#000' }}/>
+              style={{ fillRule: 'evenodd', markerStart: 'none', strokeWidth: '1pt', stroke: '#000' }} />
           </marker>
           <marker orient="auto" refY="0" refX="0" overflow="visible">
             <path d="M0 0 5-5-12.5 0 5 5 0 0z" transform="matrix(0.2,0,0,0.2,1.2,0)"
-                  style={{ fillRule: 'evenodd', markerStart: 'none', strokeWidth: '1pt', stroke: '#000' }}/>
+              style={{ fillRule: 'evenodd', markerStart: 'none', strokeWidth: '1pt', stroke: '#000' }} />
           </marker>
           <marker orient="auto" refY="0" refX="0" overflow="visible">
             <path d="M0 0 5-5-12.5 0 5 5 0 0z" transform="matrix(0.8,0,0,0.8,10,0)"
-                  style={{ fillRule: 'evenodd', markerStart: 'none', strokeWidth: '1pt', stroke: '#000' }}/>
+              style={{ fillRule: 'evenodd', markerStart: 'none', strokeWidth: '1pt', stroke: '#000' }} />
           </marker>
         </defs>
 
-        {type === 'adult' ? <AdultRender /> : type === 'kid' ?  <KidRender /> : <></>}
+        {type === 'adult' ? <AdultRender /> : type === 'kid' ? <KidRender /> : <></>}
       </svg>
     </>
   )

@@ -33,6 +33,7 @@ const PatientInfoForm = ({
   changeAppointment,
   patients,
   currentPatientData,
+  setTreatment
 }) => {
   const classes = useStyles()
   const [isFromProfile, setIsFromProfile] = useState(false)
@@ -79,7 +80,7 @@ const PatientInfoForm = ({
 
   return (
     <div className={classes.root}>
-      <Tabs
+      {false && <Tabs
         orientation='vertical'
         variant='scrollable'
         value={tabValue}
@@ -90,7 +91,7 @@ const PatientInfoForm = ({
       >
         <Tab label='Paciente registrado' />
         <Tab label='Paciente nuevo' disabled={isFromProfile} />
-      </Tabs>
+      </Tabs>}
       <TabPanel value={tabValue} index={0} style={{ width: '80%' }}>
         <div>
           <Autocomplete
@@ -103,7 +104,7 @@ const PatientInfoForm = ({
             disabled={isFromProfile}
             options={patients}
             getOptionSelected={(option, value) => {
-              return option?.personInfo?.id === value.id
+              return option?.id === value.id
             }}
             getOptionLabel={(option) => option.personInfo !== undefined ? `${option?.personInfo?.firstName} ${option?.personInfo?.lastName}` : `${option?.firstName} ${option?.lastName}`}
             onChange={(event, newValue) => changeAppointment({
@@ -120,13 +121,14 @@ const PatientInfoForm = ({
               fullWidth
               {...textEditorProps('medicId')}
               key={'treatment-relation-'}
-              value={displayAppointmentData?.treatmentId}
+              value={(displayAppointmentData?.treatmentId === -1 && displayAppointmentData?.treatment?.id !== undefined) ? displayAppointmentData?.treatment?.id : displayAppointmentData?.treatmentId}
               onChange={(e) => {
                 changeAppointment({field: ['treatmentId'], changes: e.target.value})
+                setTreatment(patientTreatments.find(pt => pt.id === e.target.value))
               }}
             >
               <MenuItem key={'none'} value={-1}>Ninguno</MenuItem>
-              {patientTreatments.map(tr => <MenuItem key={tr.id} value={tr.id}>{`${tr.specialization?.name} - ${tr.medic?.personInfo?.firstName} ${tr.medic?.personInfo?.lastName}`}</MenuItem>)}
+              {patientTreatments.map(tr => <MenuItem key={tr.id} value={tr.id}>{`${tr.comment}`}</MenuItem>)}
             </Select>
           </FormControl>
         </div>

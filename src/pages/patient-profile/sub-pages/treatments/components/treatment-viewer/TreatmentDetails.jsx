@@ -120,7 +120,7 @@ const TreatmentDetails = ({ classes, open, handleClose, treatment }) => {
           <div className={clsx(classes.content)} ref={printRef}>
             <Grid container spacing={3}>
               {isPrint && <Grid item xs={12}>
-                LOGO
+                <img src={'http://cdn.isosalud.cl/logo.png'} width={'250px'} height={'150px'}/>
               </Grid>}
                 <Grid item xs={12} sm={6} md={3}>
                 <Paper className={classes.paper} style={{ border: '1px solid grey', height: '100%' }}>

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Button, Grid, Paper } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
@@ -9,6 +10,7 @@ import useToggle from 'hooks/useToggle'
 import { patientService } from 'services/patient/PatientService'
 import { treatmentService } from 'services/treatments/TreatmentService'
 import { useToasts } from 'react-toast-notifications'
+import EmptyState from '../evolutions/components/EmptyState'
 
 const styles = {
   root: {
@@ -106,11 +108,11 @@ const TreatmentPlansPage = ({ classes, match }) => {
             </Grid>
           </Grid>
           <Grid container justify='flex-start' spacing={3} style={{ marginTop: 10, marginBottom: 10 }}>
-            {treatments.map((treatment) => (
+            {treatments && treatments.length > 0 ? treatments.map((treatment) => (
               <Grid key={treatment.id} item xs={12}>
                 <TreatmentCard handleOpenDetails={() => handleOpenModal(treatment)} key={treatment.id} treatment={treatment} />
               </Grid>
-            ))}
+            )) : <EmptyState />}
           </Grid>
         </div>
       </Paper>

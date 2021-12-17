@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Grid, Paper, Typography } from "@material-ui/core"
 
-const PatientsResume = ({data}) => {
+const PatientsResume = ({data, title: titleParent}) => {
 
     console.log({data})
 
@@ -12,7 +12,7 @@ const PatientsResume = ({data}) => {
         const percent = (currentMonth * 100) / previousMonth 
 
         return (
-        <Grid container spacing={4}>
+        <Grid container spacing>
             <Grid item xs={2}>
                 <Typography variant='h4'>{total}</Typography>
             </Grid>
@@ -21,7 +21,7 @@ const PatientsResume = ({data}) => {
                     <Grid item xs={12}>
                         <Typography>{title}</Typography>
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} style={{paddingLeft: 10}}>
                         <Typography style={{color: '#66BB6A', fontWeight: 1000}}>^ {percent}% (dif. mes pasado)</Typography>
                     </Grid>
                 </Grid>
@@ -30,10 +30,10 @@ const PatientsResume = ({data}) => {
     )}
 
     return (
-        <Grid container component={Paper} spacing={2}>
+        <Grid container component={Paper} style={{paddingTop: 15, paddingBottom: 15, paddingRight: 15, paddingLeft: 15}}>
             <Grid item xs={12}>
                 <Typography variant='h5'>
-                    Pacientes
+                    {titleParent}
                 </Typography>
             </Grid>
             <Grid item xs={12} style={{marginTop: 15}}>

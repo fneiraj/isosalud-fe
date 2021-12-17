@@ -1,8 +1,14 @@
+/* eslint-disable */
 import { Button, Grid, Paper } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
-import EvolutionCard from 'pages/patient-profile/sub-pages/evolutions/components/EvolutionCard'
-import { DataMock } from 'mock/data'
+import { useEffect, useState } from 'react'
+import useToggle from 'hooks/useToggle'
+import { useToasts } from 'react-toast-notifications'
+import { evolutionService } from 'services/evolutions/EvolutionsService'
+import EvolutionRenderCard from './components/EvolutionRenderCard'
+import EmptyState from './components/EmptyState'
+import FormAddEvolution from './components/FormAddEvolution'
 
 const styles = {
   root: {
@@ -16,35 +22,79 @@ const styles = {
   }
 }
 
-const EvolutionsPage = (props) => {
-  const { classes } = props
+const EvolutionsPage = ({ classes, match }) => {
+  const [evolutions, setEvolutions] = useState([])
+  const [isVisibleModalAddFile, toggleVisibleModalAddFile] = useToggle()
+  const { addToast } = useToasts()
+
+  useEffect(() => {
+    evolutionService.getByIdPatient(match.params.id)
+      .then(response => setEvolutions(response.data.data))
+      .catch(error => console.error(error))
+  }, [])
+
+  const handleOnAddButton = () => {
+    toggleVisibleModalAddFile()
+  }
+
+  const handleSubmitUploadFiles = (evolution) => {
+    evolutionService.create({comment: evolution, patientId: match.params.id})
+      .then(response => {
+        setEvolutions(prev => [response.data, ...prev])
+        addToast('Evolución agregada correctamente', { appearance: 'success' })
+      })
+      .catch(error => {
+        console.error(error)
+        addToast('Error al agregar evolución', { appearance: 'error' })
+      })
+
+    toggleVisibleModalAddFile()
+  }
+
+  const renderUserFiles = () => {
+    evolutions?.sort((a, b) => new Date(b.dateCreated) - new Date(a.dateCreated))
+
+    return evolutions
+      .map((evolution) => {
+        return (
+          <Grid key={evolution.id} item xs={12}>
+            <EvolutionRenderCard key={`evolution-card-${evolution.id}`} {...evolution} />
+          </Grid>
+        )
+      })
+  }
 
   return (
-    <Paper className={classes.root}>
-      <div className={classes.tableWrapper}>
-        <Grid container justify='flex-end'>
-          <Grid key='addEvolution' item>
-            <Button
-              onClick={() => {
-              }}
-              variant='contained'
-              color='primary'
-              className={classes.button}
-              endIcon={<AddIcon />}
-            >
-              Agregar
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid container justify='flex-start' spacing={3} style={{ marginTop: 10, marginBottom: 10 }}>
-          {DataMock.evolutions().map(({ id, date, author, description }) => (
-            <Grid key={id} item xs={12}>
-              <EvolutionCard key={id} id={id} date={date} author={author} description={description} />
+    <>
+      <Paper className={classes.root}>
+        <div className={classes.tableWrapper}>
+          <Grid container justify='flex-end'>
+            <Grid key='addEvolution' item>
+              <Button
+                onClick={handleOnAddButton}
+                variant='contained'
+                color='primary'
+                className={classes.button}
+                endIcon={<AddIcon />}
+              >
+                Agregar
+              </Button>
             </Grid>
-          ))}
-        </Grid>
-      </div>
-    </Paper>
+          </Grid>
+          <Grid container justify='flex-start' spacing={3} style={{ marginTop: 10, marginBottom: 10 }}>
+            {
+              evolutions.length > 0 ? renderUserFiles() : <EmptyState />
+            }
+          </Grid>
+        </div>
+      </Paper>
+      <FormAddEvolution
+        key={`form-new-evolution-${isVisibleModalAddFile}`}
+        visible={isVisibleModalAddFile}
+        toggleVisible={toggleVisibleModalAddFile}
+        onUploadCallback={handleSubmitUploadFiles}
+      />
+    </>
   )
 }
 

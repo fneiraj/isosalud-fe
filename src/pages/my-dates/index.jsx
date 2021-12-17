@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react'
 import { Paper, withStyles } from '@material-ui/core'
 import {
@@ -74,6 +75,8 @@ const Calendar = () => {
         })
     }
     if (changed) {
+      console.log({changed})
+
       appointmentService.edit(changed)
         .then(response => {
           setData([...data.filter(d => d.id !== changed.id), response.data])

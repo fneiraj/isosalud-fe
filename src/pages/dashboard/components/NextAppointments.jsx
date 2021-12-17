@@ -39,17 +39,29 @@ const NextAppointments = () => {
     }
   }
 
+  const filterNonPased = (target) => {
+    console.log(new Date())
+
+    return target.filter(t => {
+      const startDateParsed = dateUtils.parse(t.startDate, 'yyyy-MM-dd HH:mm')
+      return  dateFnsInstance.isAfter(startDateParsed, new Date()) || dateUtils.isSameDay(new Date(), startDateParsed)
+    })
+  }
+
   useEffect(() => {
     appointmentService.getAllOwn()
       .then(response => {
-        setAppointments(filterAcordingTab(response.data.data))
-        setData(response.data.data)
+        const appointmentsRs = filterNonPased(response.data.data)
+        appointmentsRs?.sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+
+        setAppointments(filterAcordingTab(appointmentsRs))
+        setData(appointmentsRs)
       })
       .catch(error => console.error(error))
   }, [])
 
   const EmptyState = () => (
-    <>EmptyState</>
+    <>Sin registros</>
   )
 
   const Appointment = ({ box, comment, startDate, endDate, medic, patient, status, title, treatment, type }) => {
@@ -57,7 +69,7 @@ const NextAppointments = () => {
     const startDateParsed = dateFnsInstance.parse(startDate, 'yyyy-MM-dd HH:mm')
     const endDateParsed = dateFnsInstance.parse(endDate, 'yyyy-MM-dd HH:mm')
 
-    const startDateFormatted = dateFnsInstance.format(startDateParsed, 'EEEE dd \'a las\' HH:mm')
+    const startDateFormatted = dateFnsInstance.format(startDateParsed, 'EEEE dd \'a las\' HH:mm a')
 
     return (
       <Grid item xs={12}>
@@ -72,7 +84,7 @@ const NextAppointments = () => {
               <Grid item xs />
               <Grid item>
                 <Typography color='textSecondary' gutterBottom>
-                  {startDateFormatted} hrs.
+                  {startDateFormatted}
                 </Typography>
               </Grid>
             </Grid>

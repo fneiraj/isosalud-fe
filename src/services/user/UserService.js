@@ -8,7 +8,8 @@ export const userService = {
   edit,
   validate,
   changeStatus,
-  getUserStates
+  getUserStates,
+  getMe
 }
 
 function getAll () {
@@ -21,6 +22,10 @@ function getUserStates () {
 
 function getByUsername (username) {
   return HttpClient.get(`/user/search?username=${username}`)
+}
+
+function getMe () {
+  return HttpClient.get('/auth/me')
 }
 
 function create ({ gender, prevision, commune, address: street, rut, firstName, lastName, email, phone, cellphone, dateOfBirth, roleName, preferredContactMeanName, profileImgUri = null, status }) {

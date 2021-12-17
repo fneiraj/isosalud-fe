@@ -5,8 +5,8 @@ const ResumeGraphic = ({data}) => {
 
     return (
         <BarChart
-            width={1000}
-            height={300}
+            width={500}
+            height={250}
             data={data}
             margin={{
               top: 5,

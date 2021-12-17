@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Grid, makeStyles } from '@material-ui/core'
 import { AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui'
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
@@ -17,6 +18,8 @@ const AppointmentTooltipContent = ({ appointmentData, ...rest }) => {
 
   // eslint-disable-next-line no-unused-vars
   const { author, box, comment, endDate, id, patient, startDate, title, treatment } = appointmentData
+
+  console.log({ patient })
 
   const patientName = `${patient?.personInfo?.firstName} ${patient?.personInfo?.lastName}`
 

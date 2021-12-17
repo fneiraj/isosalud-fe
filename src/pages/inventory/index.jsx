@@ -88,6 +88,7 @@ const InventoryPage = ({ classes }) => {
         setCurrentData([...data, product])
         toggleNewProductFormVisible()
         addToast('Producto agregado correctamente', { appearance: 'success', autoDismiss: true })
+        setCurrentProductEditing(undefined)
       })
       .catch(error => {
         console.error(error)
@@ -104,6 +105,7 @@ const InventoryPage = ({ classes }) => {
         })
         toggleNewProductFormVisible()
         addToast('Producto modificado correctamente', { appearance: 'success', autoDismiss: true })
+        setCurrentProductEditing(undefined)
       })
       .catch(error => {
         console.error(error)

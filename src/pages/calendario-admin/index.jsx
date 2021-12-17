@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useState } from 'react'
 import { Paper, withStyles } from '@material-ui/core'
 import {
@@ -12,26 +13,25 @@ import {
   WeekView
 } from '@devexpress/dx-react-scheduler-material-ui'
 import { CurrentTimeIndicator, EditingState, ViewState } from '@devexpress/dx-react-scheduler'
-import DeleteAppoinmentDialog from 'pages/my-dates/components/calendar/delete-appointment-dialog'
+import DeleteAppoinmentDialog from 'pages/calendario-admin/components/calendar/delete-appointment-dialog'
 import { format } from 'date-fns'
 import styles from './styles'
 import useLocalStorage from 'hooks/useLocalStorage'
-import DayScaleCell from 'pages/my-dates/components/calendar/week-day-scale-cell'
-import Appointment from 'pages/my-dates/components/calendar/appointment'
-import AppointmentContent from 'pages/my-dates/components/calendar/appointment-content'
-import AppointmentFormWrapper from 'pages/my-dates/components/calendar/appointment-form-wrapper'
-import CalendarHeader from 'pages/my-dates/components/calendar/calendar-header'
-import TimeIndicator from 'pages/my-dates/components/calendar/calendar-time-indicator'
-import WeekTimeTableCell from 'pages/my-dates/components/calendar/time-table-cell'
-import MonthTimeTableCell from 'pages/my-dates/components/calendar/month-day-scale-cell'
-import DayTimeTableCell from 'pages/my-dates/components/calendar/day-table-cell'
+import DayScaleCell from 'pages/calendario-admin/components/calendar/week-day-scale-cell'
+import Appointment from 'pages/calendario-admin/components/calendar/appointment'
+import AppointmentContent from 'pages/calendario-admin/components/calendar/appointment-content'
+import AppointmentFormWrapper from 'pages/calendario-admin/components/calendar/appointment-form-wrapper'
+import CalendarHeader from 'pages/calendario-admin/components/calendar/calendar-header'
+import TimeIndicator from 'pages/calendario-admin/components/calendar/calendar-time-indicator'
+import WeekTimeTableCell from 'pages/calendario-admin/components/calendar/time-table-cell'
+import MonthTimeTableCell from 'pages/calendario-admin/components/calendar/month-day-scale-cell'
+import DayTimeTableCell from 'pages/calendario-admin/components/calendar/day-table-cell'
 import useToggle from 'hooks/useToggle'
 import { appointmentService } from 'services/appointment/AppointmentService'
 import { useToasts } from 'react-toast-notifications'
 import { feriadosService } from 'services/api/feriados/FeriadosService'
-import AppointmentTooltipContent from 'pages/my-dates/components/calendar/appointment-tooltip-content'
-import AppointmentTooltipHeader from 'pages/my-dates/components/calendar/appointment-tooltip-header'
-import CalendarHeaderList from 'pages/my-dates/components/calendar/calendar-header-list'
+import AppointmentTooltipContent from 'pages/calendario-admin/components/calendar/appointment-tooltip-content'
+import AppointmentTooltipHeader from 'pages/calendario-admin/components/calendar/appointment-tooltip-header'
 
 const AdminCalendarPage = () => {
   const currentDate = new Date()
@@ -75,6 +75,8 @@ const AdminCalendarPage = () => {
         })
     }
     if (changed) {
+      console.log({changed})
+
       appointmentService.edit(changed)
         .then(response => {
           setData([...data.filter(d => d.id !== changed.id), response.data])
@@ -132,14 +134,7 @@ const AdminCalendarPage = () => {
   if (calendarType === 'List') {
     return (
       <>
-        <CalendarHeaderList
-//          onNavigate={onNavigate}
-          navigatorText='navigatorText'
-          handleAddNewAppointment={handleAddNewAppointment}
-          calendarType={calendarType}
-          setCalendarType={setCalendarType}
-        />
-        <>Calendario vista lista</>
+        Calendario vista lista
       </>
     )
   }

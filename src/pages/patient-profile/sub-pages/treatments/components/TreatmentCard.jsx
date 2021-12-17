@@ -1,24 +1,22 @@
 import { Button, Card, CardContent, Grid, Typography } from '@material-ui/core'
 import ListAltIcon from '@material-ui/icons/ListAlt'
+import dateFnsInstance from 'utils/date-fns-utils'
 
 const TreatmentCard = ({ handleOpenDetails, treatment }) => {
   console.log({ treatment })
   const medicName = `${treatment?.medic?.personInfo?.firstName} ${treatment?.medic?.personInfo?.lastName}`
   const specialty = treatment?.specialization?.name
   const status = treatment?.state?.name
-  const startDate = ''
-  const lastDate = ''
+
+  const startDateParsed = dateFnsInstance.parse(treatment?.startDate, 'yyyy-MM-dd HH:mm')
+  const lastDateParsed = dateFnsInstance.parse(treatment?.lastMeeting, 'yyyy-MM-dd HH:mm')
+
+  const startDate = (treatment?.startDate !== undefined && dateFnsInstance.isValid(startDateParsed)) ? dateFnsInstance.format(startDateParsed, 'dd-MM-yyy HH:mm a') : 'Sin registro'
+  const lastDate = (treatment?.lastMeeting !== undefined && dateFnsInstance.isValid(lastDateParsed)) ? dateFnsInstance.format(lastDateParsed, 'dd-MM-yyy HH:mm a') : 'Sin registro'
 
   return (
     <Card className='' variant='outlined'>
       <CardContent>
-        <Grid container spacing={3}>
-          <Grid item>
-            <Typography color='textSecondary' gutterBottom>
-              #
-            </Typography>
-          </Grid>
-        </Grid>
         <Grid container spacing={3}>
           <Grid item xs>
             <Typography color='textSecondary'>

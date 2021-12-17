@@ -50,7 +50,7 @@ const ProcessSelectedTable = ({processes, handlePriceChange, handleRemoveProcess
           <TableBody>
             {processes && processes.length > 0 ? processes.map((row) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.pid}>
                   <TableCell key={row.id + '-name'}>{row.name}</TableCell>
                   <TableCell key={row.id + '-pieces'} size={'small'}>{row.pieces}</TableCell>
                   <TableCell key={row.id + '-price'} align={'right'} alignRight size={'small'}>

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import AppBar from '@material-ui/core/AppBar'
 import Grid from '@material-ui/core/Grid'
 import Hidden from '@material-ui/core/Hidden'
@@ -123,9 +124,9 @@ const Header = (props) => {
 
             <Grid item xs />
 
-            <Hidden xsDown>
+            {/*<Hidden xsDown>
               {notifications()}
-            </Hidden>
+            </Hidden>*/}
 
             <Hidden smUp>
               {moreBtnMobile()}

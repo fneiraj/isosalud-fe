@@ -1,21 +1,19 @@
-# pull the base image
-FROM node:16.13.0-stretch
+FROM node:14-alpine as build-stage
 
-# set the working direction
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
-
-# install app dependencies
-COPY package.json ./
-
-COPY package-lock.json ./
-
+COPY package*.json ./
 RUN npm install
 
-# add app
-COPY . ./
+COPY . .
+RUN npm run build
 
-# start app
-CMD ["npm", "start"]
+# -----------------------------------------------------------------------------
+# SERVING IMAGE
+FROM fitiavana07/nginx-react
+
+COPY --from=build-stage /app/build /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD nginx -g 'daemon off;'

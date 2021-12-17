@@ -184,11 +184,11 @@ const PatientsPage = ({ classes }) => {
         <HeaderData
           searchText={searchText}
           handleSearch={handleSearch}
-          placeholderSearchInput='Buscar usuario por Nombre, RUT o usuario...'
+          placeholderSearchInput='Buscar paciente por Nombre, RUT o usuario...'
           enableRefreshData={false}
           enableButtonNewData
           handleOnClickNewData={toggleNewUserFormVisible}
-          newDataText='Agregar usuario'
+          newDataText='Agregar paciente'
         />
 
         <div className={classes.tableWrapper}>

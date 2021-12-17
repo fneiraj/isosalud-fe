@@ -66,19 +66,22 @@ const DashboardAdmin = ({ classes }) => {
                 <Grid item xs={4}>
                   <PatientsResume
                     key={'patients-resume-' + resume}
+                    title={'Pacientes'}
                     data={resume?.patients}
                   />
                 </Grid>
                 <Grid item xs={4}>
                   <PatientsResume
-                    key={'patients-resume-' + resume}
-                    data={resume?.patients}
+                    key={'appointment-resume-' + resume}
+                    title={'Citas'}
+                    data={resume?.appointments}
                   />
                 </Grid>
                 <Grid item xs={4}>
                   <PatientsResume
-                    key={'patients-resume-' + resume}
-                    data={resume?.patients}
+                    key={'treatment-resume-' + resume}
+                    title={'Tratamientos'}
+                    data={resume?.treatment}
                   />
                 </Grid>
               </Grid>
@@ -86,10 +89,20 @@ const DashboardAdmin = ({ classes }) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          <AppointmentGraphic data={data} />
-        </Grid>
-        <Grid item xs={12}>
-          <ResumeGraphic data={data} />
+          <Grid container>
+            <Grid item xs={3}>
+              <Typography>Citas agendadas vs canceladas</Typography>
+              <AppointmentGraphic
+                data={data}
+              />
+            </Grid>
+            <Grid item xs={9}>
+              <ResumeGraphic 
+                data={data} 
+              />
+            </Grid>
+          </Grid>
+
         </Grid>
       </Grid>
     </Paper>

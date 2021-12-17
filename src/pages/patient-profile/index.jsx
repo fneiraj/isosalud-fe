@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useEffect, useState } from 'react'
 import styles from 'pages/patient-profile/styles'
 import { Grid, Paper } from '@material-ui/core'
@@ -50,7 +51,7 @@ const PatienteProfilePage = (props) => {
               />
             </Grid>
             <Grid item xs={12}>
-              <Payments />
+              {/*<Payments />*/}
             </Grid>
           </Grid>
         </Grid>

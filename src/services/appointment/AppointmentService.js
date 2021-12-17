@@ -7,7 +7,8 @@ export const appointmentService = {
   getById,
   add,
   edit,
-  cancel
+  cancel,
+  getUnavaibleBoxes
 }
 
 function getAll () {
@@ -24,6 +25,15 @@ function getAllByPatientRut (rut) {
 
 function getById (id) {
   return HttpClient.get(`/appointment/search?id=${id}`)
+}
+
+function getUnavaibleBoxes (startDate, endDate) {
+  const payload = {
+    startDate,
+    endDate
+  }
+
+  return HttpClient.get('/appointment/unavailable', payload)
 }
 
 function cancel (id) {
@@ -46,7 +56,7 @@ function add ({ box, comment, endDate, startDate, patient, title, type, medic, t
       id: patient?.id
     },
     medic: {
-      id: medic
+      id: medic?.id !== undefined ? medic.id : medic
     },
     treatment: {
       id: treatmentId === -1 ? undefined : treatmentId
@@ -56,7 +66,7 @@ function add ({ box, comment, endDate, startDate, patient, title, type, medic, t
   return HttpClient.post('/appointment', payload)
 }
 
-function edit ({ id, box, comment, endDate, startDate, patient, title, type, medic }) {
+function edit ({ id, box, comment, endDate, startDate, patient, title, type, medic, treatmentId }) {
   const payload = {
     title,
     startDate,
@@ -69,12 +79,14 @@ function edit ({ id, box, comment, endDate, startDate, patient, title, type, med
     },
     comment,
     patient: {
-      id: patient?.personInfo?.id !== undefined ? patient?.personInfo?.id : patient?.id
+      id: patient?.id !== undefined ? patient?.id : patient?.id
     },
     medic: {
-      id: medic?.personInfo?.id !== undefined ? medic?.personInfo?.id : medic?.id
+      id: medic?.id !== undefined ? medic?.id : medic?.id
     },
-    _treatmentId: 1
+    treatment: {
+      id: treatmentId === -1 ? undefined : treatmentId
+    }
   }
 
   return HttpClient.post(`/appointment/edit?appointmentId=${id}`, payload)

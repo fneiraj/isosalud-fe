@@ -31,6 +31,7 @@ const NewAppointmentForm = (props) => {
   const [messageError, setMessageError] = useState(undefined)
   const [isNewAppointment, setIsNewAppointment] = useState()
   const [flagDataPassed, setFlagDataPassed] = useState(false)
+  const [treatment, setTreatment] = useState(undefined)
 
   useEffect(() => {
     boxService.getAll()
@@ -309,6 +310,7 @@ const NewAppointmentForm = (props) => {
         patients={patients}
         setNextBtnEnabled={setNextBtnEnabled}
         currentPatientData={currentPatientData}
+        setTreatment={setTreatment}
         {...props}
                  />
     },
@@ -320,6 +322,7 @@ const NewAppointmentForm = (props) => {
         pickerEditorPropsStartDate={pickerEditorPropsStartDate}
         displayAppointmentData={displayAppointmentData}
         setNextBtnEnabled={setNextBtnEnabled}
+        treatment={treatment}
         {...props}
                  />
     }
@@ -390,7 +393,7 @@ const NewAppointmentForm = (props) => {
               key={'nextBtn' + activeStep}
               variant='contained'
               color='primary'
-              disabled={!isNextBtnEnabled}
+              disabled={!isNextBtnEnabled || (activeStep === steps.length - 1 && !isNewAppointment && appointmentData?.status?.name === 'Cancelada')}
               onClick={() => {
                 if (activeStep === steps.length - 1) {
                   visibleChange()
