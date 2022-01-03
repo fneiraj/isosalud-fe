@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
-import { Link } from 'react-router-dom'
 import { authenticationService } from 'services'
 import { history } from 'helpers'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
