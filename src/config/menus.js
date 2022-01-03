@@ -32,7 +32,7 @@ const menus = [
       { id: 'Dashboard admin', icon: <SupervisedUserCircleIcon />, link: '/admin' },
       { id: 'Calendario', icon: <EventIcon />, link: '/admin/calendario' },
       { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/admin/usuarios' },
-      { id: 'Configuración sitio', icon: <SettingsIcon />, link: '/admin/configuracion-sitio'}
+      //{ id: 'Configuración sitio', icon: <SettingsIcon />, link: '/admin/configuracion-sitio'}
     ]
   }
 ]
