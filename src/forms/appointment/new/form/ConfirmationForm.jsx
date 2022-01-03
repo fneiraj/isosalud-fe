@@ -73,7 +73,7 @@ const ConfirmationForm = ({
 
   const box = displayAppointmentData?.box?.name !== undefined ? displayAppointmentData?.box?.name : getBoxName(displayAppointmentData?.box)
   const title = displayAppointmentData?.title !== undefined ? displayAppointmentData?.title : displayAppointmentData?.title
-  const treatment = displayAppointmentData?.treatment?.comment !== undefined ? displayAppointmentData?.treatment?.comment : treatmentSelected.comment
+  const treatment = displayAppointmentData?.treatment?.comment !== undefined ? displayAppointmentData?.treatment?.comment : treatmentSelected?.comment !== undefined ? treatmentSelected?.comment : 'Sin comentarios'
 
   const Details1 = () => (
     <Grid container style={{ border: "1px solid #66C2EF", borderRadius: '15px 15px 15px 15px' }}>

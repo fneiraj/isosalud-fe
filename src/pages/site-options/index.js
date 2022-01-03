@@ -1,1 +1,1 @@
-export { default as GeneralOptionsPage } from './pages/general'
+export { default as GeneralOptionsPage } from './GeneralOptionsPage'

@@ -187,7 +187,11 @@ const ClinicalProccessForm = ({
         </div>
       </div>
       <Grid container spacing={2}>
-        <Grid item xs={5} style={{align: 'center'}}>
+        <Grid item xs={5}>
+          <Grid container spacing={0}
+  direction="column"
+  alignItems="center"
+  justify="center">
           {blockOdontogramaSelect
             && <ToothArches
               type={odontogramaTypeSelected}
@@ -196,6 +200,7 @@ const ClinicalProccessForm = ({
               renderFlag={`${actualProcessSelected}-${isAllSelected}`}
               selectAllCallback={selectAllCallback}
             />}
+            </Grid>
         </Grid>
         <Grid item xs={7}>
           <ProcessSelectedTable

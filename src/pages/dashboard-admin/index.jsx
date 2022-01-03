@@ -91,18 +91,17 @@ const DashboardAdmin = ({ classes }) => {
         <Grid item xs={12}>
           <Grid container>
             <Grid item xs={3}>
-              <Typography>Citas agendadas vs canceladas</Typography>
               <AppointmentGraphic
                 data={data}
               />
             </Grid>
-            <Grid item xs={9}>
+            <Grid item xs={1} />
+            <Grid item xs={6}>
               <ResumeGraphic 
                 data={data} 
               />
             </Grid>
           </Grid>
-
         </Grid>
       </Grid>
     </Paper>

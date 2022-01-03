@@ -23,7 +23,6 @@ import {
 } from 'pages/site-options'
 
 import { Role } from 'models/Role'
-import { NotificationsCallOptionsPage, NotificationsSmsOptionsPage } from 'pages/site-options/pages/notifications'
 
 export const privateRoutes = [
   {
@@ -42,20 +41,8 @@ export const privateRoutes = [
     exact: true
   },
   {
-    path: '/admin/configuracion-sitio/general',
+    path: '/admin/configuracion-sitio',
     component: GeneralOptionsPage,
-    roles: [Role.Admin],
-    exact: true
-  },
-  {
-    path: '/admin/configuracion-sitio/notificaciones/sms',
-    component: NotificationsSmsOptionsPage,
-    roles: [Role.Admin],
-    exact: true
-  },
-  {
-    path: '/admin/configuracion-sitio/notificaciones/llamadas',
-    component: NotificationsCallOptionsPage,
     roles: [Role.Admin],
     exact: true
   },

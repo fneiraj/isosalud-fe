@@ -32,30 +32,7 @@ const menus = [
       { id: 'Dashboard admin', icon: <SupervisedUserCircleIcon />, link: '/admin' },
       { id: 'Calendario', icon: <EventIcon />, link: '/admin/calendario' },
       { id: 'Usuarios', icon: <SupervisedUserCircleIcon />, link: '/admin/usuarios' },
-/*      {
-        id: 'Configuración sitio',
-        icon: <SettingsIcon />,
-        link: '/admin/configuracion-sitio',
-        tabs: [
-          { title: 'General', link: '/admin/configuracion-sitio/general' },
-          {
-            title: 'Mantenedores',
-            link: '/admin/configuracion-sitio/mantenedores',
-            tabs: [
-              { title: 'Procesos clinicos', link: '/admin/configuracion-sitio/procesos-clinicos' },
-              { title: 'ads', link: '/admin/configuracion-sitio/asds' }
-            ]
-          },
-          {
-            title: 'Notificaciones',
-            link: '/admin/configuracion-sitio/notificaciones/',
-            tabs: [
-              { title: 'Sms', link: '/admin/configuracion-sitio/notificaciones/sms' },
-              { title: 'Llamadas', link: '/admin/configuracion-sitio/notificaciones/llamadas' }
-            ]
-          }
-        ]
-      }*/
+      { id: 'Configuración sitio', icon: <SettingsIcon />, link: '/admin/configuracion-sitio'}
     ]
   }
 ]
