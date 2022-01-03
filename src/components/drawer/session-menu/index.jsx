@@ -30,7 +30,7 @@ const SessionMenu = ({ classes, onDrawerToggle, location }) => {
       <ListItem
         key={childId}
         button
-        component={action ? Button : Link}
+        component={Button}
         className={classNames(classes.item, isActive && classes.itemActiveItem)}
         to={link}
         onClick={() => {
