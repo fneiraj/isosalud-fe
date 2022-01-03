@@ -8,7 +8,7 @@ const RenderFile = ({ name, downloadUrl }) => {
     <Grid container spacing={3} style={{ marginLeft: 30, marginRight: 30 }}>
       <Grid item xs>
         <Typography color='textSecondary' style={{ whiteSpace: 'pre-line' }} gutterBottom>
-          <Link onClick={() => saveAs(downloadUrl, name)} style={{ cursor: 'pointer' }}>
+          <Link onClick={() => saveAs('http://cdn.isosalud.cl/' + downloadUrl, name)} style={{ cursor: 'pointer' }}>
             {name}
           </Link>
         </Typography>
