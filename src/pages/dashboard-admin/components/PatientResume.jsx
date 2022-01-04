@@ -9,7 +9,7 @@ const PatientsResume = ({data, title: titleParent}) => {
         
         console.log({title, total, currentMonth, previousMonth})
 
-        const percent = (currentMonth * 100) / previousMonth 
+        const percent = Math.trunc((currentMonth * 100) / previousMonth) 
 
         return (
         <Grid container spacing>

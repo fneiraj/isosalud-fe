@@ -19,18 +19,14 @@ const MedicInfoForm = ({
   messageError,
   setNextBtnEnabled,
   displayData,
-  currentUser
+  currentUser,
+  specializations
 }) => {
-  const [specializations, setSpecializations] = useState([])
   const [dentists, setDentists] = useState([])
   const [specializationValue, setSpecializationValue] = useState(undefined)
   const [medicIdValue, setMedicIdValue] = useState(undefined)
 
   useEffect(() => {
-    treatmentService.getAllSpecializations()
-      .then(response => setSpecializations(response.data.data))
-      .catch(error => console.error(error))
-
     dentistService.getAll()
       .then(response => setDentists(response.data.data))
       .catch(error => console.error(error))

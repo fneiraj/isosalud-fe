@@ -6,6 +6,7 @@ import styles from './styles'
 import { PatientInfo, ConfirmationForm, ClinicalProccessForm } from './form'
 import MedicInfoForm from 'pages/patient-profile/sub-pages/treatments/components/form-new/form/MedicInfoForm'
 import { authenticationService } from 'services'
+import { treatmentService } from 'services/treatments/TreatmentService'
 
 const FormNewTreatment = ({
   classes,
@@ -24,6 +25,7 @@ const FormNewTreatment = ({
   const [isNew, setIsNew] = useState()
   const [flagDataPassed, setFlagDataPassed] = useState(false)
   const currentUser = authenticationService.currentUserValue
+  const [specializations, setSpecializations] = useState([])
 
 
   useEffect(() => {
@@ -44,6 +46,12 @@ const FormNewTreatment = ({
 
   useEffect(() => {
     setIsNew(currentTreatmentEditing.id === undefined)
+  }, [])
+
+  useEffect(() => {
+    treatmentService.getAllSpecializations()
+      .then(response => setSpecializations(response.data.data))
+      .catch(error => console.error(error))
   }, [])
 
   const change = ({ field, changes }) => {
@@ -221,6 +229,7 @@ const FormNewTreatment = ({
         setNextBtnEnabled={setNextBtnEnabled}
         messageError={messageError}
         currentUser={currentUser}
+        specializations={specializations}
       />
     },
     {
@@ -232,6 +241,7 @@ const FormNewTreatment = ({
         displayAppointmentData={displayData}
         setNextBtnEnabled={setNextBtnEnabled}
         messageError={messageError}
+        specializations={specializations}
       />
     }
   ]

@@ -44,7 +44,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ConfirmationForm = ({
   displayAppointmentData,
-  preloadData
+  preloadData,
+  specializations
 }) => {
 
   const classes = useStyles();
@@ -57,6 +58,8 @@ const ConfirmationForm = ({
     // minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
     // maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
   })
+
+  const specializationName = specializations && specializations.length > 0 ? specializations.find(s => s.id === displayAppointmentData?.specializationId)?.name : displayAppointmentData?.specializationId 
 
   const ProcessName = ({name, isLast}) => (
     <Grid item className={classes.outerColumn} style={isLast? {borderRight: '0px', borderBottomLeftRadius: '15px'} : {borderRight: '0px'}}>
@@ -97,7 +100,7 @@ const ConfirmationForm = ({
           <Typography>{displayAppointmentData?.comment}</Typography>
         </Grid>
         <Grid item className={classes.centerColumn}>
-          <Typography>{displayAppointmentData?.specializationId}</Typography>
+          <Typography>{specializationName}</Typography>
         </Grid>
         <Grid item className={classes.centerColumn}>
           <Typography>{displayAppointmentData?.odontogramaType === 'adult' ? 'Adulto' : 'Niño'}</Typography>
