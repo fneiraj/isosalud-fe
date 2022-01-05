@@ -2,9 +2,13 @@
 import { Grid, Paper, Typography } from "@material-ui/core";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
 
-const AppointmentGraphic = () => {
+const AppointmentGraphic = ({data}) => {
 
-  const data = [
+  const dataG = () => data?.appointmentsStates ? [
+    { name: 'Realizadas', value: data?.appoitnmentsStates?.realizados, color: '#00C49F' },
+    { name: 'Canceladas', value: data?.appoitnmentsStates?.cancelados, color: '#f44336' }
+  ] :
+   [
     { name: 'Realizadas', value: 10, color: '#00C49F' },
     { name: 'Canceladas', value: 5, color: '#f44336' }
   ];
@@ -31,7 +35,7 @@ const AppointmentGraphic = () => {
       <Grid item xs={12}>
         <PieChart width={200} height={230} style={{margin: '0 auto'}}>
           <Pie
-            data={data}
+            data={dataG}
             cx="50%"
             cy="50%"
             label
@@ -39,7 +43,7 @@ const AppointmentGraphic = () => {
             fill="#8884d8"
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {dataG.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
