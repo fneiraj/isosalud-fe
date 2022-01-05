@@ -3,34 +3,14 @@ import { Button, Card, CardContent, Grid, Link, Typography } from '@material-ui/
 import { saveAs } from 'file-saver'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import dateUtils from 'utils/date-fns-utils'
-import axios from 'axios'
+import { downloadZip } from "client-zip/index.js"
 
 const RenderFile = ({ name, downloadUrl }) => {
-  const save = async (downloadUrl, name) => {
-    const instance = axios.create({
-      transformRequest: [
-        (data, headers) => {
-          delete headers.common.Authorization
-          headers['Access-Control-Allow-Origin'] = '*'
-          return data
-        },
-      ],
-    });
-  
-    try {
-      await instance.get(downloadUrl);
-    }catch(e) {
-      console.error(e)
-    }
-  
-    saveAs(downloadUrl, name)
-  }
-
   return (
     <Grid container spacing={3} style={{ marginLeft: 30, marginRight: 30 }}>
       <Grid item xs>
         <Typography color='textSecondary' style={{ whiteSpace: 'pre-line' }} gutterBottom>
-          <Link onClick={() => save('http://cdn.isosalud.cl/' + downloadUrl, name)} style={{ cursor: 'pointer' }}>
+          <Link onClick={() => saveAs('http://cdn.isosalud.cl/' + downloadUrl, name)} style={{ cursor: 'pointer' }}>
             {name}
           </Link>
         </Typography>
@@ -44,6 +24,19 @@ const CollectionFiles = ({ collectionName, date, medicUser, documents }) => {
   const dateFormatted = dateUtils.format(dateParsed, 'dd-MM-yyyy HH:mm')
 
   const medicName = `${medicUser?.personInfo?.firstName} ${medicUser?.personInfo?.lastName}`
+
+  const downloadCollection = async () => {
+    const fetchs = documents.map(async ({ downloadUrl, name }) => {
+      return {
+        name: name,
+        input: await window.fetch('http://cdn.isosalud.cl/' + downloadUrl)
+      }
+    })
+
+    const zipBlob = await downloadZip(fetchs).blob()
+
+    saveAs(zipBlob, collectionName)
+  }
 
   return (
     <Card className='' variant='outlined'>
@@ -66,11 +59,10 @@ const CollectionFiles = ({ collectionName, date, medicUser, documents }) => {
           <Grid item>
             <Grid key='downloadButton' item>
               <Button
-                onClick={() => {
-                }}
+                onClick={downloadCollection}
                 variant='contained'
                 color='primary'
-              //              className={classes.button}
+                //              className={classes.button}
                 endIcon={<GetAppIcon />}
               >
                 Descargar colección
