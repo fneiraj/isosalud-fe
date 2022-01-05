@@ -19,7 +19,8 @@ const RemindersCard = ({ notes, setVisitArr, onDeleteHandle } = {}) => {
 
   const RenderNote = ({ comment, id }) => {
     return (
-      <Card variant='outlined'>
+      <Box display="inline-block" style={{width: '100%'}}>
+      <Card variant='outlined' >
         <CardContent>
           <Grid container>
             <Grid item xs={10}>
@@ -43,6 +44,7 @@ const RemindersCard = ({ notes, setVisitArr, onDeleteHandle } = {}) => {
           </Grid>
         </CardContent>
       </Card>
+      </Box>
     )
   }
 
@@ -55,6 +57,7 @@ const RemindersCard = ({ notes, setVisitArr, onDeleteHandle } = {}) => {
   }
 
   return (
+    <div style={{flexGrow: 1}}>
     <Grid container spacing={2} direction='row'>
       {notes && notes.length > 0 ? notes.map(note => (
         <Grid item key={note.id} style={{ marginLeft: 10, marginRight: 10, width: '100%' }}>
@@ -64,6 +67,7 @@ const RemindersCard = ({ notes, setVisitArr, onDeleteHandle } = {}) => {
         </Grid>
       )) : <Grid item style={{ marginLeft: 10, marginRight: 10, width: '100%' }}><EmptyState /></Grid>}
     </Grid>
+    </div>
   )
 }
 

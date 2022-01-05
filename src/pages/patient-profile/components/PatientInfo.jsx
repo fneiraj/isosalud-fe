@@ -21,11 +21,7 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
 
   const { personInfo: info = {} } = userData
   const { addressInfo: address = {} } = info
-
-  const appointmentInfo = {
-    past: 0,
-    upcoming: 3
-  }
+  const {meetingsCompletedQuantity = 0, nextMeetingsQuantity = 0} = userData
 
   const BasicInfo = () => (
     <Grid container alignItems='center' justify='center' direction='column'>
@@ -67,7 +63,7 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
             <Typography
               style={{ textAlign: 'center', borderRight: '0.1em solid #DEDEDE', padding: '0.5em' }}
             >
-              <span className={classes.bold}>{appointmentInfo.past}</span>
+              <span className={classes.bold}>{meetingsCompletedQuantity}</span>
               <br />
               Realizadas
             </Typography>
@@ -76,7 +72,7 @@ const PatientInfo = ({ isEditing, onContactClick, userData }) => {
             <Typography
               style={{ textAlign: 'center', padding: '0.5em' }}
             >
-              <span className={classes.bold}>{appointmentInfo.upcoming}</span>
+              <span className={classes.bold}>{nextMeetingsQuantity}</span>
               <br />
               Agendada
             </Typography>

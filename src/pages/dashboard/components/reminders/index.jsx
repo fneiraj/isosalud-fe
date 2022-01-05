@@ -81,7 +81,7 @@ const Reminders = () => {
             </Typography>
           </div>
         </Grid>
-        <Grid item style={{ height: '70vh' }}>
+        <Grid item style={{ height: '70vh', width: '100%' }}>
           <Scrollable maxHeight='100%' style={{minHeight: '100%', overflowX: 'hidden'}}>
             <RemindersCard notes={reminders} setVisitArr={setReminders} onDeleteHandle={onDeleteHandle} />
           </Scrollable>

@@ -1,10 +1,13 @@
 /* eslint-disable */
 import { Avatar, Button, Card, CardContent, Grid, TextField, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from '../styles'
 import { makeStyles } from '@material-ui/core/styles'
 import dateUtils from 'utils/date-fns-utils'
 import {Link} from 'react-router-dom'
+import ChangePasswordModal from './ChangePasswordModal'
+import { authenticationService } from 'services'
+import { useToasts } from 'react-toast-notifications'
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -19,13 +22,26 @@ const useStyles = makeStyles((theme) => ({
 
 const PatientInfo2 = ({ isEditing, onContactClick, userData }) => {
   const classes = useStyles()
+  const { addToast } = useToasts()
 
   const { personInfo: info = {} } = userData
   const { addressInfo: address = {} } = info
 
-  const appointmentInfo = {
-    past: 5,
-    upcoming: 4
+  const [isModalChangePasswordVisible, setIsModalChangePasswordVisible] = useState(false)
+
+  const toggleIsModalChangePasswordVisible = () => {
+    setIsModalChangePasswordVisible(prev => !prev)
+  }
+
+  const onUpdateCallback = (password) => {
+    authenticationService.changePassword(password)
+      .then(response => {
+        addToast('Contraseña actualizada correctamente.', { appearance: 'success', autoDismiss: true })
+      })
+      .catch(error => {
+        addToast('Error al actualizar la contraseña.', { appearance: 'error', autoDismiss: true })
+      })
+    toggleIsModalChangePasswordVisible()
   }
 
   const BasicInfo = () => (
@@ -71,10 +87,9 @@ const PatientInfo2 = ({ isEditing, onContactClick, userData }) => {
         <Button
           variant='contained'
           color='primary'
-          to={'/pacientes/'+userData?.id}
-          component={Link}
+          onClick={toggleIsModalChangePasswordVisible}
         >
-          Ir a perfil paciente
+          Cambiar contraseña
         </Button>
       </Grid>
     </Grid>
@@ -141,6 +156,7 @@ const PatientInfo2 = ({ isEditing, onContactClick, userData }) => {
   )
 
   return (
+    <>
     <Card variant='outlined'>
       <CardContent>
         <Grid container spacing={1}>
@@ -164,6 +180,14 @@ const PatientInfo2 = ({ isEditing, onContactClick, userData }) => {
         </Grid>
       </CardContent>
     </Card>
+    <ChangePasswordModal 
+      key={'change-password-modal-' + isModalChangePasswordVisible}
+      classes={classes}  
+      visible={isModalChangePasswordVisible}
+      toggleVisible={toggleIsModalChangePasswordVisible}
+      onUpdateCallback={onUpdateCallback}
+    />
+    </>
   )
 }
 

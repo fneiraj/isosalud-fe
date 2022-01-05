@@ -1,11 +1,12 @@
+/* eslint-disable */
 import React from 'react'
 import { Button, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import { authenticationService } from 'services'
-import { history } from 'helpers'
 import AccountBoxIcon from '@material-ui/icons/AccountBox'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import classNames from 'classnames'
 import { useToasts } from 'react-toast-notifications'
+import { history } from 'helpers'
 
 const SessionMenu = ({ classes, onDrawerToggle, location }) => {
   const { addToast } = useToasts()
@@ -33,6 +34,11 @@ const SessionMenu = ({ classes, onDrawerToggle, location }) => {
         className={classNames(classes.item, isActive && classes.itemActiveItem)}
         to={link}
         onClick={() => {
+
+          if (link) {
+            history.push(link)
+          }
+
           if (action) {
             action()
           } else if (onDrawerToggle) {

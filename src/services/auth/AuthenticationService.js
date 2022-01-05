@@ -10,6 +10,7 @@ export const authenticationService = {
   login,
   logout,
   getMeInfo,
+  changePassword,
   currentUser: currentUserSubject.asObservable(),
   get currentUserValue () {
     return currentUserSubject.value
@@ -53,6 +54,14 @@ function getMeInfo () {
 
       return response
     })
+}
+
+function changePassword (newPassword) {
+  const payload = {
+    password: newPassword
+  }
+
+  return HttpClient.post('/auth/change-password', payload)
 }
 
 function logout () {

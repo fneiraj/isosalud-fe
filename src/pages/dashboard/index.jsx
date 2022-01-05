@@ -39,8 +39,7 @@ const Dashboard = ({classes}) => {
         </Grid>
         <Grid item xs={4}>
           <div style={{width: '85%'}}>
-          <Reminders />
-
+            <Reminders />
           </div>
         </Grid>
       </Grid>

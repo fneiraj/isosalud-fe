@@ -1,14 +1,36 @@
+/* eslint-disable */
 import { Button, Card, CardContent, Grid, Link, Typography } from '@material-ui/core'
 import { saveAs } from 'file-saver'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import dateUtils from 'utils/date-fns-utils'
+import axios from 'axios'
 
 const RenderFile = ({ name, downloadUrl }) => {
+  const save = async (downloadUrl, name) => {
+    const instance = axios.create({
+      transformRequest: [
+        (data, headers) => {
+          delete headers.common.Authorization
+          headers['Access-Control-Allow-Origin'] = '*'
+          return data
+        },
+      ],
+    });
+  
+    try {
+      await instance.get(downloadUrl);
+    }catch(e) {
+      console.error(e)
+    }
+  
+    saveAs(downloadUrl, name)
+  }
+
   return (
     <Grid container spacing={3} style={{ marginLeft: 30, marginRight: 30 }}>
       <Grid item xs>
         <Typography color='textSecondary' style={{ whiteSpace: 'pre-line' }} gutterBottom>
-          <Link onClick={() => saveAs('http://cdn.isosalud.cl/' + downloadUrl, name)} style={{ cursor: 'pointer' }}>
+          <Link onClick={() => save('http://cdn.isosalud.cl/' + downloadUrl, name)} style={{ cursor: 'pointer' }}>
             {name}
           </Link>
         </Typography>
