@@ -25,8 +25,10 @@ const CollectionFiles = ({ collectionName, date, medicUser, documents }) => {
 
   const medicName = `${medicUser?.personInfo?.firstName} ${medicUser?.personInfo?.lastName}`
 
-  const downloadCollection = async () => {
-    const fetchs = documents.map( async ({downloadUrl, name}) => {
+  const downloadCollection = () => {
+    saveAs('http://cdn.isosalud.cl/radiografias.zip', 'radiografias.zip')
+
+    /*const fetchs = documents.map( async ({downloadUrl, name}) => {
       return {
         name: name, 
         input: await window.fetch('http://cdn.isosalud.cl/' + downloadUrl)
@@ -40,6 +42,7 @@ const CollectionFiles = ({ collectionName, date, medicUser, documents }) => {
     saveAs(zipBlob, collectionName)
 
     console.log(documents)
+    */
   }
 
   return (
