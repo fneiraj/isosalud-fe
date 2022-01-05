@@ -18,9 +18,6 @@ const AppointmentTooltipContent = ({ appointmentData, ...rest }) => {
 
   // eslint-disable-next-line no-unused-vars
   const { author, box, comment, endDate, id, patient, startDate, title, treatment } = appointmentData
-
-  console.log({ patient })
-
   const patientName = `${patient?.personInfo?.firstName} ${patient?.personInfo?.lastName}`
 
   return (

@@ -3,12 +3,8 @@ import { Grid, Paper, Typography } from "@material-ui/core"
 
 const PatientsResume = ({data, title: titleParent}) => {
 
-    console.log({data})
-
     const RenderData = ({title, total, currentMonth, previousMonth}) => {
         
-        console.log({title, total, currentMonth, previousMonth})
-
         const percent = Math.trunc((currentMonth * 100) / previousMonth) 
 
         return (

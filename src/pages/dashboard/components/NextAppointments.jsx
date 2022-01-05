@@ -40,8 +40,6 @@ const NextAppointments = () => {
   }
 
   const filterNonPased = (target) => {
-    console.log(new Date())
-
     return target.filter(t => {
       const startDateParsed = dateUtils.parse(t.startDate, 'yyyy-MM-dd HH:mm')
       return  dateFnsInstance.isAfter(startDateParsed, new Date()) || dateUtils.isSameDay(new Date(), startDateParsed)

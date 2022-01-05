@@ -4,9 +4,11 @@ import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from "recha
 
 const AppointmentGraphic = ({data}) => {
 
-  const dataG = () => data?.appointmentsStates ? [
-    { name: 'Realizadas', value: data?.appoitnmentsStates?.realizados, color: '#00C49F' },
-    { name: 'Canceladas', value: data?.appoitnmentsStates?.cancelados, color: '#f44336' }
+  console.log(data)
+
+  const dataG = data ? [
+    { name: 'Realizadas', value: data?.realizados, color: '#00C49F' },
+    { name: 'Canceladas', value: data?.cancelados, color: '#f44336' }
   ] :
    [
     { name: 'Realizadas', value: 10, color: '#00C49F' },

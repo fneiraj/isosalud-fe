@@ -27,8 +27,6 @@ const Reminders = () => {
         const dateCreatedParsedA = parseISO(a.dateCreated)
         const dateCreatedParsedB = parseISO(b.dateCreated)
   
-        console.log({dateCreatedParsedA, dateCreatedParsedB})
-  
         return dateCreatedParsedB - dateCreatedParsedA
       })
 

@@ -35,7 +35,6 @@ const MedicInfoForm = ({
 
 
   useEffect(() => {
-    console.log({currentUser})
     if (currentUser && !displayData?.medicId) {
       setMedicIdValue(currentUser?.personInfo?.id)
       change({field: ['medicId'], changes: currentUser?.id})

@@ -75,7 +75,6 @@ const Calendar = () => {
         })
     }
     if (changed) {
-      console.log({changed})
 
       appointmentService.edit(changed)
         .then(response => {

@@ -3,7 +3,6 @@ import ListAltIcon from '@material-ui/icons/ListAlt'
 import dateFnsInstance from 'utils/date-fns-utils'
 
 const TreatmentCard = ({ handleOpenDetails, treatment }) => {
-  console.log({ treatment })
   const medicName = `${treatment?.medic?.personInfo?.firstName} ${treatment?.medic?.personInfo?.lastName}`
   const specialty = treatment?.specialization?.name
   const status = treatment?.state?.name

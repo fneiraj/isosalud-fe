@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import dateFnsUtils from 'utils/date-fns-utils'
 
 const Resume = ({ classes, treatment }) => {
-  console.log({ treatment })
 
   const medicName = `${treatment?.medic?.personInfo?.firstName} ${treatment?.medic?.personInfo?.lastName}`
   const patientConvenio = treatment?.patient?.personInfo?.prevision
@@ -13,8 +12,6 @@ const Resume = ({ classes, treatment }) => {
   const dateParsed = dateFnsUtils.format(dateCreatedParsed, 'dd-MM-yyyy HH:mm')
 
   const Appointment = ({data}) => {
-
-    console.log({data})
 
     const dateParsed = dateFnsUtils.parse(data.startDate, 'yyyy-MM-dd HH:mm')
     const dateFormatted = dateFnsUtils.format(dateParsed, 'dd \'de\' MMMM \'de\' yyyy - HH:mm')

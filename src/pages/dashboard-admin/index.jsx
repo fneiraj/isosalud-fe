@@ -92,7 +92,8 @@ const DashboardAdmin = ({ classes }) => {
           <Grid container>
             <Grid item xs={3}>
               <AppointmentGraphic
-                data={data}
+                key={'appointments-resume-' + resume}
+                data={resume?.appointmentsStates}
               />
             </Grid>
             <Grid item xs={1} />

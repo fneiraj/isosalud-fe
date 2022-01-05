@@ -133,7 +133,6 @@ const NewAppointmentForm = (props) => {
   }
 
   const handleTextEditorOnChange = (prev, field, value) => {
-    console.log({ activeStep })
     if (activeStep === 0) {
       const isStartDateOk = validateHourStart(String(field) === 'startDate' ? value : prev.startDate)
       const isEndDateOk = validateHourEnd(String(field) === 'endDate' ? value : prev.endDate)
