@@ -26,16 +26,20 @@ const CollectionFiles = ({ collectionName, date, medicUser, documents }) => {
   const medicName = `${medicUser?.personInfo?.firstName} ${medicUser?.personInfo?.lastName}`
 
   const downloadCollection = async () => {
-    const fetchs = documents.map(async ({ downloadUrl, name }) => {
+    const fetchs = documents.map( async ({downloadUrl, name}) => {
       return {
-        name: name,
+        name: name, 
         input: await window.fetch('http://cdn.isosalud.cl/' + downloadUrl)
       }
     })
 
+    console.log(fetchs)
+
     const zipBlob = await downloadZip(fetchs).blob()
 
     saveAs(zipBlob, collectionName)
+
+    console.log(documents)
   }
 
   return (
@@ -62,7 +66,7 @@ const CollectionFiles = ({ collectionName, date, medicUser, documents }) => {
                 onClick={downloadCollection}
                 variant='contained'
                 color='primary'
-                //              className={classes.button}
+              //              className={classes.button}
                 endIcon={<GetAppIcon />}
               >
                 Descargar colección
